@@ -194,10 +194,13 @@
                     </script>
 
                     
+                    <?php
+                        $isSchoolPortal = ($portal ?? 'bureau') === 'school';
+                    ?>
                     <div
                         class="d-flex flex-wrap gap-3 justify-content-between align-items-center mb-4 p-3 bg-light rounded-3 shadow-sm">
                         
-                        <a href="<?php echo e(route('student.bulk.import.index')); ?>"
+                        <a href="<?php echo e(route($isSchoolPortal ? 'school.student.bulk.import.index' : 'student.bulk.import.index')); ?>"
                             class="btn btn-outline-secondary btn-sm rounded-pill px-3">
                             <i class="fa fa-arrow-left me-2"></i> Change Year/Category/School
                         </a>
@@ -205,12 +208,12 @@
                         
                         <div class="d-flex flex-wrap gap-2 align-items-center toolbar-actions">
                             <a class="btn btn-outline-primary btn-sm rounded-pill px-3"
-                                href="<?php echo e(route('student.bulk.import.template', ['year' => $year, 'category' => $category, 'school_number' => $schoolNumber])); ?>">
+                                href="<?php echo e(route($isSchoolPortal ? 'school.student.bulk.import.template' : 'student.bulk.import.template', ['year' => $year, 'category' => $category, 'school_number' => $schoolNumber])); ?>">
                                 <i class="fa fa-download me-2"></i> Download Template
                             </a>
 
                             <button type="button" class="btn btn-success btn-sm rounded-pill px-4 shadow-sm"
-                                data-bs-toggle="modal" data-bs-target="#importModal">
+                                data-toggle="modal" data-target="#importModal">
                                 <i class="fa fa-upload me-2"></i> Import Students
                             </button>
 
@@ -220,7 +223,7 @@
                                 </button>
                             <?php endif; ?>
 
-                            <?php if(in_array($category, ['UCE', 'UACE']) && $studentRows->count() > 0): ?>
+                            <?php if(!$isSchoolPortal && in_array($category, ['UCE', 'UACE']) && $studentRows->count() > 0): ?>
                                 <a class="btn btn-dark btn-sm rounded-pill px-4 shadow-sm"
                                     style="background-color:#6a123f; border-color:#6a123f;"
                                     href="<?php echo e(route('subject.registration.manage', ['year' => $year, 'category' => $category, 'school_number' => $schoolNumber])); ?>">
@@ -272,7 +275,7 @@
                                                     <i class="fa fa-pen"></i>
                                                 </button>
                                                 <form method="POST"
-                                                    action="<?php echo e(route('student.bulk.import.destroy.student', ['studentId' => $student->Student_ID])); ?>"
+                                                    action="<?php echo e(route($isSchoolPortal ? 'school.student.bulk.import.destroy.student' : 'student.bulk.import.destroy.student', ['studentId' => $student->Student_ID])); ?>"
                                                     class="d-inline sbi-delete-form" data-student-id="<?php echo e($student->Student_ID); ?>">
                                                     <?php echo csrf_field(); ?>
                                                     <?php echo method_field('DELETE'); ?>
@@ -305,7 +308,7 @@
     </div>
 
     
-    <form method="POST" action="<?php echo e(route('student.bulk.import.destroy.all')); ?>" id="clearAllForm" class="d-none">
+    <form method="POST" action="<?php echo e(route($isSchoolPortal ? 'school.student.bulk.import.destroy.all' : 'student.bulk.import.destroy.all')); ?>" id="clearAllForm" class="d-none">
         <?php echo csrf_field(); ?>
         <?php echo method_field('DELETE'); ?>
         <input type="hidden" name="year" value="<?php echo e($year); ?>">
@@ -317,7 +320,7 @@
     <div class="modal fade" id="importModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="POST" action="<?php echo e(route('student.bulk.import.import')); ?>" enctype="multipart/form-data">
+                <form method="POST" action="<?php echo e(route($isSchoolPortal ? 'school.student.bulk.import.import' : 'student.bulk.import.import')); ?>" enctype="multipart/form-data">
                     <?php echo csrf_field(); ?>
                     <input type="hidden" name="year" value="<?php echo e($year); ?>">
                     <input type="hidden" name="category" value="<?php echo e($category); ?>">
@@ -338,7 +341,7 @@
                         <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn text-white" style="background-color:#026837;">
                             <i class="fa fa-check me-1"></i> Import
                         </button>
@@ -362,7 +365,7 @@
                     <div class="modal-header text-white" style="background-color:#026837;">
                         <h5 class="modal-title"><i class="fa fa-pen me-2"></i> Edit Student — <span
                                 id="editStudentIdLabel"></span></h5>
-                        <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal"
+                        <button type="button" class="close text-white" data-dismiss="modal"
                             aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -382,7 +385,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                        <button type="button" class="btn btn-outline-secondary"
                             data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn text-white" style="background-color:#026837;">
                             <i class="fa fa-check me-1"></i> Save Changes
@@ -413,7 +416,8 @@
             btn.addEventListener('click', function () {
                 const studentId = btn.dataset.studentId;
                 const form = document.getElementById('editStudentForm');
-                form.action = '<?php echo e(url('/student-bulk-import/student')); ?>/' + encodeURIComponent(studentId);
+                const baseUrl = <?php echo json_encode($isSchoolPortal ? url('/school/student-bulk-import/student') : url('/student-bulk-import/student'), 15, 512) ?>;
+                form.action = baseUrl + '/' + encodeURIComponent(studentId);
                 document.getElementById('editStudentIdLabel').textContent = studentId;
                 document.getElementById('editStudentName').value = btn.dataset.studentName || '';
                 document.getElementById('editStudentSex').value = btn.dataset.studentSex || 'Male';

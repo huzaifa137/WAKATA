@@ -28,8 +28,7 @@ class ReportsController extends Controller
 
         $lockedSchoolNumber = null;
         if ($portal === 'school') {
-            $school = House::find(session('LoggedSchool'));
-            $lockedSchoolNumber = $school->Number ?? null;
+            $lockedSchoolNumber = session('LoggedSchoolCode') ?? House::find(session('LoggedSchool'))?->Number;
         }
 
         $years = DB::table('class_allocation')
@@ -52,9 +51,9 @@ class ReportsController extends Controller
      */
     protected function lockToLoggedInSchool(Request $request): void
     {
-        $school = House::find(session('LoggedSchool'));
-        if ($school) {
-            $request->merge(['school_number' => $school->Number]);
+        $schoolNumber = session('LoggedSchoolCode') ?? House::find(session('LoggedSchool'))?->Number;
+        if ($schoolNumber) {
+            $request->merge(['school_number' => $schoolNumber]);
         }
     }
 

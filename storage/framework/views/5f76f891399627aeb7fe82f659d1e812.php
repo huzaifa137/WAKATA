@@ -827,7 +827,7 @@
                                                                 <th width="35%">
                                                                     <?php if($subject->total_papers > 1): ?>
                                                                         Marks — <?php echo e($subject->total_papers); ?> papers
-                                                                        (each out of its own max, averaged on a 0-100
+                                                                        (each out of its own max, averaged on a ( 0 - 100 )
                                                                         scale)
                                                                     <?php else: ?>
                                                                         Marks
@@ -839,15 +839,35 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <?php $__currentLoopData = $subjectRecords; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $record): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                                <?php
-                                                                    $markValue = $subjectMarks[$record->Student_ID] ?? '';
-                                                                    if ($markValue !== '' && is_numeric($markValue)) {
-                                                                        $markValue = $markValue + 0;
-                                                                    }
-                                                                    $studentName = $studentNames[$record->Student_ID] ?? 'Unknown Student';
-                                                                    $studentPapers = $existingPaperMarks[$subject->md_id][$record->Student_ID] ?? [];
-                                                                ?>
+<?php $__currentLoopData = $subjectRecords; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $record): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    <?php
+        $studentName = $studentNames[$record->Student_ID] ?? 'Unknown Student';
+        $studentPapers = $existingPaperMarks[$subject->md_id][$record->Student_ID] ?? [];
+
+        if ($subject->total_papers > 1) {
+            // Recompute live from each paper's mark against the subject's
+            // *current* max score, so changing a paper's max later is
+            // reflected on refresh — instead of trusting the average that
+            // was persisted at save time against the old max.
+            $convertedVals = [];
+            foreach ($studentPapers as $paperNum => $paperVal) {
+                if ($paperVal !== '' && $paperVal !== null && is_numeric($paperVal)) {
+                    $paperMax = (float) ($subject->paper_max_scores[$paperNum] ?? 100);
+                    if ($paperMax > 0) {
+                        $convertedVals[] = ((float) $paperVal / $paperMax) * 100;
+                    }
+                }
+            }
+            $markValue = count($convertedVals) > 0
+                ? round(array_sum($convertedVals) / count($convertedVals), 2)
+                : '';
+        } else {
+            $markValue = $subjectMarks[$record->Student_ID] ?? '';
+            if ($markValue !== '' && is_numeric($markValue)) {
+                $markValue = $markValue + 0;
+            }
+        }
+    ?>
                                                                 <tr
                                                                     data-search="<?php echo e(strtolower($studentName . ' ' . $record->Student_ID)); ?>">
                                                                     <td><?php echo e($key + 1); ?></td>

@@ -244,7 +244,7 @@
         </a>
 
         <button type="button" class="btn btn-sm text-white rounded-pill px-4 shadow-sm" style="background-color:#026837;"
-            data-bs-toggle="modal" data-bs-target="#importModal">
+            data-toggle="modal" data-target="#importModal">
             <i class="fa fa-upload me-2"></i> Import Filled Template
         </button>
 
@@ -360,7 +360,9 @@
 
                     <div class="modal-header text-white" style="background-color:#026837;">
                         <h5 class="modal-title"><i class="fa fa-upload me-2"></i> Import Subject Registrations</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                     <div class="modal-body">
                         <p class="text-muted small">
@@ -379,7 +381,7 @@
                         <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn text-white" style="background-color:#026837;">
                             <i class="fa fa-check me-1"></i> Import
                         </button>

@@ -41,27 +41,33 @@ class UceUaceSubjectsSeeder extends Seeder
         ];
 
         // Uganda Advanced Certificate of Education (A-LEVEL) subjects.
-        // General Paper is compulsory for every UACE student; the rest are
-        // principal / subsidiary subjects picked per student's combination.
+        // General Paper is compulsory for every UACE student. The rest are
+        // 'Optional', and split into two pools via `role`:
+        //   - Principal: the subjects combinations are built from (3 per
+        //     combination, e.g. PCM = Physics + Chemistry + Mathematics).
+        //   - Subsidiary: a separate pool (Sub Math, Sub ICT) — at most one
+        //     is attached to a combination, alongside its 3 principals.
+        // `role` is only meaningful for Optional UACE subjects; it's left
+        // null for Compulsory subjects and for all UCE subjects.
         $uace = [
-            ['code' => 'GP', 'name' => 'General Paper', 'status' => 'Compulsory'],
-            ['code' => 'PHY', 'name' => 'Physics', 'status' => 'Optional'],
-            ['code' => 'CHEM', 'name' => 'Chemistry', 'status' => 'Optional'],
-            ['code' => 'BIO', 'name' => 'Biology', 'status' => 'Optional'],
-            ['code' => 'MATH', 'name' => 'Mathematics', 'status' => 'Optional'],
-            ['code' => 'ECON', 'name' => 'Economics', 'status' => 'Optional'],
-            ['code' => 'GEOG', 'name' => 'Geography', 'status' => 'Optional'],
-            ['code' => 'HIST', 'name' => 'History', 'status' => 'Optional'],
-            ['code' => 'DIV', 'name' => 'Divinity (CRE)', 'status' => 'Optional'],
-            ['code' => 'IRE', 'name' => 'Islamic Religious Education', 'status' => 'Optional'],
-            ['code' => 'LIT', 'name' => 'Literature in English', 'status' => 'Optional'],
-            ['code' => 'KISW', 'name' => 'Kiswahili', 'status' => 'Optional'],
-            ['code' => 'FART', 'name' => 'Fine Art', 'status' => 'Optional'],
-            ['code' => 'AGRIC', 'name' => 'Agriculture', 'status' => 'Optional'],
-            ['code' => 'CS', 'name' => 'Computer Science', 'status' => 'Optional'],
-            ['code' => 'ENT', 'name' => 'Entrepreneurship', 'status' => 'Optional'],
-            ['code' => 'SMATH', 'name' => 'Subsidiary Mathematics', 'status' => 'Optional'],
-            ['code' => 'SICT', 'name' => 'Subsidiary ICT', 'status' => 'Optional'],
+            ['code' => 'GP', 'name' => 'General Paper', 'status' => 'Compulsory', 'role' => null],
+            ['code' => 'PHY', 'name' => 'Physics', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'CHEM', 'name' => 'Chemistry', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'BIO', 'name' => 'Biology', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'MATH', 'name' => 'Mathematics', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'ECON', 'name' => 'Economics', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'GEOG', 'name' => 'Geography', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'HIST', 'name' => 'History', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'DIV', 'name' => 'Divinity (CRE)', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'IRE', 'name' => 'Islamic Religious Education', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'LIT', 'name' => 'Literature in English', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'KISW', 'name' => 'Kiswahili', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'FART', 'name' => 'Fine Art', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'AGRIC', 'name' => 'Agriculture', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'CS', 'name' => 'Computer Science', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'ENT', 'name' => 'Entrepreneurship', 'status' => 'Optional', 'role' => 'Principal'],
+            ['code' => 'SMATH', 'name' => 'Subsidiary Mathematics', 'status' => 'Optional', 'role' => 'Subsidiary'],
+            ['code' => 'SICT', 'name' => 'Subsidiary ICT', 'status' => 'Optional', 'role' => 'Subsidiary'],
         ];
 
         $now = now();
@@ -87,6 +93,7 @@ class UceUaceSubjectsSeeder extends Seeder
                 'md_date_added' => $now->toDateString(),
                 'md_added_by' => 'system',
                 'md_misc1' => $s['status'], // 'Compulsory' or 'Optional'
+                'md_misc4' => $s['role'] ?? null, // 'Principal' / 'Subsidiary' — UACE optional subjects only
                 'updated_at' => $now,
                 'created_at' => $now,
             ]

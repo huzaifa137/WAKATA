@@ -9,11 +9,18 @@ class CombinationsSeeder extends Seeder
 {
     // php artisan db:seed --class=CombinationsSeeder
     //
-    // Requires UceUaceSubjectsSeeder to have already been run, since each
-    // combination below is defined in terms of the UACE subject codes it
-    // creates (PHY, CHEM, BIO, MATH, ECON, GEOG, HIST, DIV, LIT, AGRIC, CS).
+    // Each combination below is defined in terms of the UACE subject codes
+    // created by UceUaceSubjectsSeeder (PHY, CHEM, BIO, MATH, ECON, GEOG,
+    // HIST, DIV, LIT, AGRIC, CS). Rather than requiring that seeder to be
+    // run first (and failing with "could not find subject code(s)" if it
+    // wasn't), this seeder calls it directly. UceUaceSubjectsSeeder uses
+    // updateOrInsert keyed on (md_master_code_id, md_code), so calling it
+    // again here is always safe/idempotent — existing subjects are simply
+    // left as-is (skipped), nothing is duplicated.
     public function run(): void
     {
+        $this->call(UceUaceSubjectsSeeder::class);
+
         $uaceCode = config('constants.options.UACEPapers', 25);
 
         // Common Uganda UACE combinations. Subject codes here refer to the

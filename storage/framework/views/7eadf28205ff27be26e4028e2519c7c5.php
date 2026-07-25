@@ -1,3 +1,5 @@
+
+
 <?php
     use App\Models\StudentBasic;
     use App\Http\Controllers\Helper;
@@ -451,7 +453,7 @@
                                         </tr>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                         <tr class="gr-empty-row">
-                                            <td colspan="8"><i class="fas fa-inbox me-2"></i>No students found for this
+                                            <td colspan="8"><i class="fas fa-inbox me-2"></i> No students found for this
                                                 selection.</td>
                                         </tr>
                                     <?php endif; ?>

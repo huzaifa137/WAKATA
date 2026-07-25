@@ -1,3 +1,5 @@
+
+
 <?php $__env->startSection('content'); ?>
     <div class="side-app">
         <div class="container-fluid mt-3">

@@ -1,3 +1,5 @@
+
+
 <?php $__env->startSection('content'); ?>
     <div class="side-app">
         <div class="container-fluid mt-3">
@@ -25,7 +27,7 @@
                 }
 
                 .sm-tab.UCE {
-                    background-color: #17a2b8;
+                    background-color: #3d17b8;
                 }
 
                 .sm-tab.UACE {
@@ -213,6 +215,9 @@
                                                             <?php echo e($subject->md_misc1); ?>
 
                                                         </span>
+                                                        <?php if($subject->subject_type): ?>
+                                                            <span class="badge bg-secondary text-white d-block mt-1"><?php echo e($subject->subject_type); ?></span>
+                                                        <?php endif; ?>
                                                     </td>
                                                     <td>
                                                         <?php if($subject->total_papers > 1): ?>
@@ -248,7 +253,7 @@
     <div class="sm-actions">
         <button type="button" class="btn btn-outline-dark btn-sm"
             title="Edit"
-            onclick="smOpenEditModal(<?php echo e($subject->md_id); ?>, '<?php echo e($code); ?>', '<?php echo e(addslashes($subject->md_code)); ?>', '<?php echo e(addslashes($subject->md_name)); ?>', '<?php echo e($subject->md_misc1); ?>', <?php echo e($subject->total_papers); ?>, <?php echo e($subject->paper_max_scores->isEmpty() ? '{}' : $subject->paper_max_scores->toJson()); ?>)">
+            onclick="smOpenEditModal(<?php echo e($subject->md_id); ?>, '<?php echo e($code); ?>', '<?php echo e(addslashes($subject->md_code)); ?>', '<?php echo e(addslashes($subject->md_name)); ?>', '<?php echo e($subject->md_misc1); ?>', <?php echo e($subject->total_papers); ?>, <?php echo e($subject->paper_max_scores->isEmpty() ? '{}' : $subject->paper_max_scores->toJson()); ?>, <?php echo e($subject->subject_type ? "'{$subject->subject_type}'" : 'null'); ?>)">
             <i class="fa fa-pen"></i>
         </button>
 
@@ -318,10 +323,21 @@
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Type</label>
-                            <select name="status" id="subjectStatus" class="form-control" required>
+                            <select name="status" id="subjectStatus" class="form-control" required onchange="smToggleSubjectTypeField()">
                                 <option value="Compulsory">Compulsory (auto-registered for every student)</option>
                                 <option value="Optional">Optional (student must be ticked for it)</option>
                             </select>
+                        </div>
+                        <div class="mb-3" id="subjectTypeWrap" style="display:none;">
+                            <label class="form-label">Subject Role (UACE only)</label>
+                            <select name="subject_type" id="subjectType" class="form-control">
+                                <option value="Principal">Principal (used to build combinations, e.g. Physics, Economics)</option>
+                                <option value="Subsidiary">Subsidiary (a separate pool — e.g. Sub Math, Sub ICT)</option>
+                            </select>
+                            <small class="text-muted">
+                                Every UACE combination is built from 3 Principal subjects plus, optionally, 1
+                                Subsidiary subject.
+                            </small>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Number of Papers</label>
@@ -405,6 +421,17 @@
             container.innerHTML = html;
         }
 
+        // ── Principal / Subsidiary field visibility (UACE Optional only) ─
+        function smToggleSubjectTypeField() {
+            const category = document.getElementById('subjectCategory').value;
+            const status = document.getElementById('subjectStatus').value;
+            const wrap = document.getElementById('subjectTypeWrap');
+            const select = document.getElementById('subjectType');
+            const show = category === 'UACE' && status === 'Optional';
+            wrap.style.display = show ? '' : 'none';
+            select.required = show;
+        }
+
         // ── Add modal ──────────────────────────────────────────────────
 function smOpenAddModal(category) {
     document.getElementById('subjectModalTitle').innerHTML = '<i class="fa fa-plus me-2"></i> Add ' + smCategoryLabels[category] + ' Subject';
@@ -415,13 +442,15 @@ function smOpenAddModal(category) {
     document.getElementById('subjectCode').value = '';
     document.getElementById('subjectName').value = '';
     document.getElementById('subjectStatus').value = 'Compulsory';
+    document.getElementById('subjectType').value = 'Principal';
     document.getElementById('subjectTotalPapers').value = 1;
     smCurrentMaxScores = {};
     smRenderPaperMaxScores();
+    smToggleSubjectTypeField();
     $('#subjectModal').modal('show');
 }
 
-function smOpenEditModal(id, category, code, name, status, totalPapers, maxScores) {
+function smOpenEditModal(id, category, code, name, status, totalPapers, maxScores, subjectType) {
     document.getElementById('subjectModalTitle').innerHTML = '<i class="fa fa-pen me-2"></i> Edit Subject';
     document.getElementById('subjectForm').action = "<?php echo e(url('subject-management')); ?>/" + id;
     document.getElementById('subjectFormMethod').value = 'PUT';
@@ -430,9 +459,11 @@ function smOpenEditModal(id, category, code, name, status, totalPapers, maxScore
     document.getElementById('subjectCode').value = code;
     document.getElementById('subjectName').value = name;
     document.getElementById('subjectStatus').value = status;
+    document.getElementById('subjectType').value = subjectType || 'Principal';
     document.getElementById('subjectTotalPapers').value = totalPapers || 1;
     smCurrentMaxScores = maxScores || {};
     smRenderPaperMaxScores();
+    smToggleSubjectTypeField();
     $('#subjectModal').modal('show');
 }
 

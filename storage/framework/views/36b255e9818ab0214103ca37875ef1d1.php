@@ -1,6 +1,9 @@
+
+
 <?php $__env->startSection('content'); ?>
     <div class="side-app">
 
+        <?php if (! (isset($lockedSchool))): ?>
         <div class="row">
             <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
                 <div class="card bg-primary">
@@ -10,6 +13,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; ?>
 
         <div class="row">
             <div class="col-lg-12">
@@ -27,7 +31,7 @@
                             students to already exist.
                         </div>
 
-                        <form id="selectForm" method="GET" action="<?php echo e(route('student.bulk.import.manage')); ?>">
+                        <form id="selectForm" method="GET" action="<?php echo e(isset($lockedSchool) ? route('school.student.bulk.import.manage') : route('student.bulk.import.manage')); ?>">
                             <div class="row">
                                 <div class="col-md-3 mb-3">
                                     <label><strong>Select Year</strong></label>
@@ -51,12 +55,16 @@
 
                                 <div class="col-md-6 mb-3">
                                     <label><strong>Select School</strong></label>
-                                    <select name="school_id" class="form-control select2" required>
-                                        <option value="">-- Select School --</option>
-                                        <?php $__currentLoopData = $houses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $house): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <option value="<?php echo e($house->ID); ?>"><?php echo e($house->House); ?> (<?php echo e($house->Number); ?>)</option>
-                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                    </select>
+                                    <?php if(isset($lockedSchool)): ?>
+                                        <input type="text" class="form-control" value="<?php echo e($lockedSchool->House ?? ''); ?> (<?php echo e($lockedSchool->Number ?? ''); ?>)" disabled>
+                                    <?php else: ?>
+                                        <select name="school_id" class="form-control select2" required>
+                                            <option value="">-- Select School --</option>
+                                            <?php $__currentLoopData = $houses; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $house): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <option value="<?php echo e($house->ID); ?>"><?php echo e($house->House); ?> (<?php echo e($house->Number); ?>)</option>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </select>
+                                    <?php endif; ?>
                                 </div>
                             </div>
 

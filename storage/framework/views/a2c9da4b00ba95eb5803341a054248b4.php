@@ -1,3 +1,5 @@
+
+
 <?php $__env->startSection('content'); ?>
     <div class="side-app">
         <div class="container-fluid mt-3">
@@ -395,7 +397,7 @@
                 maybeLoadStudents();
             }
 
-            new bootstrap.Modal(document.getElementById('reportFilterModal')).show();
+            $('#reportFilterModal').modal('show');
         }
 
         function getSelectedSchoolNumber() {

@@ -63,6 +63,16 @@
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
 
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <div class="table-responsive">
                     <table class="table cm-table mb-0">
                         <thead>
@@ -82,7 +92,9 @@
                                     <td class="text-start">{{ $combination->name }}</td>
                                     <td class="text-start">
                                         @foreach($combination->subjects as $subject)
-                                            <span class="subject-chip">{{ $subject->md_name }}</span>
+                                            <span class="subject-chip">
+                                                {{ $subject->md_name }}@if($subject->md_misc4 === 'Subsidiary') <em>(Sub)</em>@endif
+                                            </span>
                                         @endforeach
                                     </td>
                                     <td>{{ $combination->student_count }}</td>
@@ -95,8 +107,8 @@
                                                 onclick='cmOpenEditModal(
                                                     {{ $combination->id }},
                                                     {{ json_encode($combination->code) }},
-                                                    {{ json_encode($combination->name) }},
-                                                    {{ json_encode($combination->subjects->pluck("md_id")) }}
+                                                    {{ json_encode($combination->subjects->where("md_misc4", "!=", "Subsidiary")->pluck("md_id")->values()) }},
+                                                    {{ json_encode(optional($combination->subjects->firstWhere("md_misc4", "Subsidiary"))->md_id) }}
                                                 )'>
                                                 <i class="fa fa-pen"></i>
                                             </button>
@@ -134,36 +146,78 @@
             <form id="combinationForm" method="POST">
                 @csrf
                 <input type="hidden" name="_method" id="combinationFormMethod" value="POST">
+                <input type="hidden" name="category" value="UACE">
                 <div class="modal-header" style="background:#026837;">
                     <h5 class="modal-title text-white" id="combinationModalTitle">Add Combination</h5>
                     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-</button>
-
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Code</label>
-                        <input type="text" name="code" id="combinationCode" class="form-control" placeholder="e.g. PCM" maxlength="10" required>
+                        <input type="text" name="code" id="combinationCode" class="form-control" placeholder="e.g. PCM" maxlength="10" value="{{ old('code') }}" required>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Name</label>
-                        <input type="text" name="name" id="combinationName" class="form-control" placeholder="e.g. Physics, Chemistry, Mathematics" required>
+                        <input type="text" id="combinationNamePreview" class="form-control" disabled placeholder="Select subjects below to build the name">
+                        <small class="text-muted">Generated automatically from the subjects you pick.</small>
                     </div>
-                    <div class="mb-1">
-                        <label class="form-label fw-semibold">Principal Subjects</label>
-                        <div id="combinationSubjectsContainer">
-                            @foreach($availableSubjects['UACE'] as $subject)
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Principal Subjects <span id="combinationPrincipalCount" class="badge bg-secondary text-white">0 / 3</span>
+                        </label>
+                        <div id="combinationPrincipalContainer">
+                            @forelse($availableSubjects['UACE']['principal'] as $subject)
                                 <div class="form-check">
-                                    <input class="form-check-input combination-subject-checkbox" type="checkbox"
-                                        name="subject_ids[]" value="{{ $subject->md_id }}" id="subj-{{ $subject->md_id }}">
-                                    <label class="form-check-label" for="subj-{{ $subject->md_id }}">
+                                    <input class="form-check-input combination-principal-checkbox" type="checkbox"
+                                        name="principal_subject_ids[]" value="{{ $subject->md_id }}" id="subj-p-{{ $subject->md_id }}"
+                                        data-name="{{ $subject->md_name }}"
+                                        {{ in_array($subject->md_id, old('principal_subject_ids', [])) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="subj-p-{{ $subject->md_id }}">
                                         {{ $subject->md_name }}
                                     </label>
                                 </div>
-                            @endforeach
+                            @empty
+                                <p class="text-muted small mb-0">
+                                    No Principal subjects yet — add some under
+                                    <a href="{{ route('subject.management.index') }}" target="_blank">Subject Management</a>
+                                    (UACE, Optional, role = Principal).
+                                </p>
+                            @endforelse
                         </div>
-                        <small class="text-muted">Only Optional subjects can belong to a combination — compulsory subjects like General Paper are registered automatically for everyone.</small>
+                        <small class="text-muted">Pick exactly 3 — e.g. Physics, Chemistry, Mathematics.</small>
+                    </div>
+
+                    <div class="mb-1">
+                        <label class="form-label fw-semibold">Subsidiary Subject <span class="text-muted fw-normal">(optional, pick at most 1)</span></label>
+                        <div id="combinationSubsidiaryContainer">
+                            <div class="form-check">
+                                <input class="form-check-input combination-subsidiary-radio" type="radio"
+                                    name="subsidiary_subject_id" value="" id="subj-s-none" checked>
+                                <label class="form-check-label text-muted" for="subj-s-none">None</label>
+                            </div>
+                            @forelse($availableSubjects['UACE']['subsidiary'] as $subject)
+                                <div class="form-check">
+                                    <input class="form-check-input combination-subsidiary-radio" type="radio"
+                                        name="subsidiary_subject_id" value="{{ $subject->md_id }}" id="subj-s-{{ $subject->md_id }}"
+                                        data-name="{{ $subject->md_name }}"
+                                        {{ old('subsidiary_subject_id') == $subject->md_id ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="subj-s-{{ $subject->md_id }}">
+                                        {{ $subject->md_name }}
+                                    </label>
+                                </div>
+                            @empty
+                                <p class="text-muted small mb-0">
+                                    No Subsidiary subjects yet — add some under
+                                    <a href="{{ route('subject.management.index') }}" target="_blank">Subject Management</a>
+                                    (UACE, Optional, role = Subsidiary), e.g. Sub Math, Sub ICT.
+                                </p>
+                            @endforelse
+                        </div>
+                        <small class="text-muted">Only Principal/Subsidiary subjects can belong to a combination — compulsory subjects like General Paper are registered automatically for everyone.</small>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -183,30 +237,63 @@
 
 <script>
     function cmResetCheckboxes() {
-        document.querySelectorAll('.combination-subject-checkbox').forEach(cb => cb.checked = false);
+        document.querySelectorAll('.combination-principal-checkbox').forEach(cb => cb.checked = false);
+        document.getElementById('subj-s-none').checked = true;
+        cmUpdatePreview();
     }
+
+    // Cap principal picks at 3, and keep the live name preview + counter in sync.
+    function cmUpdatePreview() {
+        const principalBoxes = Array.from(document.querySelectorAll('.combination-principal-checkbox'));
+        const checkedPrincipals = principalBoxes.filter(cb => cb.checked);
+
+        document.getElementById('combinationPrincipalCount').textContent = checkedPrincipals.length + ' / 3';
+
+        principalBoxes.forEach(cb => {
+            cb.disabled = !cb.checked && checkedPrincipals.length >= 3;
+        });
+
+        const subsidiary = document.querySelector('.combination-subsidiary-radio:checked');
+        const names = checkedPrincipals.map(cb => cb.dataset.name);
+        if (subsidiary && subsidiary.value) {
+            names.push(subsidiary.dataset.name);
+        }
+
+        document.getElementById('combinationNamePreview').value = names.join(', ');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.combination-principal-checkbox, .combination-subsidiary-radio')
+            .forEach(el => el.addEventListener('change', cmUpdatePreview));
+        cmUpdatePreview();
+    });
 
     function cmOpenAddModal() {
         document.getElementById('combinationModalTitle').innerHTML = '<i class="fa fa-plus me-2"></i> Add Combination';
         document.getElementById('combinationForm').action = "{{ route('combination.management.store') }}";
         document.getElementById('combinationFormMethod').value = 'POST';
         document.getElementById('combinationCode').value = '';
-        document.getElementById('combinationName').value = '';
         cmResetCheckboxes();
         $('#combinationModal').modal('show');
     }
 
-    function cmOpenEditModal(id, code, name, subjectIds) {
+    function cmOpenEditModal(id, code, principalIds, subsidiaryId) {
         document.getElementById('combinationModalTitle').innerHTML = '<i class="fa fa-pen me-2"></i> Edit Combination';
         document.getElementById('combinationForm').action = "{{ url('combination-management') }}/" + id;
         document.getElementById('combinationFormMethod').value = 'PUT';
         document.getElementById('combinationCode').value = code;
-        document.getElementById('combinationName').value = name;
         cmResetCheckboxes();
-        subjectIds.forEach(sid => {
-            const cb = document.getElementById('subj-' + sid);
+        principalIds.forEach(sid => {
+            const cb = document.getElementById('subj-p-' + sid);
             if (cb) cb.checked = true;
         });
+        const subsidiaryInput = subsidiaryId ? document.getElementById('subj-s-' + subsidiaryId) : null;
+        if (subsidiaryInput) {
+            subsidiaryInput.checked = true;
+        } else {
+            document.getElementById('subj-s-none').checked = true;
+        }
+        cmUpdatePreview();
         $('#combinationModal').modal('show');
     }
 
@@ -268,5 +355,13 @@
                 });
         });
     }
+
+    @if ($errors->any() && !session('success'))
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('combinationForm').action = "{{ route('combination.management.store') }}";
+            document.getElementById('combinationFormMethod').value = 'POST';
+            $('#combinationModal').modal('show');
+        });
+    @endif
 </script>
 @endsection

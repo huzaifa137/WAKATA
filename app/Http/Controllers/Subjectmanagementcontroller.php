@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mark;
+use App\Models\MarkPaper;
 use App\Models\MasterData;
 use App\Models\SubjectPaper;
 use App\Models\StudentSubjectRegistration;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 /**
@@ -82,6 +84,14 @@ class SubjectManagementController extends Controller
             'code' => ['required', 'string', 'max:15', 'alpha_num'],
             'name' => ['required', 'string', 'max:150'],
             'status' => ['required', Rule::in(['Compulsory', 'Optional'])],
+            // Only meaningful for UACE Optional subjects — Principal subjects
+            // are what combinations (PCM, HEG, ...) are built from; Subsidiary
+            // subjects (Sub Math, Sub ICT) are a separate pool, at most one
+            // per combination.
+            'subject_type' => [
+                Rule::requiredIf(fn () => $request->category === 'UACE' && $request->status === 'Optional'),
+                Rule::in(['Principal', 'Subsidiary']),
+            ],
             'total_papers' => ['nullable', 'integer', 'min:1', 'max:10'],
             'max_scores' => ['nullable', 'array'],
             'max_scores.*' => ['nullable', 'numeric', 'min:1', 'max:1000'],
@@ -100,6 +110,8 @@ class SubjectManagementController extends Controller
                 ->withInput();
         }
 
+        $isUaceOptional = $validated['category'] === 'UACE' && $validated['status'] === 'Optional';
+
         $subject = MasterData::create([
             'md_master_code_id' => $masterCodeId,
             'md_code' => $code,
@@ -110,6 +122,7 @@ class SubjectManagementController extends Controller
             'md_misc1' => $validated['status'],
             'md_misc2' => 'Active',
             'md_misc3' => (string) ($validated['total_papers'] ?? 1),
+            'md_misc4' => $isUaceOptional ? $validated['subject_type'] : null,
         ]);
 
         $this->syncSubjectPapers($subject->md_id, $validated['total_papers'] ?? 1, $validated['max_scores'] ?? []);
@@ -155,8 +168,76 @@ class SubjectManagementController extends Controller
         ]);
 
         $this->syncSubjectPapers($subject->md_id, $validated['total_papers'] ?? 1, $validated['max_scores'] ?? []);
+        $this->recalculateMarksForSubject($subject->md_id);
 
         return back()->with('success', "Subject '{$validated['name']}' updated.");
+    }
+
+    /**
+     * When a subject's per-paper max score changes after marks already
+     * exist for it, those marks were converted onto the 0-100 scale using
+     * the OLD max score (see ItebController::saveMarks). Left alone,
+     * mark_papers.mark and the marks.mark average both stay stale forever
+     * — silently wrong for grading, passslips, certificates, rankings —
+     * until someone happens to re-type that student's mark.
+     *
+     * This re-runs the same conversion (raw_mark / current max_score * 100)
+     * against every existing mark_papers row for the subject, then
+     * recomputes each affected student's marks.mark as the average of
+     * their (now up to date) paper marks — mirroring saveMarks() exactly.
+     *
+     * Only rows with a stored raw_mark can be reconverted. Older rows
+     * saved before raw_mark existed have no original value to reconvert
+     * from, so they're left as-is; those students would need their marks
+     * re-entered once to pick up the new max score.
+     */
+    private function recalculateMarksForSubject($subjectId)
+    {
+        $currentMaxScores = SubjectPaper::where('subject_id', $subjectId)
+            ->pluck('max_score', 'paper_number');
+
+        DB::transaction(function () use ($subjectId, $currentMaxScores) {
+            $paperRows = MarkPaper::where('subject_id', $subjectId)->get();
+
+            $touchedStudents = [];
+
+            foreach ($paperRows as $row) {
+                if ($row->raw_mark === null) {
+                    continue; // legacy row — no original value to reconvert from
+                }
+
+                $newMax = (float) ($currentMaxScores[$row->paper_number] ?? $row->max_score);
+                if ($newMax <= 0) {
+                    continue;
+                }
+
+                $newMark = round(((float) $row->raw_mark / $newMax) * 100, 2);
+
+                if ((float) $row->mark !== $newMark || (float) $row->max_score !== $newMax) {
+                    $row->mark = $newMark;
+                    $row->max_score = $newMax;
+                    $row->save();
+                }
+
+                $touchedStudents[$row->student_id] = true;
+            }
+
+            foreach (array_keys($touchedStudents) as $studentId) {
+                $papers = MarkPaper::where('subject_id', $subjectId)
+                    ->where('student_id', $studentId)
+                    ->pluck('mark');
+
+                if ($papers->isEmpty()) {
+                    continue;
+                }
+
+                $average = round($papers->avg(), 2);
+
+                Mark::where('student_id', $studentId)
+                    ->where('subject_id', $subjectId)
+                    ->update(['mark' => $average]);
+            }
+        });
     }
 
     /**

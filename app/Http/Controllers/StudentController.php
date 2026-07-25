@@ -20,10 +20,13 @@ use Mail;
 use App\Models\AcademicYear;
 use App\Imports\StudentExamImport;
 use App\Models\Exam;
-use App\Services\GradingService;
 use App\Models\Mark;
 use App\Models\ClassAllocation;
 use App\Models\Grading;
+use App\Models\StudentSubjectRegistration;
+use App\Models\StudentCombination;
+use App\Models\Combination;
+use App\Models\BroadcastMessage;
 use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Helper;
 
@@ -205,59 +208,215 @@ class StudentController extends Controller
         }
     }
 
-    public function studentDashboard(GradingService $gradingService)
+    /**
+     * Admin dashboard (System Administrator sees system-wide stats;
+     * School Admin / Teacher sees their own school's stats — decided by
+     * whether Session('LoggedSchool') is set, matching the scoping
+     * convention used everywhere else in this app).
+     */
+    public function studentDashboard()
     {
-        // Dummy student
-        $student = (object) [
-            'id' => 1,
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-        ];
+        $adminId = session('LoggedAdmin') ?? session('LoggedStudent');
+        $currentUser = User::find($adminId);
 
-        // Dummy exams data
-        $exams = collect([
-            (object) [
-                'exam_id' => 1,
-                'exam_name' => 'Midterm Exam',
-                'academic_year' => '2024/2025',
-                'exam_type' => 'Midterm',
-                'total_subjects' => 5,
-                'aggregate' => 375,
-                'division' => 'I',
-                'grade' => 'A',
-                'examsTaken' => 1,
-                'averageGrade' => 'A',
-                'passPercentage' => 100,
-            ],
-            (object) [
-                'exam_id' => 2,
-                'exam_name' => 'Final Exam',
-                'academic_year' => '2024/2025',
-                'exam_type' => 'Final',
-                'total_subjects' => 5,
-                'aggregate' => 320,
-                'division' => 'II',
-                'grade' => 'B',
-                'examsTaken' => 1,
-                'averageGrade' => 'B',
-                'passPercentage' => 80,
-            ],
-        ]);
+        $roleLabel = match ((int) ($currentUser->user_role ?? -1)) {
+            1 => 'System Administrator',
+            5 => 'Teacher',
+            default => 'School Admin',
+        };
 
-        // Overall stats
-        $overallExamsTaken = $exams->sum('examsTaken');
-        $overallAggregate = $exams->sum('aggregate');
-        $overallPassPercentage = $exams->avg('passPercentage');
-        $overallAverageGrade = 'A'; // Dummy value
+        $activeYear = AcademicYear::where('status', 'Active')->value('year_en')
+            ?? AcademicYear::orderByDesc('year_en')->value('year_en');
+
+        $categories = ['UCE' => 'UCE (O-LEVEL)', 'UACE' => 'UACE (A-LEVEL)'];
+
+        $schoolSessionId = session('LoggedSchool');
+        $isSystemAdmin = !$schoolSessionId;
+
+        $recentBroadcasts = BroadcastMessage::with('sender:id,name,firstname,lastname')
+            ->latest()
+            ->take(5)
+            ->get(['id', 'subject', 'priority', 'sender_id', 'created_at']);
+
+        $school = null;
+        $recentStudents = collect();
+        $recentSchools = collect();
+        $topSchools = collect();
+        $systemUsersByRole = collect();
+        $totalSchools = $activeSchoolsCount = null;
+
+        if ($isSystemAdmin) {
+            $unreadMessages = $currentUser ? Helper::adminUnreadBroadcastCount() : 0;
+
+            $totalSchools = House::count();
+            $activeSchoolsCount = House::where('school_status', 1)->count();
+
+            $studentsByCategory = $this->studentCategoryCounts();
+
+            $recentSchools = House::orderByDesc('RegistrationDate')
+                ->take(6)
+                ->get(['ID', 'House', 'Number', 'Location', 'RegistrationDate', 'school_status']);
+
+            $topSchools = StudentBasic::select('House', DB::raw('count(*) as total'))
+                ->groupBy('House')
+                ->orderByDesc('total')
+                ->take(6)
+                ->get();
+
+            $systemUsersByRole = User::select('user_role', DB::raw('count(*) as total'))
+                ->groupBy('user_role')
+                ->pluck('total', 'user_role');
+
+            [$registrationProgress, $marksEntryProgress] = $this->categoryProgress($categories, $activeYear, null);
+            $combinationBreakdown = $this->combinationBreakdown(null);
+        } else {
+            $school = House::find($schoolSessionId);
+            $houseName = $school->House ?? null;
+            $schoolNumber = $school->Number ?? null;
+
+            $unreadMessages = Helper::schoolUnreadBroadcastCount();
+
+            $studentsByCategory = $this->studentCategoryCounts($houseName);
+
+            $recentStudents = StudentBasic::where('House', $houseName)
+                ->orderByDesc('EntryDate')
+                ->take(6)
+                ->get(['Student_ID', 'Student_Name', 'StudentSex', 'EntryDate']);
+
+            [$registrationProgress, $marksEntryProgress] = $this->categoryProgress($categories, $activeYear, $schoolNumber);
+            $combinationBreakdown = $this->combinationBreakdown($schoolNumber);
+        }
+
+        $totalStudents = array_sum($studentsByCategory);
 
         return view('student.dashboard', compact(
-            'student',
-            'exams',
-            'overallExamsTaken',
-            'overallAggregate',
-            'overallPassPercentage',
-            'overallAverageGrade'
+            'currentUser',
+            'roleLabel',
+            'isSystemAdmin',
+            'activeYear',
+            'categories',
+            'unreadMessages',
+            'recentBroadcasts',
+            'school',
+            'studentsByCategory',
+            'totalStudents',
+            'registrationProgress',
+            'marksEntryProgress',
+            'combinationBreakdown',
+            'recentStudents',
+            'recentSchools',
+            'topSchools',
+            'systemUsersByRole',
+            'totalSchools',
+            'activeSchoolsCount'
         ));
+    }
+
+    /**
+     * Student counts per examination category, derived from the
+     * `{school}-{category}-{seq}-{year}` Student_ID pattern (see
+     * StudentController::generateStudentId / storeStudent). Optionally
+     * scoped to one school by house name.
+     */
+    private function studentCategoryCounts(?string $houseName = null): array
+    {
+        $query = DB::table('students_basic')
+            ->selectRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(Student_ID, '-', 3), '-', -1) as category, COUNT(*) as total")
+            ->groupBy('category');
+
+        if ($houseName !== null) {
+            $query->where('House', $houseName);
+        }
+
+        $rows = $query->pluck('total', 'category');
+
+        return [
+            'UCE' => (int) ($rows['UCE'] ?? 0),
+            'UACE' => (int) ($rows['UACE'] ?? 0),
+            'PLE' => (int) ($rows['PLE'] ?? 0),
+        ];
+    }
+
+    /**
+     * For each category: subject-registration completion (% of that
+     * year's students who have at least one registered subject) and
+     * marks-entry completion (% of registered student-subject pairs that
+     * have a mark recorded). Optionally scoped to one school by number
+     * (e.g. "IT-005").
+     *
+     * @return array{0: array, 1: array} [$registrationProgress, $marksEntryProgress]
+     */
+    private function categoryProgress(array $categories, ?string $activeYear, ?string $schoolNumber): array
+    {
+        $registration = [];
+        $marksEntry = [];
+
+        foreach ($categories as $code => $label) {
+            $totalThisYear = 0;
+
+            if ($activeYear) {
+                $totalQuery = DB::table('students_basic')
+                    ->where('Student_ID', 'LIKE', "%-{$code}-%-{$activeYear}");
+
+                if ($schoolNumber) {
+                    $totalQuery->where('Student_ID', 'LIKE', "{$schoolNumber}-%");
+                }
+
+                $totalThisYear = $totalQuery->count();
+            }
+
+            $registeredBase = StudentSubjectRegistration::where('category', $code)
+                ->where('year', $activeYear ?? '__none__');
+
+            if ($schoolNumber) {
+                $registeredBase->where('school_number', $schoolNumber);
+            }
+
+            $registeredStudents = (clone $registeredBase)->distinct('student_id')->count('student_id');
+            $expectedPairs = (clone $registeredBase)->count();
+
+            $registration[$code] = [
+                'label' => $label,
+                'total' => $totalThisYear,
+                'registered' => $registeredStudents,
+                'pct' => $totalThisYear > 0 ? (int) round(min(100, $registeredStudents / $totalThisYear * 100)) : 0,
+            ];
+
+            $marksQuery = Mark::where('category', $code)->where('year', $activeYear ?? '__none__');
+
+            if ($schoolNumber) {
+                $marksQuery->where('school_number', $schoolNumber);
+            }
+
+            $marksEntered = $marksQuery->count();
+
+            $marksEntry[$code] = [
+                'label' => $label,
+                'expected' => $expectedPairs,
+                'entered' => $marksEntered,
+                'pct' => $expectedPairs > 0 ? (int) round(min(100, $marksEntered / $expectedPairs * 100)) : 0,
+            ];
+        }
+
+        return [$registration, $marksEntry];
+    }
+
+    /**
+     * UACE combinations ranked by how many students are on each — either
+     * system-wide or scoped to one school's students.
+     */
+    private function combinationBreakdown(?string $schoolNumber)
+    {
+        return Combination::where('category', 'UACE')
+            ->active()
+            ->withCount(['studentCombinations as students_count' => function ($q) use ($schoolNumber) {
+                if ($schoolNumber) {
+                    $q->where('school_number', $schoolNumber);
+                }
+            }])
+            ->orderByDesc('students_count')
+            ->take(8)
+            ->get(['id', 'code', 'name', 'status']);
     }
 
 

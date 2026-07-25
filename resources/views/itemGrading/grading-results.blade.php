@@ -452,7 +452,7 @@
                                         </tr>
                                     @empty
                                         <tr class="gr-empty-row">
-                                            <td colspan="8"><i class="fas fa-inbox me-2"></i>No students found for this
+                                            <td colspan="8"><i class="fas fa-inbox me-2"></i> No students found for this
                                                 selection.</td>
                                         </tr>
                                     @endforelse

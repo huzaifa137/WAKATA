@@ -41,7 +41,7 @@ class StudentBulkImportController extends Controller
      * Management screen for a chosen year/category/school: shows students
      * already imported, plus the download-template / upload-import tools.
      */
-    public function manage(Request $request)
+    public function manage(Request $request, string $portal = 'bureau')
     {
         $request->validate([
             'year' => 'required|digits:4',
@@ -75,7 +75,8 @@ class StudentBulkImportController extends Controller
             'category',
             'schoolId',
             'schoolNumber',
-            'schoolName'
+            'schoolName',
+            'portal'
         ));
     }
 
@@ -102,7 +103,7 @@ class StudentBulkImportController extends Controller
      * Import a filled-in Excel template: creates Student_ID + students_basic
      * + class_allocation rows for every valid row.
      */
-    public function import(Request $request)
+    public function import(Request $request, string $redirectRoute = 'student.bulk.import.manage')
     {
         $request->validate([
             'year' => 'required|digits:4',
@@ -132,7 +133,7 @@ class StudentBulkImportController extends Controller
         $summary = $import->getSummary();
 
         return redirect()
-            ->route('student.bulk.import.manage', [
+            ->route($redirectRoute, [
                 'year' => $request->year,
                 'category' => $request->category,
                 'school_id' => $request->school_id,
@@ -147,7 +148,7 @@ class StudentBulkImportController extends Controller
      * never changed here since it's auto-generated and referenced by
      * subject registrations, marks, and results.
      */
-    public function updateStudent(Request $request, string $studentId)
+    public function updateStudent(Request $request, string $studentId, string $redirectRoute = 'student.bulk.import.manage')
     {
         $request->validate([
             'year' => 'required|digits:4',
@@ -161,7 +162,7 @@ class StudentBulkImportController extends Controller
 
         if (!$student) {
             return redirect()
-                ->route('student.bulk.import.manage', [
+                ->route($redirectRoute, [
                     'year' => $request->year,
                     'category' => $request->category,
                     'school_id' => $request->school_id,
@@ -175,7 +176,7 @@ class StudentBulkImportController extends Controller
         ]);
 
         return redirect()
-            ->route('student.bulk.import.manage', [
+            ->route($redirectRoute, [
                 'year' => $request->year,
                 'category' => $request->category,
                 'school_id' => $request->school_id,
@@ -189,7 +190,7 @@ class StudentBulkImportController extends Controller
      * results). Used to undo an accidental double-import of one row, or
      * to remove a student who was entered by mistake.
      */
-    public function destroyStudent(Request $request, string $studentId)
+    public function destroyStudent(Request $request, string $studentId, string $redirectRoute = 'student.bulk.import.manage')
     {
         $request->validate([
             'year' => 'required|digits:4',
@@ -206,7 +207,7 @@ class StudentBulkImportController extends Controller
         });
 
         return redirect()
-            ->route('student.bulk.import.manage', [
+            ->route($redirectRoute, [
                 'year' => $request->year,
                 'category' => $request->category,
                 'school_id' => $request->school_id,
@@ -219,7 +220,7 @@ class StudentBulkImportController extends Controller
      * go — the "start over" button for when a template was imported twice
      * or the wrong file was uploaded entirely.
      */
-    public function destroyAll(Request $request)
+    public function destroyAll(Request $request, string $redirectRoute = 'student.bulk.import.manage')
     {
         $request->validate([
             'year' => 'required|digits:4',
@@ -248,11 +249,89 @@ class StudentBulkImportController extends Controller
         });
 
         return redirect()
-            ->route('student.bulk.import.manage', [
+            ->route($redirectRoute, [
                 'year' => $year,
                 'category' => $category,
                 'school_id' => $request->school_id,
             ])
             ->with('success', "Cleared {$count} student(s) for {$category} {$schoolNumber} {$year}. You can now re-import a clean file.");
+    }
+
+    // ---- School portal entry points (school locked server-side from session) ----
+
+    private function loggedInHouse(): ?House
+    {
+        return House::find(session('LoggedSchool'));
+    }
+
+    /**
+     * Selection screen for the school portal: year + category only — the
+     * school itself is never a choice, it's always the logged-in one.
+     */
+    public function schoolIndex()
+    {
+        return view('itemGrading.student-bulk-import.select', [
+            'houses' => collect(),
+            'categories' => $this->categories,
+            'lockedSchool' => $this->loggedInHouse(),
+        ]);
+    }
+
+    public function schoolManage(Request $request)
+    {
+        $house = $this->loggedInHouse();
+        $request->merge(['school_id' => $house->ID ?? session('LoggedSchool')]);
+
+        return $this->manage($request, 'school');
+    }
+
+    public function schoolDownloadTemplate(Request $request)
+    {
+        $house = $this->loggedInHouse();
+        $request->merge(['school_number' => $house->Number ?? session('LoggedSchoolCode')]);
+
+        return $this->downloadTemplate($request);
+    }
+
+    public function schoolImport(Request $request)
+    {
+        $house = $this->loggedInHouse();
+        $request->merge(['school_id' => $house->ID ?? session('LoggedSchool')]);
+
+        return $this->import($request, 'school.student.bulk.import.manage');
+    }
+
+    /** A school account may only ever touch its own students. */
+    private function assertOwnedByLoggedInSchool(string $studentId): void
+    {
+        $schoolNumber = $this->loggedInHouse()->Number ?? session('LoggedSchoolCode');
+
+        abort_unless(str_starts_with($studentId, "{$schoolNumber}-"), 403, 'This student does not belong to your school.');
+    }
+
+    public function schoolUpdateStudent(Request $request, string $studentId)
+    {
+        $this->assertOwnedByLoggedInSchool($studentId);
+        $house = $this->loggedInHouse();
+        $request->merge(['school_id' => $house->ID ?? session('LoggedSchool')]);
+
+        return $this->updateStudent($request, $studentId, 'school.student.bulk.import.manage');
+    }
+
+    public function schoolDestroyStudent(Request $request, string $studentId)
+    {
+        $this->assertOwnedByLoggedInSchool($studentId);
+        $house = $this->loggedInHouse();
+        $request->merge(['school_id' => $house->ID ?? session('LoggedSchool')]);
+
+        return $this->destroyStudent($request, $studentId, 'school.student.bulk.import.manage');
+    }
+
+    public function schoolDestroyAll(Request $request)
+    {
+        $house = $this->loggedInHouse();
+        $request->merge(['school_id' => $house->ID ?? session('LoggedSchool')]);
+
+        return $this->destroyAll($request, 'school.student.bulk.import.manage');
     }
 }

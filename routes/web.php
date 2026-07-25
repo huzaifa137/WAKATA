@@ -530,6 +530,26 @@ Route::controller(SchoolsController::class)->group(function () {
             Route::post('/process-grading', 'processGrading')->name('school.process.grading');
             Route::post('iteb/grading/results/pdf', 'generateResultsPDF')->name('iteb.grading.results.pdf');
 
+            Route::controller(\App\Http\Controllers\ItebController::class)->group(function () {
+                Route::get('/enter-marks', 'schoolEnterMarks')->name('school.enter.marks');
+                Route::get('/class-allocation/filter', 'schoolFilter')->name('school.class.allocation.filter');
+                Route::post('/iteb/save-marks', 'schoolSaveMarks')->name('school.iteb.save.marks');
+            });
+
+            Route::controller(\App\Http\Controllers\StudentBulkImportController::class)->group(function () {
+                Route::get('/student-bulk-import', 'schoolIndex')->name('school.student.bulk.import.index');
+                Route::get('/student-bulk-import/manage', 'schoolManage')->name('school.student.bulk.import.manage');
+                Route::get('/student-bulk-import/template', 'schoolDownloadTemplate')->name('school.student.bulk.import.template');
+                Route::post('/student-bulk-import/import', 'schoolImport')->name('school.student.bulk.import.import');
+                Route::delete('/student-bulk-import/student/{studentId}', 'schoolDestroyStudent')
+                    ->where('studentId', '.*')
+                    ->name('school.student.bulk.import.destroy.student');
+                Route::put('/student-bulk-import/student/{studentId}', 'schoolUpdateStudent')
+                    ->where('studentId', '.*')
+                    ->name('school.student.bulk.import.update.student');
+                Route::delete('/student-bulk-import/clear', 'schoolDestroyAll')->name('school.student.bulk.import.destroy.all');
+            });
+
             Route::get('/register-student', 'schoolStudentRegistration')->name('school.register.student');
             Route::post('/store-registration', 'storeSchoolRegistration')->name('school.store.registration');
             Route::get('/generate-student-id', 'generateSchoolStudentID')->name('school.generate.student.id');

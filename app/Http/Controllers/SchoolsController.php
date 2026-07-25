@@ -43,27 +43,25 @@ class SchoolsController extends Controller
         // $categories = ['UCE' => 'UCE (O-LEVEL)', 'UACE' => 'UACE (A-LEVEL)', 'PLE' => 'Primary (PLE)'];
         $categories = ['UCE' => 'UCE (O-LEVEL)', 'UACE' => 'UACE (A-LEVEL)'];
 
-        $schools = ClassAllocation::select('Student_ID')
-            ->get()
-            ->map(function ($item) {
-                $parts = explode('-', $item->Student_ID);
-                return implode('-', array_slice($parts, 0, 2));
-            })
-            ->unique()
-            ->filter()
-            ->values()
-            ->mapWithKeys(function ($item) {
-                return [$item => Helper::schoolName($item) ?? $item];
-            });
+        $house = House::find(session('LoggedSchool'));
+        $schoolNumber = $house->Number ?? session('LoggedSchoolCode');
 
-        $totalStudents = ClassAllocation::distinct('Student_ID')->count('Student_ID');
-        $gradedSoFar = Mark::distinct('student_id')->count('student_id');
+        // Every stat below is scoped to THIS school only — this page is the
+        // school portal, not the bureau-wide admin dashboard, so a school
+        // should only ever see its own numbers.
+        $schoolStudentIds = ClassAllocation::where('Student_ID', 'LIKE', "{$schoolNumber}-%")
+            ->distinct('Student_ID')
+            ->pluck('Student_ID');
+
+        $totalStudents = $schoolStudentIds->count();
+        $gradedSoFar = Mark::whereIn('student_id', $schoolStudentIds)->distinct('student_id')->count('student_id');
         $pendingGrading = $totalStudents - $gradedSoFar;
 
         $avgPerformance = Mark::selectRaw('AVG(total_mark) as avg_mark')
-            ->fromSub(function ($query) {
+            ->fromSub(function ($query) use ($schoolStudentIds) {
                 $query->selectRaw('student_id, SUM(mark) as total_mark')
                     ->from('marks')
+                    ->whereIn('student_id', $schoolStudentIds)
                     ->groupBy('student_id');
             }, 'student_totals')
             ->value('avg_mark') ?? 0;
@@ -72,7 +70,6 @@ class SchoolsController extends Controller
             'academicYears',
             'activeYear',
             'categories',
-            'schools',
             'totalStudents',
             'gradedSoFar',
             'pendingGrading',
@@ -87,12 +84,19 @@ class SchoolsController extends Controller
         $request->validate([
             'year' => 'required',
             'category' => 'required',
-            'school_number' => 'nullable',
         ]);
 
         $year = $request->year;
         $category = $request->category;
-        $schoolNumber = $request->school_number;
+
+        // This method is only reachable via the school-portal route
+        // (SchoolAuth + /school prefix) — school_number is therefore always
+        // forced to the logged-in school here, never taken from the
+        // request, so a school can never pull another school's report by
+        // editing form values.
+        $house = House::find(session('LoggedSchool'));
+        $schoolNumber = $house->Number ?? session('LoggedSchoolCode');
+
         $level = $request->level ?? 'A';
 
         // Build query for students

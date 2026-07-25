@@ -7,6 +7,7 @@ use App\Models\MasterData;
 use App\Models\StudentCombination;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 /**
  * CRUD management for UACE combinations (e.g. PCM, HEG) and which
@@ -26,6 +27,7 @@ class CombinationManagementController extends Controller
 
     public function index()
     {
+        
         $categories = $this->categories;
         $combinations = [];
 
@@ -46,18 +48,28 @@ class CombinationManagementController extends Controller
             });
         }
 
-        // Subjects available to attach, per category (all Optional subjects —
-        // compulsory ones like General Paper are auto-registered separately
-        // and never belong to a combination).
+        // Subjects available to attach, per category, split into the two
+        // pools a combination is built from:
+        //   - principal: exactly 3 required per combination
+        //   - subsidiary: at most 1 per combination
+        // Compulsory subjects (General Paper) are auto-registered separately
+        // and never belong to a combination. Subjects created before the
+        // Principal/Subsidiary role existed have no md_misc4 — treat those
+        // as Principal so they don't just disappear from the screen.
         $availableSubjects = [];
         foreach ($categories as $code => $label) {
-            $availableSubjects[$code] = MasterData::where('md_master_code_id', $this->masterCodeFor($code))
+            $optional = MasterData::where('md_master_code_id', $this->masterCodeFor($code))
                 ->where('md_misc1', 'Optional')
                 ->where(function ($q) {
                     $q->whereNull('md_misc2')->orWhere('md_misc2', '!=', 'Inactive');
                 })
                 ->orderBy('md_name')
                 ->get();
+
+            $availableSubjects[$code] = [
+                'principal' => $optional->filter(fn($s) => $s->md_misc4 !== 'Subsidiary')->values(),
+                'subsidiary' => $optional->filter(fn($s) => $s->md_misc4 === 'Subsidiary')->values(),
+            ];
         }
 
         return view('itemGrading.combination-management.index', compact('categories', 'combinations', 'availableSubjects'));
@@ -65,13 +77,7 @@ class CombinationManagementController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'category' => ['required', Rule::in(array_keys($this->categories))],
-            'code' => ['required', 'string', 'max:10', 'alpha_num'],
-            'name' => ['required', 'string', 'max:150'],
-            'subject_ids' => ['required', 'array', 'min:1'],
-            'subject_ids.*' => ['integer', 'exists:master_datas,md_id'],
-        ]);
+        $validated = $this->validateCombination($request);
 
         $code = strtoupper($validated['code']);
 
@@ -85,14 +91,19 @@ class CombinationManagementController extends Controller
                 ->withInput();
         }
 
+        $subjectIds = array_values(array_filter(array_merge(
+            $validated['principal_subject_ids'],
+            [$validated['subsidiary_subject_id'] ?? null]
+        )));
+
         $combination = Combination::create([
             'category' => $validated['category'],
             'code' => $code,
-            'name' => $validated['name'],
+            'name' => $this->nameFromSubjectIds($subjectIds),
             'status' => 'Active',
         ]);
 
-        $combination->subjects()->sync($validated['subject_ids']);
+        $combination->subjects()->sync($subjectIds);
 
         return back()->with('success', "Combination '{$code}' created.");
     }
@@ -101,12 +112,7 @@ class CombinationManagementController extends Controller
     {
         $combination = Combination::findOrFail($id);
 
-        $validated = $request->validate([
-            'code' => ['required', 'string', 'max:10', 'alpha_num'],
-            'name' => ['required', 'string', 'max:150'],
-            'subject_ids' => ['required', 'array', 'min:1'],
-            'subject_ids.*' => ['integer', 'exists:master_datas,md_id'],
-        ]);
+        $validated = $this->validateCombination($request);
 
         $code = strtoupper($validated['code']);
 
@@ -119,14 +125,80 @@ class CombinationManagementController extends Controller
             return back()->withErrors(['code' => "Combination code '{$code}' is already used by another combination."])->withInput();
         }
 
+        $subjectIds = array_values(array_filter(array_merge(
+            $validated['principal_subject_ids'],
+            [$validated['subsidiary_subject_id'] ?? null]
+        )));
+
         $combination->update([
             'code' => $code,
-            'name' => $validated['name'],
+            'name' => $this->nameFromSubjectIds($subjectIds),
         ]);
 
-        $combination->subjects()->sync($validated['subject_ids']);
+        $combination->subjects()->sync($subjectIds);
 
         return back()->with('success', "Combination '{$code}' updated.");
+    }
+
+    /**
+     * Shared validation for store()/update(): exactly 3 Principal subjects
+     * (from md_misc4 = 'Principal', or legacy subjects with no role set)
+     * plus an optional single Subsidiary subject.
+     */
+    private function validateCombination(Request $request): array
+    {
+        $validated = $request->validate([
+            'category' => ['required', Rule::in(array_keys($this->categories))],
+            'code' => ['required', 'string', 'max:10', 'alpha_num'],
+            'principal_subject_ids' => ['required', 'array', 'size:3'],
+            'principal_subject_ids.*' => ['integer', 'distinct', 'exists:master_datas,md_id'],
+            'subsidiary_subject_id' => ['nullable', 'integer', 'exists:master_datas,md_id'],
+        ], [
+            'principal_subject_ids.size' => 'A combination needs exactly 3 principal subjects.',
+        ]);
+
+        $masterCodeId = $this->masterCodeFor($validated['category']);
+
+        $principalCount = MasterData::where('md_master_code_id', $masterCodeId)
+            ->whereIn('md_id', $validated['principal_subject_ids'])
+            ->where('md_misc1', 'Optional')
+            ->where(function ($q) {
+                $q->whereNull('md_misc4')->orWhere('md_misc4', '!=', 'Subsidiary');
+            })
+            ->count();
+
+        if ($principalCount !== 3) {
+            throw ValidationException::withMessages([
+                'principal_subject_ids' => 'The 3 selected subjects must be Optional Principal subjects under ' . $this->categories[$validated['category']] . '.',
+            ]);
+        }
+
+        if (!empty($validated['subsidiary_subject_id'])) {
+            $isSubsidiary = MasterData::where('md_master_code_id', $masterCodeId)
+                ->where('md_id', $validated['subsidiary_subject_id'])
+                ->where('md_misc1', 'Optional')
+                ->where('md_misc4', 'Subsidiary')
+                ->exists();
+
+            if (!$isSubsidiary) {
+                throw ValidationException::withMessages([
+                    'subsidiary_subject_id' => 'The selected subsidiary subject is not marked as Subsidiary in Subject Management.',
+                ]);
+            }
+        }
+
+        return $validated;
+    }
+
+    /** Builds "Physics, Chemistry, Mathematics[, Subsidiary Mathematics]" from subject ids, in the order given. */
+    private function nameFromSubjectIds(array $subjectIds): string
+    {
+        $names = MasterData::whereIn('md_id', $subjectIds)->pluck('md_name', 'md_id');
+
+        return collect($subjectIds)
+            ->map(fn($id) => $names[$id] ?? null)
+            ->filter()
+            ->implode(', ');
     }
 
     /**

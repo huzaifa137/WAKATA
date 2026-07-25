@@ -74,7 +74,7 @@ $__loggedInMarksEntrant = Session('LoggedAdmin')
 
                     <li>
                         <a href="{{ route('student.bulk.import.index') }}">
-                            <i class="fa fa-upload me-2"></i>Bulk Student Import
+                            <i class="fa fa-upload me-2"></i>Student Import
                         </a>
                     </li>
                     <!-- <li>
@@ -188,7 +188,14 @@ $__loggedInMarksEntrant = Session('LoggedAdmin')
                     Dashboard
                 </a>
             </li>
-            
+
+            <li class="slide">
+                <a class="side-menu__item" href="{{ route('school.student.bulk.import.index') }}">
+                    <i class="fa fa-users fa-2x mr-3"></i>
+                    Student Import
+                </a>
+            </li>
+
             <li class="slide">
                 <a class="side-menu__item" href="{{ route('school.reports.dashboard') }}">
                     <i class="fas fa-poll fa-2x mr-3"></i>

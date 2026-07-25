@@ -397,7 +397,7 @@
                 maybeLoadStudents();
             }
 
-            new bootstrap.Modal(document.getElementById('reportFilterModal')).show();
+            $('#reportFilterModal').modal('show');
         }
 
         function getSelectedSchoolNumber() {

@@ -821,7 +821,7 @@
                                                                 <th width="35%">
                                                                     @if ($subject->total_papers > 1)
                                                                         Marks — {{ $subject->total_papers }} papers
-                                                                        (each out of its own max, averaged on a 0-100
+                                                                        (each out of its own max, averaged on a ( 0 - 100 )
                                                                         scale)
                                                                     @else
                                                                         Marks
@@ -833,15 +833,35 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach ($subjectRecords as $key => $record)
-                                                                @php
-                                                                    $markValue = $subjectMarks[$record->Student_ID] ?? '';
-                                                                    if ($markValue !== '' && is_numeric($markValue)) {
-                                                                        $markValue = $markValue + 0;
-                                                                    }
-                                                                    $studentName = $studentNames[$record->Student_ID] ?? 'Unknown Student';
-                                                                    $studentPapers = $existingPaperMarks[$subject->md_id][$record->Student_ID] ?? [];
-                                                                @endphp
+@foreach ($subjectRecords as $key => $record)
+    @php
+        $studentName = $studentNames[$record->Student_ID] ?? 'Unknown Student';
+        $studentPapers = $existingPaperMarks[$subject->md_id][$record->Student_ID] ?? [];
+
+        if ($subject->total_papers > 1) {
+            // Recompute live from each paper's mark against the subject's
+            // *current* max score, so changing a paper's max later is
+            // reflected on refresh — instead of trusting the average that
+            // was persisted at save time against the old max.
+            $convertedVals = [];
+            foreach ($studentPapers as $paperNum => $paperVal) {
+                if ($paperVal !== '' && $paperVal !== null && is_numeric($paperVal)) {
+                    $paperMax = (float) ($subject->paper_max_scores[$paperNum] ?? 100);
+                    if ($paperMax > 0) {
+                        $convertedVals[] = ((float) $paperVal / $paperMax) * 100;
+                    }
+                }
+            }
+            $markValue = count($convertedVals) > 0
+                ? round(array_sum($convertedVals) / count($convertedVals), 2)
+                : '';
+        } else {
+            $markValue = $subjectMarks[$record->Student_ID] ?? '';
+            if ($markValue !== '' && is_numeric($markValue)) {
+                $markValue = $markValue + 0;
+            }
+        }
+    @endphp
                                                                 <tr
                                                                     data-search="{{ strtolower($studentName . ' ' . $record->Student_ID) }}">
                                                                     <td>{{ $key + 1 }}</td>

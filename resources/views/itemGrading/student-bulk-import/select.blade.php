@@ -3,6 +3,7 @@
 @section('content')
     <div class="side-app">
 
+        @unless(isset($lockedSchool))
         <div class="row">
             <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
                 <div class="card bg-primary">
@@ -12,6 +13,7 @@
                 </div>
             </div>
         </div>
+        @endunless
 
         <div class="row">
             <div class="col-lg-12">
@@ -29,7 +31,7 @@
                             students to already exist.
                         </div>
 
-                        <form id="selectForm" method="GET" action="{{ route('student.bulk.import.manage') }}">
+                        <form id="selectForm" method="GET" action="{{ isset($lockedSchool) ? route('school.student.bulk.import.manage') : route('student.bulk.import.manage') }}">
                             <div class="row">
                                 <div class="col-md-3 mb-3">
                                     <label><strong>Select Year</strong></label>
@@ -53,12 +55,16 @@
 
                                 <div class="col-md-6 mb-3">
                                     <label><strong>Select School</strong></label>
-                                    <select name="school_id" class="form-control select2" required>
-                                        <option value="">-- Select School --</option>
-                                        @foreach ($houses as $house)
-                                            <option value="{{ $house->ID }}">{{ $house->House }} ({{ $house->Number }})</option>
-                                        @endforeach
-                                    </select>
+                                    @isset($lockedSchool)
+                                        <input type="text" class="form-control" value="{{ $lockedSchool->House ?? '' }} ({{ $lockedSchool->Number ?? '' }})" disabled>
+                                    @else
+                                        <select name="school_id" class="form-control select2" required>
+                                            <option value="">-- Select School --</option>
+                                            @foreach ($houses as $house)
+                                                <option value="{{ $house->ID }}">{{ $house->House }} ({{ $house->Number }})</option>
+                                            @endforeach
+                                        </select>
+                                    @endisset
                                 </div>
                             </div>
 
