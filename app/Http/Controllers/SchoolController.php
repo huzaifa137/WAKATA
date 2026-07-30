@@ -243,6 +243,77 @@ class SchoolController extends Controller
         ]);
     }
 
+     public function updateSchool(Request $request)
+    {
+        $request->validate([
+            'school_id' => 'required|exists:houses,ID',
+            'House' => 'required|string|max:255',
+            'Location' => 'required|string|max:100',
+            'Category' => 'required|string|in:Answer Sheets,No Answer Sheets',
+            'AdministratorNames' => 'required|string|max:255',
+            'AdministratorTelephones' => 'required|string|max:20',
+            'Title' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone' => 'nullable|string|max:255',
+            'school_type' => 'nullable|string|max:255',
+            'gender' => 'nullable|string|max:255',
+            'regional_level' => 'nullable|string|max:255',
+            'school_ownership' => 'nullable|string|max:255',
+            'boarding_status' => 'nullable|string|max:255',
+            'school_product' => 'nullable|string|max:255',
+            'population' => 'nullable|string|max:255',
+            'motto' => 'nullable|string|max:255',
+            'vision' => 'nullable|string|max:255',
+        ]);
+
+        $school = House::findOrFail($request->school_id);
+
+        $school->update([
+            'House' => strtoupper(trim($request->House)),
+            'Location' => $request->Location,
+            'district' => $request->Location,
+            'category' => $request->Category,
+            'administrator_names' => $request->AdministratorNames,
+            'administrator_telephones' => $request->AdministratorTelephones,
+            'title' => $request->Title,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'school_type' => $request->school_type,
+            'gender' => $request->gender,
+            'regional_level' => $request->regional_level,
+            'school_ownership' => $request->school_ownership,
+            'boarding_status' => $request->boarding_status,
+            'school_product' => $request->school_product,
+            'population' => $request->population,
+            'motto' => $request->motto,
+            'vision' => $request->vision,
+        ]);
+
+        // Update school password entry if it exists
+        $schoolPassword = SchoolPassword::where('school_id', $school->Number)->first();
+        if ($schoolPassword) {
+            $schoolPassword->update([
+                'phonenumber' => $request->AdministratorTelephones,
+                'updated_at' => now(),
+            ]);
+        } else {
+            // Create if it doesn't exist (fallback)
+            SchoolPassword::create([
+                'school_id' => $school->Number,
+                'phonenumber' => $request->AdministratorTelephones,
+                'password_plain' => '123456789',
+                'password_hashed' => Hash::make('123456789'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        return response()->json([
+            'message' => "School '{$school->House}' has been updated successfully.",
+            'school' => $school,
+        ]);
+    }
+
     public function deleteSchool($schoolId)
     {
         try {

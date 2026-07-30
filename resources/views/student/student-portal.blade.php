@@ -1,6 +1,3 @@
-<?php
-use App\Http\Controllers\Helper;
-?>
 @extends('layouts-side-bar.master')
 @section('content')
     <div class="side-app">
@@ -18,193 +15,167 @@ use App\Http\Controllers\Helper;
         <div class="row">
             <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
                 <div class="card bg-primary">
-                    <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
                         <h4 class="card-title mb-0 text-white">Add Student</h4>
-                        <a href="{{ url('students/all-students') }}" class="btn text-white" style="background-color: #287C44;">
+                        <a href="{{ url('students/all-students') }}" class="btn text-white mt-2 mt-sm-0"
+                            style="background-color: #16c53c; white-space: nowrap;">
                             <i class="fas fa-users text-white"></i> All Students
                         </a>
                     </div>
+
                     <div class="card-body bg-light">
-                        <form id="createStudentForm">
+                        <form id="createStudentForm" method="POST" action="{{ route($storeRouteName ?? 'students.store') }}">
+                            @csrf
 
-                            <div class="row">
-                                <!-- Left column -->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Firstname <span style="color: red;">(*)</span></label>
-                                        <input type="text" name="firstname" class="form-control"
-                                            placeholder="Enter firstname">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Lastname <span style="color: red;">(*)</span></label>
-                                        <input type="text" name="lastname" class="form-control"
-                                            placeholder="Enter lastname">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Senior <span style="color: red;">(*)</span></label>
+                            <input type="hidden" name="School" value="{{ session('LoggedSchool') }}">
 
-                                        <select class="form-control select2" id="senior" name="senior">
+                            <!-- Responsive Grid -->
+                            <div class="row g-3">
+                                <!-- School Field -->
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>School</label>
+                                        <input type="hidden" name="School" value="{{ session('LoggedSchool') }}">
+                                        <input type="text" class="form-control" value="{{ session('LoggedSchoolName') }}"
+                                            readonly>
+                                    </div>
+                                </div>
+
+                                <!-- Category Field -->
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Category <span class="text-danger">*</span></label>
+                                        <select name="Category" class="form-control select2" required>
                                             <option value="">-- Select --</option>
-                                            @foreach ($classRecord as $class)
-                                                <option value="{{ $class->md_name }}">
-                                                    {{ $class->md_name }}
+                                            <option value="UCE">O-LEVEL (UCE)</option>
+                                            <option value="UACE">A-LEVEL (UACE)</option>
+                                            <!-- <option value="PLE">Primary - PLE</option> -->
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Admission Year Field -->
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Admission Year <span class="text-danger">*</span></label>
+                                        <select name="Admission_Year" id="year" class="form-control select2" required>
+                                            <option value="">-- Select Year --</option>
+                                            @foreach ($years as $year)
+                                                <option value="{{ $year->year_en }}">{{ $year->year_en }} - {{ $year->year_ar }}
                                                 </option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Stream <span style="color: red;">(*)</span></label>
-                                        <input type="text" class="form-control" id="stream" name="stream"
-                                            placeholder="Enter stream" value="{{ old('stream') }}">
-                                    </div>
+                                </div>
 
+                                <!-- Student Name Field -->
+                                <div class="col-12 col-md-6 col-lg-4">
                                     <div class="form-group">
-                                        <label>Gender <span style="color: red;">(*)</span> </label>
-                                        <select name="gender" class="form-control">
-                                            <option value="">Select gender</option>
+                                        <label>Student Name <span class="text-danger">*</span></label>
+                                        <input type="text" name="Student_Name" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <!-- Student Sex Field -->
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="form-group">
+                                        <label>Student Sex <span class="text-danger">*</span></label>
+                                        <select name="StudentSex" class="form-control select2" required>
+                                            <option value="">-- Select --</option>
                                             <option value="Male">Male</option>
                                             <option value="Female">Female</option>
-                                            <option value="Other">Other</option>
                                         </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Admission Number</label>
-                                        <input type="text" name="admission_number" class="form-control"
-                                            placeholder="Admission number">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Primary Contact</label>
-                                        <input type="text" name="primary_contact" class="form-control"
-                                            placeholder="Phone number">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Other Contact</label>
-                                        <input type="text" name="other_contact" class="form-control"
-                                            placeholder="Alternate number">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Date of Admission</label>
-                                        <input type="date" name="date_of_admission" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Date of Birth</label>
-                                        <input type="date" name="date_of_birth" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Place of Birth</label>
-                                        <input type="text" name="place_of_birth" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Nationality</label>
-                                        <input type="text" name="nationality" class="form-control">
-                                    </div>
-                                </div>
-
-                                <!-- Right column -->
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>PLE Score</label>
-                                        <input type="number" step="0.01" name="ple_score" class="form-control"
-                                            placeholder="Enter PLE score">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>UCE Score</label>
-                                        <input type="number" step="0.01" name="uce_score" class="form-control"
-                                            placeholder="Enter UCE score">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>School <span style="color: red;">(*)</span></label>
-                                        <select name="school_id" id="school_id" class="form-control select2">
-                                            <option value="">-- Select School --</option>
-
-                                            @foreach ($schools as $school)
-                                                <option value="{{ $school->id }}"
-                                                    {{ $school->id == $school_id ? 'selected' : '' }}>
-                                                    {{ $school->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Primary School Name</label>
-                                        <input type="text" name="primary_school_name" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Guardian Names</label>
-                                        <input type="text" name="guardian_names" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Relation to Student</label>
-                                        <input type="text" name="relation" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Guardian Phone</label>
-                                        <input type="text" name="guardian_phone" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Guardian Email</label>
-                                        <input type="email" name="guardian_email" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Home Address</label>
-                                        <textarea name="home_address" class="form-control" rows="2"></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Birth Certificate Entry Number</label>
-                                        <input type="text" name="birth_certificate_entry_number" class="form-control">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Medical History</label>
-                                        <textarea name="medical_history" class="form-control" rows="2"></textarea>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Comments</label>
-                                        <textarea name="comments" class="form-control" rows="2"></textarea>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="mt-4 text-left">
-                                <button type="submit" class="btn text-white" style="background-color: #287C44;">
-                                    <i class="fas fa-paper-plane"></i> Submit
+                            <!-- Submit Button -->
+                            <div class="mt-4">
+                                <button type="submit" class="btn text-white" style="background-color:#0bb931;">
+                                    <i class="fa-solid fa-paper-plane me-2"></i> Submit
                                 </button>
                             </div>
+
                         </form>
                     </div>
                 </div>
             </div>
         </div>
 
-
-    </div>
-    </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            $('#createStudentForm').on('submit', function(e) {
+        $(document).ready(function () {
+
+            function submitStudentForm($form, $submitBtn) {
+
+                let formData = {
+                    Student_Name: $form.find('[name="Student_Name"]').val(),
+                    StudentSex: $form.find('[name="StudentSex"]').val(),
+                    school_id: $form.find('[name="School"]').val(),
+                    Category: $form.find('[name="Category"]').val(),
+                    Admission_Year: $form.find('[name="Admission_Year"]').val()
+                };
+
+                let originalHtml = $submitBtn.html();
+                $submitBtn.prop('disabled', true).html('Saving... <i class="fas fa-spinner fa-spin"></i>');
+
+                $.ajax({
+                    url: $form.attr('action'),
+                    method: 'POST',
+                    data: formData,
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function (response) {
+                        Swal.fire('Success!', response.message, 'success');
+                        $form[0].reset();
+                        $('.select2').val('').trigger('change');
+                    },
+                    error: function (xhr) {
+                        let contentType = xhr.getResponseHeader('content-type') || '';
+
+                        if (contentType.includes('application/json')) {
+                            let res = xhr.responseJSON || {};
+                            if (res.errors) {
+                                let messages = Object.values(res.errors).flat().join('\n');
+                                Swal.fire('Validation Error', messages, 'error');
+                            } else {
+                                Swal.fire('Error', res.error || res.message || 'Something went wrong.', 'error');
+                            }
+                        } else {
+                            console.log(xhr.responseText);
+                            $('body').html(xhr.responseText);
+                        }
+                    },
+                    complete: function () {
+                        $submitBtn.prop('disabled', false).html(originalHtml);
+                    }
+                });
+            }
+
+            // Form submission with validation and SweetAlert confirmation
+            $('#createStudentForm').on('submit', function (e) {
                 e.preventDefault();
 
                 let $form = $(this);
                 let $submitBtn = $form.find('button[type="submit"]');
                 let isValid = true;
 
-                $form.find('.form-control, select').removeClass('is-invalid');
+                $form.find('.form-control').removeClass('is-invalid');
                 $form.find('.invalid-feedback').remove();
 
-                // Basic required fields
-                let requiredFields = ['firstname', 'lastname', 'gender', 'school_id', 'senior', 'stream'];
+                // Required fields
+                let requiredFields = ['Category', 'Admission_Year', 'Student_Name', 'StudentSex'];
 
                 requiredFields.forEach(field => {
                     let input = $form.find(`[name="${field}"]`);
-                    if (!input.val().trim()) {
+                    if (!input.val() || input.val().trim() === '') {
                         input.addClass('is-invalid');
                         input.after('<div class="invalid-feedback">This field is required.</div>');
                         isValid = false;
@@ -229,59 +200,13 @@ use App\Http\Controllers\Helper;
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        console.log('Submitting form via AJAX:', $form.serialize());
                         submitStudentForm($form, $submitBtn);
                     }
                 });
+
             });
 
-            function submitStudentForm($form, $submitBtn) {
-                let formData = $form.serialize();
-                let originalHtml = $submitBtn.html();
-
-                $submitBtn.prop('disabled', true).html('Saving... <i class="fas fa-spinner fa-spin"></i>');
-
-                $.ajax({
-                    url: '{{ route('students.store') }}',
-                    method: 'POST',
-                    data: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        Swal.fire('Success!', response.message, 'success');
-                        $form[0].reset();
-                    },
-                    // error: function(xhr) {
-                    //     if (xhr.status === 422) {
-                    //         let errors = xhr.responseJSON.errors;
-                    //         for (let field in errors) {
-                    //             let input = $form.find(`[name="${field}"]`);
-                    //             input.addClass('is-invalid');
-                    //             input.after(`<div class="invalid-feedback">${errors[field][0]}</div>`);
-                    //         }
-
-                    //         Swal.fire({
-                    //             icon: 'error',
-                    //             title: 'Validation Error',
-                    //             text: 'Please fix the highlighted errors.'
-                    //         });
-                    //     } else {
-                    //         Swal.fire({
-                    //             icon: 'error',
-                    //             title: 'Server Error',
-                    //             text: xhr.responseJSON?.message ||
-                    //                 'An unexpected error occurred.'
-                    //         });
-                    //     }
-                    // },
-                    error: function(data) {
-                        $('body').html(data.responseText);
-                    },
-                    complete: function() {
-                        $submitBtn.prop('disabled', false).html(originalHtml);
-                    }
-                });
-            }
         });
     </script>
 @endsection
@@ -300,6 +225,4 @@ use App\Http\Controllers\Helper;
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
-
-    <script></script>
 @endsection

@@ -246,7 +246,6 @@ class ItebController extends Controller
 
         $subjectId = $request->input('subject_id');
         $marks = $request->input('marks');
-        $students = $request->input('students');
 
         // Marks entrants may only save marks for their assigned subject +
         // papers, even if the request has been tampered with client-side.
@@ -257,9 +256,7 @@ class ItebController extends Controller
             $allowedPapers = $currentUser->allowedPapersForSubject($subjectId);
 
             if (empty($allowedPapers)) {
-                return back()->withErrors([
-                    'marks' => 'You are not assigned to enter marks for this subject.',
-                ])->withInput();
+                return $this->saveMarksError($request, 'You are not assigned to enter marks for this subject.');
             }
         }
 
@@ -278,12 +275,14 @@ class ItebController extends Controller
             $normalized[$studentKey] = is_array($value) ? $value : [1 => $value];
         }
 
-        $missing = array_diff($students, array_keys($normalized));
-        if (!empty($missing)) {
-            return back()->withErrors([
-                'marks' => 'Missing marks for students: ' . implode(', ', $missing)
-            ])->withInput();
-        }
+        // It's no longer a requirement that every student in the class has
+        // a mark before anything can be saved. A student is only "missing"
+        // if none of their papers have a value at all — those are simply
+        // skipped so whoever HAS been entered still gets saved. Every mark
+        // that IS present still has to be a valid, in-range number, or the
+        // whole submission is rejected (nothing gets half-saved on a typo).
+        $toSave = [];
+        $skippedStudents = [];
 
         foreach ($normalized as $studentKey => $paperMarks) {
             $parts = explode('-', $studentKey);
@@ -291,7 +290,7 @@ class ItebController extends Controller
             $school_number = implode('-', array_slice($parts, 0, 2));
             $category = implode('-', array_slice($parts, 2));
 
-            $convertedPapers = [];
+            $papers = [];
             foreach ($paperMarks as $paperNumber => $rawMark) {
                 if ($rawMark === null || $rawMark === '') {
                     continue; // paper left blank — skip, don't count it in the average
@@ -306,60 +305,109 @@ class ItebController extends Controller
                 $maxScore = (float) ($maxScores[$paperNumber] ?? 100);
 
                 if (!is_numeric($rawMark) || $rawMark < 0 || $rawMark > $maxScore) {
-                    return back()->withErrors([
-                        'marks' => "Invalid mark ({$rawMark}) for student {$studentKey}, paper {$paperNumber}. " .
+                    return $this->saveMarksError(
+                        $request,
+                        "Invalid mark ({$rawMark}) for student {$studentKey}, paper {$paperNumber}. " .
                             "This paper is marked out of {$maxScore}, so marks must be between 0 and {$maxScore}."
-                    ])->withInput();
+                    );
                 }
 
                 // Convert onto a 0-100 scale, e.g. 25 out of 40 -> 62.5
                 $convertedMark = round(((float) $rawMark / $maxScore) * 100, 2);
-                $convertedPapers[$paperNumber] = $convertedMark;
+                $papers[$paperNumber] = [
+                    'raw_mark' => $rawMark,
+                    'max_score' => $maxScore,
+                    'converted' => $convertedMark,
+                ];
+            }
 
-                MarkPaper::updateOrCreate(
+            if (empty($papers)) {
+                // Nothing entered for this student yet — leave them out
+                // rather than blocking everyone else in the batch.
+                $skippedStudents[] = $studentKey;
+                continue;
+            }
+
+            $toSave[$studentKey] = compact('papers', 'year', 'school_number', 'category');
+        }
+
+        $savedCount = count($toSave);
+
+        DB::transaction(function () use ($toSave, $subjectId) {
+            foreach ($toSave as $studentKey => $data) {
+                foreach ($data['papers'] as $paperNumber => $p) {
+                    MarkPaper::updateOrCreate(
+                        [
+                            'student_id' => $studentKey,
+                            'subject_id' => $subjectId,
+                            'paper_number' => $paperNumber,
+                        ],
+                        [
+                            'raw_mark' => $p['raw_mark'],
+                            'max_score' => $p['max_score'],
+                            'mark' => $p['converted'],
+                            'year' => $data['year'],
+                            'category' => $data['category'],
+                            'school_number' => $data['school_number'],
+                        ]
+                    );
+                }
+
+                // Final subject score = average of the CONVERTED (0-100 scale)
+                // papers entered so far for this student+subject — this keeps
+                // grading/passslips/certificates working unchanged, since they
+                // always read a plain 0-100 value from the `marks` table.
+                $averageMark = round(
+                    array_sum(array_column($data['papers'], 'converted')) / count($data['papers']),
+                    2
+                );
+
+                Mark::updateOrCreate(
                     [
                         'student_id' => $studentKey,
                         'subject_id' => $subjectId,
-                        'paper_number' => $paperNumber,
                     ],
                     [
-                        'raw_mark' => $rawMark,
-                        'max_score' => $maxScore,
-                        'mark' => $convertedMark,
-                        'year' => $year,
-                        'category' => $category,
-                        'school_number' => $school_number,
+                        'mark' => $averageMark,
+                        'year' => $data['year'],
+                        'category' => $data['category'],
+                        'school_number' => $data['school_number'],
                     ]
                 );
             }
+        });
 
-            if (empty($convertedPapers)) {
-                return back()->withErrors([
-                    'marks' => "No marks entered for student {$studentKey}."
-                ])->withInput();
-            }
+        $message = $savedCount === 1
+            ? 'Marks saved for 1 student.'
+            : "Marks saved for {$savedCount} students.";
 
-            // Final subject score = average of the CONVERTED (0-100 scale)
-            // papers entered so far for this student+subject — this keeps
-            // grading/passslips/certificates working unchanged, since they
-            // always read a plain 0-100 value from the `marks` table.
-            $averageMark = round(array_sum($convertedPapers) / count($convertedPapers), 2);
-
-            Mark::updateOrCreate(
-                [
-                    'student_id' => $studentKey,
-                    'subject_id' => $subjectId,
-                ],
-                [
-                    'mark' => $averageMark,
-                    'year' => $year,
-                    'category' => $category,
-                    'school_number' => $school_number
-                ]
-            );
+        if (!empty($skippedStudents)) {
+            $message .= ' ' . count($skippedStudents) . ' student(s) left pending (no marks entered).';
         }
 
-        return redirect()->back()->with('success', 'Marks submitted successfully for subject!');
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'saved_count' => $savedCount,
+                'skipped_students' => $skippedStudents,
+            ]);
+        }
+
+        return redirect()->back()->with('success', $message);
+    }
+
+    /**
+     * Uniform error response for saveMarks: JSON for the AJAX marks-entry
+     * form, a classic redirect-with-errors for anything else.
+     */
+    private function saveMarksError(Request $request, string $message)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json(['success' => false, 'message' => $message], 422);
+        }
+
+        return back()->withErrors(['marks' => $message])->withInput();
     }
 
     public function gradingSummary(Request $request)

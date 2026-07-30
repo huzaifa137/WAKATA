@@ -5,6 +5,12 @@
         <div class="container-fluid mt-3">
 
             <style>
+                /* ===== BASE RESPONSIVE RESET ===== */
+                * {
+                    box-sizing: border-box;
+                }
+
+                /* ===== HERO SECTION ===== */
                 .sd-hero {
                     background: linear-gradient(135deg, #0b6b3a 0%, #0f8a4d 100%);
                     border-radius: 14px;
@@ -21,11 +27,16 @@
                 .sd-hero h3 {
                     font-weight: 700;
                     margin-bottom: 4px;
+                    font-size: 1.5rem;
                 }
 
                 .sd-hero p {
                     opacity: .9;
                     margin-bottom: 0;
+                    font-size: 0.95rem;
+                    word-wrap: break-word;
+                    overflow-wrap: break-word;
+                    max-width: 100%;
                 }
 
                 .sd-hero .sd-badge {
@@ -35,10 +46,24 @@
                     padding: 8px 18px;
                     font-weight: 600;
                     font-size: .9rem;
-                    white-space: nowrap;
                     backdrop-filter: blur(4px);
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    flex-wrap: wrap;
+                    max-width: 100%;
+                    word-break: break-word;
                 }
 
+                .sd-hero .sd-badge .school-name {
+                    max-width: 200px;
+                    display: inline-block;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+
+                /* ===== STAT CARDS ===== */
                 .sd-stat {
                     border: 1px solid #e7ebf0;
                     border-radius: 16px;
@@ -72,15 +97,12 @@
                 .sd-icon.bg-students {
                     background: linear-gradient(135deg, #1c6fd6, #0d4ea3);
                 }
-
                 .sd-icon.bg-graded {
                     background: linear-gradient(135deg, #0f8a4d, #0b6b3a);
                 }
-
                 .sd-icon.bg-pending {
                     background: linear-gradient(135deg, #e08e0b, #b56d02);
                 }
-
                 .sd-icon.bg-average {
                     background: linear-gradient(135deg, #8e44ad, #5b2c6f);
                 }
@@ -100,6 +122,7 @@
                     font-weight: 600;
                 }
 
+                /* ===== CARDS ===== */
                 .sd-card {
                     border: 1px solid #e7ebf0;
                     border-radius: 16px;
@@ -113,6 +136,7 @@
                     display: flex;
                     align-items: center;
                     gap: 10px;
+                    flex-wrap: wrap;
                 }
 
                 .sd-card .sd-card-header h5 {
@@ -130,34 +154,7 @@
                     padding: 24px;
                 }
 
-                .sd-locked-school {
-                    display: flex;
-                    align-items: center;
-                    gap: 12px;
-                    background: #f0f7f3;
-                    border: 1px solid #d7ead9;
-                    border-radius: 12px;
-                    padding: 12px 16px;
-                    height: 100%;
-                }
-
-                .sd-locked-school i {
-                    color: #0b6b3a;
-                    font-size: 1.2rem;
-                }
-
-                .sd-locked-school .name {
-                    font-weight: 700;
-                    color: #1e293b;
-                    font-size: .95rem;
-                    line-height: 1.2;
-                }
-
-                .sd-locked-school .code {
-                    font-size: .78rem;
-                    color: #6b7785;
-                }
-
+                /* ===== FORM ELEMENTS ===== */
                 .form-label {
                     font-size: 0.85rem;
                     margin-bottom: 0.35rem;
@@ -171,6 +168,7 @@
                     border: 1px solid #dee2e6;
                     padding: 0.55rem 0.75rem;
                     font-size: 0.95rem;
+                    width: 100%;
                 }
 
                 .form-select:focus,
@@ -188,6 +186,7 @@
                     padding: 0.7rem 2rem;
                     box-shadow: 0 6px 16px rgba(15, 138, 77, .28);
                     transition: all .18s ease;
+                    width: 100%;
                 }
 
                 .sd-submit-btn:hover {
@@ -196,32 +195,318 @@
                     color: #fff;
                 }
 
-                @media (max-width: 767px) {
+                .sd-submit-btn i {
+                    margin-right: 8px;
+                }
+
+                /* ===== RESPONSIVE BREAKPOINTS ===== */
+
+                /* Tablets & Small Laptops (≤ 992px) */
+                @media (max-width: 992px) {
+                    .sd-hero h3 {
+                        font-size: 1.3rem;
+                    }
+                    
+                    .sd-hero p {
+                        font-size: 0.9rem;
+                    }
+
+                    .sd-stat .sd-number {
+                        font-size: 1.4rem;
+                    }
+                }
+
+                /* Mobile Landscape & Small Tablets (≤ 768px) */
+                @media (max-width: 768px) {
+                    /* Hero */
                     .sd-hero {
-                        padding: 22px;
+                        padding: 20px 18px;
+                        flex-direction: column;
+                        align-items: flex-start;
+                        text-align: left;
+                    }
+
+                    .sd-hero h3 {
+                        font-size: 1.2rem;
+                    }
+
+                    .sd-hero p {
+                        font-size: 0.85rem;
+                    }
+
+                    .sd-hero .sd-badge {
+                        font-size: 0.8rem;
+                        padding: 6px 14px;
+                        width: 100%;
+                        justify-content: center;
+                        white-space: normal;
+                    }
+
+                    .sd-hero .sd-badge .school-name {
+                        max-width: 150px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    /* Stats - 2 columns on tablet */
+                    .sd-stat {
+                        padding: 16px 18px;
+                        gap: 12px;
+                    }
+
+                    .sd-stat .sd-icon {
+                        width: 44px;
+                        height: 44px;
+                        min-width: 44px;
+                        font-size: 18px;
+                    }
+
+                    .sd-stat .sd-number {
+                        font-size: 1.3rem;
+                    }
+
+                    .sd-stat .sd-label {
+                        font-size: 0.7rem;
+                    }
+
+                    /* Cards */
+                    .sd-card .sd-card-header {
+                        padding: 14px 18px;
+                    }
+
+                    .sd-card .sd-card-header h5 {
+                        font-size: 0.95rem;
+                    }
+
+                    .sd-card .sd-card-body {
+                        padding: 18px;
+                    }
+                }
+
+                /* Mobile Portrait (≤ 576px) - STATS STACK VERTICALLY */
+                @media (max-width: 576px) {
+                    /* Hero - full width badge */
+                    .sd-hero {
+                        padding: 16px 14px;
+                        border-radius: 12px;
+                    }
+
+                    .sd-hero h3 {
+                        font-size: 1.1rem;
+                    }
+
+                    .sd-hero h3 i {
+                        font-size: 0.9rem;
+                    }
+
+                    .sd-hero p {
+                        font-size: 0.8rem;
+                    }
+
+                    .sd-hero .sd-badge {
+                        font-size: 0.75rem;
+                        padding: 6px 12px;
+                        flex-wrap: wrap;
+                        gap: 4px;
+                    }
+
+                    .sd-hero .sd-badge .school-name {
+                        max-width: 120px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                    /* CRITICAL FIX: Stats stack vertically - full width each */
+                    .row.g-3.mb-4 > [class*="col-"] {
+                        flex: 0 0 100%;
+                        max-width: 100%;
+                        width: 100%;
                     }
 
                     .sd-stat {
+                        padding: 14px 16px;
+                        gap: 14px;
+                        border-radius: 12px;
+                        width: 100%;
+                    }
+
+                    .sd-stat .sd-icon {
+                        width: 48px;
+                        height: 48px;
+                        min-width: 48px;
+                        font-size: 20px;
+                    }
+
+                    .sd-stat .sd-number {
+                        font-size: 1.5rem;
+                    }
+
+                    .sd-stat .sd-label {
+                        font-size: 0.75rem;
+                    }
+
+                    /* Card */
+                    .sd-card {
+                        border-radius: 12px;
+                    }
+
+                    .sd-card .sd-card-header {
+                        padding: 12px 16px;
+                        gap: 8px;
+                    }
+
+                    .sd-card .sd-card-header h5 {
+                        font-size: 0.9rem;
+                    }
+
+                    .sd-card .sd-card-header i {
+                        font-size: 0.9rem;
+                    }
+
+                    .sd-card .sd-card-body {
                         padding: 16px;
+                    }
+
+                    /* Form */
+                    .form-label {
+                        font-size: 0.8rem;
+                    }
+
+                    .form-select,
+                    .form-control {
+                        font-size: 0.9rem;
+                        padding: 0.45rem 0.65rem;
+                        border-radius: 0.5rem;
+                    }
+
+                    .sd-submit-btn {
+                        padding: 0.6rem 1.5rem;
+                        font-size: 0.95rem;
+                        border-radius: 40px;
+                    }
+
+                    /* Adjust button row */
+                    .row.justify-content-center.mt-4 {
+                        margin-top: 1.5rem !important;
+                    }
+                }
+
+                /* Extra Small Devices (≤ 400px) */
+                @media (max-width: 400px) {
+                    .sd-hero {
+                        padding: 14px 12px;
+                    }
+
+                    .sd-hero h3 {
+                        font-size: 1rem;
+                    }
+
+                    .sd-hero p {
+                        font-size: 0.75rem;
+                    }
+
+                    .sd-hero .sd-badge {
+                        font-size: 0.7rem;
+                        padding: 4px 10px;
+                    }
+
+                    .sd-hero .sd-badge .school-name {
+                        max-width: 80px;
+                    }
+
+                    .sd-stat {
+                        padding: 12px 14px;
+                        gap: 12px;
+                    }
+
+                    .sd-stat .sd-icon {
+                        width: 40px;
+                        height: 40px;
+                        min-width: 40px;
+                        font-size: 16px;
+                        border-radius: 10px;
+                    }
+
+                    .sd-stat .sd-number {
+                        font-size: 1.3rem;
+                    }
+
+                    .sd-stat .sd-label {
+                        font-size: 0.65rem;
+                    }
+
+                    .sd-card .sd-card-body {
+                        padding: 14px;
+                    }
+
+                    .sd-card .sd-card-header h5 {
+                        font-size: 0.85rem;
+                    }
+
+                    .form-select,
+                    .form-control {
+                        font-size: 0.85rem;
+                        padding: 0.4rem 0.6rem;
+                    }
+
+                    .sd-submit-btn {
+                        padding: 0.5rem 1.2rem;
+                        font-size: 0.9rem;
+                    }
+                }
+
+                /* Fix for very small text on any device */
+                .text-truncate-mobile {
+                    white-space: normal;
+                    word-break: break-word;
+                }
+
+                /* Improve touch targets on mobile */
+                @media (pointer: coarse) {
+                    .form-select,
+                    .form-control,
+                    .sd-submit-btn {
+                        min-height: 44px;
+                    }
+                }
+
+                /* Smooth transitions for all interactive elements */
+                .sd-stat,
+                .sd-submit-btn,
+                .form-select,
+                .form-control {
+                    transition: all 0.2s ease-in-out;
+                }
+
+                /* Additional fix for badge on very small screens */
+                @media (max-width: 480px) {
+                    .sd-hero .sd-badge {
+                        font-size: 0.7rem;
+                        padding: 5px 10px;
+                        border-radius: 30px;
                     }
                 }
             </style>
 
             {{-- Hero --}}
             <div class="sd-hero">
-                <div>
+                <div style="flex: 1; min-width: 0;">
                     <h3><i class="fas fa-school me-2"></i> School Dashboard</h3>
-                    <p>Grading &amp; examination overview for {{ session('LoggedSchoolName') ?? 'your school' }}</p>
+                    <p class="text-truncate-mobile">Grading &amp; examination overview for <strong>{{ session('LoggedSchoolName') ?? 'your school' }}</strong></p>
                 </div>
                 <div class="sd-badge">
-                    <i class="fas fa-shield-halved me-1"></i>
-                    {{ session('LoggedSchoolName') ?? 'School' }} &middot; {{ session('LoggedSchoolCode') }}
+                    <i class="fas fa-shield-halved"></i>
+                    <span class="school-name">{{ session('LoggedSchoolName') ?? 'School' }}</span>
+                    <span style="opacity: 0.5;">&middot;</span>
+                    <span>{{ session('LoggedSchoolCode') }}</span>
                 </div>
             </div>
 
-            {{-- Stats --}}
+            {{-- Stats - Now stacks vertically on small screens --}}
             <div class="row g-3 mb-4">
-                <div class="col-6 col-lg-3">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="sd-stat">
                         <div class="sd-icon bg-students"><i class="fas fa-user-graduate"></i></div>
                         <div>
@@ -230,7 +515,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-lg-3">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="sd-stat">
                         <div class="sd-icon bg-graded"><i class="fas fa-circle-check"></i></div>
                         <div>
@@ -239,7 +524,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-lg-3">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="sd-stat">
                         <div class="sd-icon bg-pending"><i class="fas fa-hourglass-half"></i></div>
                         <div>
@@ -248,7 +533,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-lg-3">
+                <div class="col-12 col-sm-6 col-lg-3">
                     <div class="sd-stat">
                         <div class="sd-icon bg-average"><i class="fas fa-chart-line"></i></div>
                         <div>
@@ -296,9 +581,9 @@
                         </div>
 
                         <div class="row justify-content-center mt-4">
-                            <div class="col-12 col-md-4 text-center">
-                                <button type="submit" class="btn sd-submit-btn w-100">
-                                    <i class="fas fa-magnifying-glass-chart me-2"></i>
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <button type="submit" class="btn sd-submit-btn">
+                                    <i class="fas fa-magnifying-glass-chart"></i>
                                     Generate School Report
                                 </button>
                             </div>
@@ -306,9 +591,6 @@
                     </form>
                 </div>
             </div>
-        </div>
-    </div>
-     </div>
         </div>
     </div>
 
@@ -319,7 +601,6 @@
             const categorySelect = document.querySelector('select[name="category"]');
             const levelInput = document.getElementById('levelInput');
 
-            // UCE -> Level O, UACE -> Level A, derived automatically from Category.
             function setLevelBasedOnCategory() {
                 if (!categorySelect || !levelInput) return;
                 const selectedCategory = categorySelect.value;

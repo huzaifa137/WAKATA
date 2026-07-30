@@ -409,11 +409,13 @@ class StudentController extends Controller
     {
         return Combination::where('category', 'UACE')
             ->active()
-            ->withCount(['studentCombinations as students_count' => function ($q) use ($schoolNumber) {
-                if ($schoolNumber) {
-                    $q->where('school_number', $schoolNumber);
+            ->withCount([
+                'studentCombinations as students_count' => function ($q) use ($schoolNumber) {
+                    if ($schoolNumber) {
+                        $q->where('school_number', $schoolNumber);
+                    }
                 }
-            }])
+            ])
             ->orderByDesc('students_count')
             ->take(8)
             ->get(['id', 'code', 'name', 'status']);
@@ -506,7 +508,9 @@ class StudentController extends Controller
         $defaultSchoolNumber = $schools->first() ? $schools->first()->Number : 'IT-001';
         $newStudentId = $defaultSchoolNumber . '-ID-001-' . $currentYear;
 
-        return view('student.add-new-student', compact('schools', 'years', 'newStudentId', 'currentYear'));
+        $storeRouteName = 'students.store';
+
+        return view('student.add-new-student', compact('schools', 'years', 'newStudentId', 'currentYear', 'storeRouteName'));
     }
 
 
@@ -520,9 +524,27 @@ class StudentController extends Controller
             return response()->json(['student_id' => ''], 200);
         }
 
+        $newStudentID = $this->buildNextStudentId($schoolId, $category, $year);
+
+        if ($newStudentID === null) {
+            return response()->json(['student_id' => ''], 200);
+        }
+
+        return response()->json(['student_id' => $newStudentID]);
+    }
+
+    /**
+     * Build the next sequential Student_ID for a given school/category/year.
+     * Shared by generateStudentID() (AJAX preview) and storeStudent() (actual save),
+     * so both stay in sync and neither has to hand-roll this logic.
+     *
+     * @return string|null  Null if the school could not be found.
+     */
+    private function buildNextStudentId($schoolId, $category, $year)
+    {
         $school = DB::table('houses')->where('ID', $schoolId)->first();
         if (!$school) {
-            return response()->json(['student_id' => ''], 200);
+            return null;
         }
 
         $schoolNumber = $school->Number;
@@ -544,25 +566,24 @@ class StudentController extends Controller
 
         $newNumber = str_pad(($lastNumber ?? 0) + 1, 3, '0', STR_PAD_LEFT);
 
-        $newStudentID = $schoolNumber . '-' . $category . '-' . $newNumber . '-' . $year;
-
-        return response()->json(['student_id' => $newStudentID]);
+        return $schoolNumber . '-' . $category . '-' . $newNumber . '-' . $year;
     }
 
     public function storeStudent(Request $request)
     {
+
         $validated = $request->validate([
             'school_id' => 'required|string|max:45',
             'Category' => 'required|string|max:10',
             'Admission_Year' => 'required|integer',
-            'Student_ID' => 'required|string|max:25|unique:students_basic,Student_ID',
             'Student_Name' => 'required|string|max:100',
+            'StudentSex' => 'required|string|in:Male,Female',
+            // All other fields are nullable since they're not in your form
+            'Student_ID' => 'nullable|string|max:25|unique:students_basic,Student_ID',
             'Student_Name_AR' => 'nullable|string|max:45',
             'date_of_birth' => 'nullable|date',
-            'StudentSex' => 'required|string|in:Male,Female',
             'nationality' => 'nullable|string|max:45',
         ]);
-
 
         $category = $request->Category;
 
@@ -577,9 +598,15 @@ class StudentController extends Controller
         DB::beginTransaction();
 
         try {
+            // Generate Student_ID if not provided (since it's nullable now)
+            $studentId = $validated['Student_ID'] ?? $this->buildNextStudentId($validated['school_id'], $validated['Category'], $validated['Admission_Year']);
+
+            if (!$studentId) {
+                throw new \Exception('Could not generate a Student ID: school not found.');
+            }
 
             $student = StudentBasic::create([
-                'Student_ID' => $validated['Student_ID'],
+                'Student_ID' => $studentId,
                 'Student_Name' => $validated['Student_Name'],
                 'Student_Name_AR' => $validated['Student_Name_AR'] ?? null,
                 'Date_of_Birth' => $validated['date_of_birth'] ?? null,
@@ -592,8 +619,8 @@ class StudentController extends Controller
                 'Class' => $Class,
                 'Class_AR' => $Class_AR,
                 'state' => 'Active',
-                'StudentsCitizenship' => Helper::toArabicLettersCountriesAndWordsPackage($validated['nationality']),
-                'Date_of_Birth_AR' => Helper::toArabicDate($validated['date_of_birth']),
+                'StudentsCitizenship' => Helper::toArabicLettersCountriesAndWordsPackage($validated['nationality'] ?? ''),
+                'Date_of_Birth_AR' => Helper::toArabicDate($validated['date_of_birth'] ?? null),
             ]);
 
             ClassAllocation::create([
@@ -609,7 +636,6 @@ class StudentController extends Controller
             ]);
 
         } catch (\Exception $e) {
-
             DB::rollBack();
 
             return response()->json([
@@ -619,7 +645,26 @@ class StudentController extends Controller
     }
 
 
-   public function allStudentsInformation(Request $request)
+        public function addNewIndividualStudent()
+    {
+        // dd("welcome");
+        // Get years from academic_years table
+        $years = Helper::academicYears();
+
+        $schools = House::select('ID', 'House', 'Number')->get();
+
+        $activeYear = AcademicYear::where('status', 'Active')->first();
+        $currentYear = $activeYear ? $activeYear->year_en : date('Y');
+
+        $defaultSchoolNumber = $schools->first() ? $schools->first()->Number : 'IT-001';
+        $newStudentId = $defaultSchoolNumber . '-ID-001-' . $currentYear;
+
+        $storeRouteName = 'school.students.store';
+
+        return view('student.student-portal', compact('schools', 'years', 'newStudentId', 'currentYear', 'storeRouteName'));
+    }
+
+    public function allStudentsInformation(Request $request)
     {
 
         $houses = House::orderBy('House')->get();

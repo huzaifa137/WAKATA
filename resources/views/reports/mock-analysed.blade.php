@@ -196,7 +196,11 @@
                                 <td>{{ $student['combination_code'] ?? 'NA' }}</td>
                             @endif
                             @foreach($subjects as $subject)
-                                <td>{{ $student['grades'][$subject->md_id] ?? '' }}</td>
+                                @php
+                                    $grade = $student['grades'][$subject->md_id] ?? '';
+                                    $grade = strtoupper((string) $grade) === \App\Services\ReportDataService::ABSENT_MARK ? '' : $grade;
+                                @endphp
+                                <td>{{ $grade }}</td>
                             @endforeach
                             @if($category === 'UACE')
                                 <td>{{ $student['points'] }}</td>

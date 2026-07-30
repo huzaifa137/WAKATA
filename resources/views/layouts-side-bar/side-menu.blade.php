@@ -43,6 +43,12 @@ $__loggedInMarksEntrant = Session('LoggedAdmin')
                     @endif
                 </a>
             </li>
+            <li class="slide">
+                <a class="side-menu__item" href="{{ route('sync.dashboard') }}">
+                    <i class="fa fa-refresh fa-2x mr-3"></i>
+                    Offline Sync
+                </a>
+            </li>
         @elseif (!Session('LoggedSchool'))
             <li class="slide">
                 <a class="side-menu__item" href="{{ url('/student/dashboard') }}">
@@ -162,6 +168,39 @@ $__loggedInMarksEntrant = Session('LoggedAdmin')
                 </a>
             </li>
 
+            <li class="slide has-sub">
+                <a class="side-menu__item" href="#" data-toggle="submenu">
+                    <i class="fa fa-refresh fa-2x mr-3"></i>
+                    <span>Offline Sync</span>
+                    <i class="fas fa-chevron-down dropdown-icon ml-auto"></i>
+                </a>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="{{ route('sync.dashboard') }}">
+                            <i class="fas fa-refresh me-2"></i>Sync Now
+                        </a>
+                    </li>
+                    @if (config('sync.role') === 'central')
+                        <li>
+                            <a href="{{ route('sync.tokens') }}">
+                                <i class="fas fa-key me-2"></i>Manage School Tokens
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('sync.conflicts') }}">
+                                <i class="fas fa-exclamation-triangle me-2"></i>Review Conflicts
+                            </a>
+                        </li>
+                    @else
+                        <li>
+                            <a href="{{ route('sync.setup') }}">
+                                <i class="fas fa-plug me-2"></i>Connect This Install
+                            </a>
+                        </li>
+                    @endif
+                </ul>
+            </li>
+
             <li class="slide">
                 <a class="side-menu__item" href="{{ route('school.passwords.setup') }}">
                     <i class="fas fa-key fa-2x mr-3"></i>
@@ -190,9 +229,24 @@ $__loggedInMarksEntrant = Session('LoggedAdmin')
             </li>
 
             <li class="slide">
+               <a class="side-menu__item" href="{{ route('school.add.new.student') }}">
+                    <i class="fa fa-user-plus fa-2x mr-3"></i>
+                    Add Student
+                </a>
+            </li>
+
+            <li class="slide">
                 <a class="side-menu__item" href="{{ route('school.student.bulk.import.index') }}">
                     <i class="fa fa-users fa-2x mr-3"></i>
-                    Student Import
+                    Bulky Student Import
+                </a>
+            </li>
+
+
+            <li class="slide">
+                <a class="side-menu__item" href="{{ route('combination.management.index') }}">
+                    <i class="fas fa-layer-group fa-2x mr-3"></i>
+                    Combinations (UACE)
                 </a>
             </li>
 

@@ -1292,67 +1292,89 @@
                 form.find('.saved-count').text(filledInputs);
             }
 
+            // ==================== SUBMIT A SINGLE SUBJECT FORM (AJAX + loader) ====================
+            // Shared by the per-subject Save button, "Save Current Subject", and
+            // "Save All Subjects". Actually performs the save — no more
+            // confirmation dialogs from this point on.
+            function submitSubjectForm(form, subjectName) {
+                return new Promise((resolve) => {
+                    Swal.fire({
+                        title: 'Saving...',
+                        html: 'Please wait',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    $.ajax({
+                        url: form.attr('action'),
+                        method: 'POST',
+                        data: form.serialize(),
+                        success: function(response) {
+                            resolve({ ok: true, response });
+                        },
+                        error: function(xhr) {
+                            resolve({
+                                ok: false,
+                                message: (xhr.responseJSON && xhr.responseJSON.message) ?
+                                    xhr.responseJSON.message :
+                                    'Failed to save marks'
+                            });
+                        }
+                    });
+                });
+            }
+
+            // Builds the "N student(s) still missing marks" list for a form,
+            // grouped by student, so the confirm dialog can show exactly who
+            // will be left pending.
+            function getMissingStudents(form) {
+                const emptyInputs = form.find('.mark-input').filter(function() {
+                    return $(this).val() === '';
+                });
+
+                const missingByStudent = {};
+                emptyInputs.each(function() {
+                    const $input = $(this);
+                    const studentId = $input.data('student');
+                    const paperLabel = $input.data('paper');
+
+                    if (!missingByStudent[studentId]) {
+                        missingByStudent[studentId] = [];
+                    }
+                    if (paperLabel) {
+                        missingByStudent[studentId].push(paperLabel);
+                    }
+                });
+
+                return missingByStudent;
+            }
+
+            function renderMissingList(missingByStudent) {
+                return Object.keys(missingByStudent).map(function(id) {
+                    const name = studentNamesMap[id] || id;
+                    const papers = missingByStudent[id];
+                    const paperNote = papers.length > 0 ?
+                        ` <span class="text-danger">(missing ${papers.join(', ')})</span>` :
+                        '';
+                    return `${name}${paperNote}`;
+                }).join('<br>');
+            }
+
             // ==================== FORM SUBMISSION ====================
             $('.subject-form').on('submit', function(e) {
                 e.preventDefault();
 
                 const form = $(this);
                 const subjectName = form.closest('.tab-pane').find('.card-header h5').text().trim();
-                const subjectId = form.data('subject-id');
 
-                // Validate all marks are filled
-                const emptyInputs = form.find('.mark-input').filter(function() {
-                    return $(this).val() === '';
-                });
-
-                if (emptyInputs.length > 0) {
-                    // Group missing inputs by student
-                    const missingByStudent = {};
-
-                    emptyInputs.each(function() {
-                        const $input = $(this);
-                        const studentId = $input.data('student');
-                        const paperLabel = $input.data('paper');
-
-                        if (!missingByStudent[studentId]) {
-                            missingByStudent[studentId] = [];
-                        }
-                        if (paperLabel) {
-                            missingByStudent[studentId].push(paperLabel);
-                        }
-                    });
-
-                    const studentList = Object.keys(missingByStudent).map(function(id) {
-                        const name = studentNamesMap[id] || id;
-                        const papers = missingByStudent[id];
-                        const paperNote = papers.length > 0 ?
-                            ` <span class="text-danger">(missing ${papers.join(', ')})</span>` :
-                            '';
-                        return `${name}${paperNote}`;
-                    }).join('<br>');
-
-                    const missingCount = Object.keys(missingByStudent).length;
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Incomplete Submission',
-                        html: `
-                            <p>All students must have marks for <strong>${subjectName}</strong>.</p>
-                            <p><strong>Missing students (${missingCount}):</strong></p>
-                            <div style="max-height:250px; overflow-y:auto; text-align:left;">
-                                ${studentList}
-                            </div>
-                        `,
-                        confirmButtonText: 'OK'
-                    });
-                    return;
-                }
-
-                // Validate mark ranges
+                // Validate mark ranges first — marks that were actually typed
+                // in must be sane; this always blocks submission.
                 const invalidInputs = form.find('.mark-input').filter(function() {
                     const val = parseFloat($(this).val());
                     const max = parseFloat($(this).data('max')) || 100;
-                    return isNaN(val) || val < 0 || val > max;
+                    return $(this).val() !== '' && (isNaN(val) || val < 0 || val > max);
                 });
 
                 invalidInputs.addClass('is-invalid border-danger');
@@ -1368,7 +1390,60 @@
                     return;
                 }
 
-                // Confirm submission
+                // Students without any mark entered yet are no longer a hard
+                // stop — ask whether to save what's been entered and leave
+                // the rest pending for later.
+                const missingByStudent = getMissingStudents(form);
+                const missingCount = Object.keys(missingByStudent).length;
+
+                if (missingCount > 0) {
+                    const studentList = renderMissingList(missingByStudent);
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Some students have no marks yet',
+                        html: `
+                            <p>${missingCount} student(s) still have no marks for <strong>${subjectName}</strong>:</p>
+                            <div style="max-height:200px; overflow-y:auto; text-align:left;">
+                                ${studentList}
+                            </div>
+                            <p class="mt-2 mb-0">Save marks for everyone else now, and enter the rest later?</p>
+                        `,
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, save the rest',
+                        cancelButtonText: 'Keep editing'
+                    }).then((result) => {
+                        if (!result.isConfirmed) {
+                            return;
+                        }
+
+                        submitSubjectForm(form, subjectName).then((result) => {
+                            if (result.ok) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Saved!',
+                                    text: 'Marks saved for the students that had marks entered.',
+                                    confirmButtonText: 'OK',
+                                    allowOutsideClick: false
+                                }).then((r) => {
+                                    if (r.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: result.message,
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        });
+                    });
+                    return;
+                }
+
+                // Everyone has a mark — straightforward confirm-and-save.
                 Swal.fire({
                     title: 'Submit Marks?',
                     html: `Save marks for <strong>${subjectName}</strong>?`,
@@ -1377,69 +1452,53 @@
                     confirmButtonText: 'Yes, save',
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Show loading
-                        Swal.fire({
-                            title: 'Saving...',
-                            html: 'Please wait',
-                            allowOutsideClick: false,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            }
-                        });
-
-                        // Submit form
-                        $.ajax({
-                            url: form.attr('action'),
-                            method: 'POST',
-                            data: form.serialize(),
-                            success: function(response) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Saved!',
-                                    text: 'Marks saved successfully',
-                                    confirmButtonText: 'OK',
-                                    allowOutsideClick: false
-                                }).then((result) => {
-                                    if (result.isConfirmed) {
-                                        location.reload();
-                                    }
-                                });
-                            },
-                            error: function(xhr) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error!',
-                                    text: xhr.responseJSON && xhr.responseJSON.message ?
-                                        xhr.responseJSON.message :
-                                        'Failed to save marks',
-                                    confirmButtonText: 'OK'
-                                });
-                            }
-                        });
+                    if (!result.isConfirmed) {
+                        return;
                     }
+
+                    submitSubjectForm(form, subjectName).then((result) => {
+                        if (result.ok) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Saved!',
+                                text: 'Marks saved successfully',
+                                confirmButtonText: 'OK',
+                                allowOutsideClick: false
+                            }).then((r) => {
+                                if (r.isConfirmed) {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: result.message,
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
                 });
             });
 
             // ==================== SAVE ALL SUBJECTS ====================
             $('#saveAllSubjectsBtn').on('click', function() {
                 const forms = $('.subject-form');
-                let hasEmptyMarks = false;
                 let hasInvalidMarks = false;
-                let emptySubjects = [];
+                let missingCountBySubject = {};
+                let totalMissing = 0;
 
                 // Validate all forms first
                 forms.each(function() {
                     const form = $(this);
                     const subjectName = form.closest('.tab-pane').find('.card-header h5').text()
                         .trim();
-                    const emptyInputs = form.find('.mark-input').filter(function() {
-                        return $(this).val() === '';
-                    });
 
-                    if (emptyInputs.length > 0) {
-                        hasEmptyMarks = true;
-                        emptySubjects.push(subjectName);
+                    const missingByStudent = getMissingStudents(form);
+                    const missingCount = Object.keys(missingByStudent).length;
+                    if (missingCount > 0) {
+                        missingCountBySubject[subjectName] = missingCount;
+                        totalMissing += missingCount;
                     }
 
                     const invalidInputs = form.find('.mark-input').filter(function() {
@@ -1454,21 +1513,6 @@
                     }
                 });
 
-                if (hasEmptyMarks) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Incomplete Marks',
-                        html: `
-                            <p>The following subjects have empty marks:</p>
-                            <ul style="text-align:left;">
-                                ${emptySubjects.map(s => `<li>${s}</li>`).join('')}
-                            </ul>
-                        `,
-                        confirmButtonText: 'OK'
-                    });
-                    return;
-                }
-
                 if (hasInvalidMarks) {
                     Swal.fire({
                         icon: 'error',
@@ -1479,14 +1523,28 @@
                     return;
                 }
 
+                // Students with no marks yet are no longer a hard stop —
+                // warn, then let the user choose to save everything else.
+                const confirmTitle = totalMissing > 0 ? 'Some students have no marks yet' :
+                    'Save All Subjects?';
+                const confirmHtml = totalMissing > 0 ? `
+                        <p>${totalMissing} student(s) across ${Object.keys(missingCountBySubject).length}
+                        subject(s) still have no marks:</p>
+                        <ul style="text-align:left; max-height:200px; overflow-y:auto;">
+                            ${Object.keys(missingCountBySubject).map(s => `<li>${s}: ${missingCountBySubject[s]} pending</li>`).join('')}
+                        </ul>
+                        <p class="mt-2 mb-0">Save marks for everyone else now, and enter the rest later?</p>
+                    ` :
+                    `This will save marks for <strong>${forms.length} subjects</strong>.`;
+
                 // Confirm saving all
                 Swal.fire({
-                    title: 'Save All Subjects?',
-                    html: `This will save marks for <strong>${forms.length} subjects</strong>.`,
-                    icon: 'warning',
+                    title: confirmTitle,
+                    html: confirmHtml,
+                    icon: totalMissing > 0 ? 'warning' : 'question',
                     showCancelButton: true,
-                    confirmButtonText: 'Yes, save all',
-                    cancelButtonText: 'Cancel'
+                    confirmButtonText: totalMissing > 0 ? 'Yes, save the rest' : 'Yes, save all',
+                    cancelButtonText: totalMissing > 0 ? 'Keep editing' : 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         // Show overall progress

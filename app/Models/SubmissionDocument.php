@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Support\Sync\Syncable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class SubmissionDocument extends Model
 {
     use HasFactory;
+    use Syncable;
 
     /**
      * The table associated with the model.
@@ -22,6 +24,7 @@ class SubmissionDocument extends Model
      * @var array
      */
     protected $fillable = [
+        'uuid',
         'submission_batch_id',
         'file_name',
         'original_name',
@@ -264,6 +267,68 @@ class SubmissionDocument extends Model
     public function scopeForSchool($query, $schoolId)
     {
         return $query->where('school_id', $schoolId);
+    }
+
+    /**
+     * Created offline (a school uploading a document while disconnected)
+     * -> matched by uuid, never the local auto-increment id.
+     */
+    public function syncKey(): array
+    {
+        return ['uuid' => $this->uuid];
+    }
+
+    /**
+     * The actual file lives on disk, not in the database — so besides
+     * the normal columns, embed the file's bytes (base64) so the
+     * receiving side can write the same file to its own disk. Fine for
+     * typical scanned submission documents; very large files should be
+     * handled with a dedicated upload step instead (see SYNC_SETUP.md).
+     */
+    public function syncPayload(): array
+    {
+        $payload = $this->only($this->getFillable());
+
+        if ($this->file_path) {
+            $absolutePath = public_path($this->file_path);
+            if (file_exists($absolutePath)) {
+                $payload['_file_base64'] = base64_encode(file_get_contents($absolutePath));
+            }
+        }
+
+        return $payload;
+    }
+
+    /**
+     * On the receiving side: write the embedded file to disk at the
+     * same relative path it was uploaded to, then strip the
+     * transport-only key before the row itself is saved.
+     *
+     * Note: `submitted_by` travels as-is (a raw user id). If the school
+     * and central installs have different local ids for the same staff
+     * member, this can end up pointing at the wrong (or no) user
+     * centrally — reconciling users across installs is out of scope for
+     * this pilot; see SYNC_SETUP.md.
+     */
+    public static function syncMaterializePayload(array $payload): array
+    {
+        if (array_key_exists('_file_base64', $payload)) {
+            $base64 = $payload['_file_base64'];
+            unset($payload['_file_base64']);
+
+            if ($base64 && !empty($payload['file_path'])) {
+                $destination = public_path($payload['file_path']);
+                $directory = dirname($destination);
+
+                if (!is_dir($directory)) {
+                    mkdir($directory, 0755, true);
+                }
+
+                file_put_contents($destination, base64_decode($base64));
+            }
+        }
+
+        return $payload;
     }
 
     /**

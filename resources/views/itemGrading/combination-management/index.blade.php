@@ -73,66 +73,70 @@
                     </div>
                 @endif
 
-                <div class="table-responsive">
-                    <table class="table cm-table mb-0">
-                        <thead>
-                            <tr>
-                                <th>Code</th>
-                                <th>Name</th>
-                                <th>Subjects</th>
-                                <th>Students Assigned</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($combinations['UACE'] as $combination)
-                                <tr class="{{ $combination->status === 'Inactive' ? 'inactive-row' : '' }}">
-                                    <td><strong>{{ $combination->code }}</strong></td>
-                                    <td class="text-start">{{ $combination->name }}</td>
-                                    <td class="text-start">
-                                        @foreach($combination->subjects as $subject)
-                                            <span class="subject-chip">
-                                                {{ $subject->md_name }}@if($subject->md_misc4 === 'Subsidiary') <em>(Sub)</em>@endif
-                                            </span>
-                                        @endforeach
-                                    </td>
-                                    <td>{{ $combination->student_count }}</td>
-                                    <td>
-                                        <span class="active-pill {{ strtolower($combination->status) }}">{{ $combination->status }}</span>
-                                    </td>
-                                    <td>
-                                        <div class="cm-actions">
-                                            <button class="btn btn-sm btn-outline-primary" title="Edit"
-                                                onclick='cmOpenEditModal(
-                                                    {{ $combination->id }},
-                                                    {{ json_encode($combination->code) }},
-                                                    {{ json_encode($combination->subjects->where("md_misc4", "!=", "Subsidiary")->pluck("md_id")->values()) }},
-                                                    {{ json_encode(optional($combination->subjects->firstWhere("md_misc4", "Subsidiary"))->md_id) }}
-                                                )'>
-                                                <i class="fa fa-pen"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-secondary" title="Toggle Active/Inactive"
-                                                onclick="cmToggleStatus({{ $combination->id }})">
-                                                <i class="fa fa-toggle-on"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger" title="Delete"
-                                                onclick="cmDeleteCombination({{ $combination->id }}, {{ json_encode($combination->code) }}, {{ $combination->student_count }})">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-muted py-4">
-                                        No combinations defined yet. Click "Add Combination" to create the first one (e.g. PCM).
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+               <div class="table-responsive">
+    <table class="table cm-table mb-0">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Subjects</th>
+                <th>Students Assigned</th>
+                <th>Status</th>
+                @unless(Session::has('LoggedSchool'))
+                    <th>Actions</th>
+                @endunless
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($combinations['UACE'] as $combination)
+                <tr class="{{ $combination->status === 'Inactive' ? 'inactive-row' : '' }}">
+                    <td><strong>{{ $combination->code }}</strong></td>
+                    <td class="text-start">{{ $combination->name }}</td>
+                    <td class="text-start">
+                        @foreach($combination->subjects as $subject)
+                            <span class="subject-chip">
+                                {{ $subject->md_name }}@if($subject->md_misc4 === 'Subsidiary') <em>(Sub)</em>@endif
+                            </span>
+                        @endforeach
+                    </td>
+                    <td>{{ $combination->student_count }}</td>
+                    <td>
+                        <span class="active-pill {{ strtolower($combination->status) }}">{{ $combination->status }}</span>
+                    </td>
+                    @unless(Session::has('LoggedSchool'))
+                        <td>
+                            <div class="cm-actions">
+                                <button class="btn btn-sm btn-outline-primary" title="Edit"
+                                    onclick='cmOpenEditModal(
+                                        {{ $combination->id }},
+                                        {{ json_encode($combination->code) }},
+                                        {{ json_encode($combination->subjects->where("md_misc4", "!=", "Subsidiary")->pluck("md_id")->values()) }},
+                                        {{ json_encode(optional($combination->subjects->firstWhere("md_misc4", "Subsidiary"))->md_id) }}
+                                    )'>
+                                    <i class="fa fa-pen"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-secondary" title="Toggle Active/Inactive"
+                                    onclick="cmToggleStatus({{ $combination->id }})">
+                                    <i class="fa fa-toggle-on"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" title="Delete"
+                                    onclick="cmDeleteCombination({{ $combination->id }}, {{ json_encode($combination->code) }}, {{ $combination->student_count }})">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    @endunless
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="{{ Session::has('LoggedSchool') ? 5 : 6 }}" class="text-muted py-4">
+                        No combinations defined yet. Click "Add Combination" to create the first one (e.g. PCM).
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
             </div>
         </div>
 

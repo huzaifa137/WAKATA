@@ -5,11 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\password_reset_table;
 use App\Models\User;
 use DB;
+use App\Models\StudentSubjectRegistration;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Mail;
+use App\Models\Combination;
+use App\Models\Mark;
+use App\Models\StudentBasic;
+use App\Models\AcademicYear;
+use App\Models\BroadcastMessage;
 use App\Models\House;
 use App\Models\SchoolPassword;
 
@@ -353,77 +359,191 @@ class UserController extends Controller
 
     public function dashboard()
     {
-        $loggedInUser = User::find(session('LoggedAdmin'));
-        if ($loggedInUser && $loggedInUser->isMarksEntrant()) {
-            return redirect('/enter-marks');
-        }
+        $adminId = session('LoggedAdmin') ?? session('LoggedStudent');
+        $currentUser = User::find($adminId);
 
-        $systemSettings = \App\Models\SystemSetting::current();
+        $roleLabel = match ((int) ($currentUser->user_role ?? -1)) {
+            1 => 'System Administrator',
+            5 => 'Teacher',
+            default => 'School Admin',
+        };
 
-        // Wrapped defensively: on a brand-new/partially-seeded DB some of
-        // these tables may still be empty (not missing - just empty), so
-        // this should always resolve to sane zeroed defaults rather than
-        // ever breaking the dashboard.
-        try {
-            $totalSchools = \App\Models\House::count();
-            $totalStudents = \App\Models\StudentBasic::count();
-            $totalExamsConducted = \App\Models\Exam::distinct('AssesmentTitle')->count('AssesmentTitle');
+        $activeYear = AcademicYear::where('status', 'Active')->value('year_en')
+            ?? AcademicYear::orderByDesc('year_en')->value('year_en');
 
-            $totalResults = \App\Models\StudentResult::count();
-            $passResults = \App\Models\StudentResult::whereNotIn(DB::raw('UPPER(grade)'), ['F7', 'FAIL'])->count();
-            $overallPassRate = $totalResults > 0 ? round(($passResults / $totalResults) * 100, 1) : 0;
-            $averagePercentage = $totalResults > 0 ? round(\App\Models\StudentResult::avg('percentage'), 1) : 0;
+        $categories = ['UCE' => 'UCE (O-LEVEL)', 'UACE' => 'UACE (A-LEVEL)'];
 
-            $gradeDistribution = \App\Models\StudentResult::select('grade', DB::raw('count(*) as total'))
-                ->whereNotNull('grade')
-                ->groupBy('grade')
+        $schoolSessionId = session('LoggedSchool');
+        $isSystemAdmin = !$schoolSessionId;
+
+        $recentBroadcasts = BroadcastMessage::with('sender:id,name,firstname,lastname')
+            ->latest()
+            ->take(5)
+            ->get(['id', 'subject', 'priority', 'sender_id', 'created_at']);
+
+        $school = null;
+        $recentStudents = collect();
+        $recentSchools = collect();
+        $topSchools = collect();
+        $systemUsersByRole = collect();
+        $totalSchools = $activeSchoolsCount = null;
+
+        if ($isSystemAdmin) {
+            $unreadMessages = $currentUser ? Helper::adminUnreadBroadcastCount() : 0;
+
+            $totalSchools = House::count();
+            $activeSchoolsCount = House::where('school_status', 1)->count();
+
+            $studentsByCategory = $this->studentCategoryCounts();
+
+            $recentSchools = House::orderByDesc('RegistrationDate')
+                ->take(6)
+                ->get(['ID', 'House', 'Number', 'Location', 'RegistrationDate', 'school_status']);
+
+            $topSchools = StudentBasic::select('House', DB::raw('count(*) as total'))
+                ->groupBy('House')
                 ->orderByDesc('total')
                 ->take(6)
                 ->get();
 
-            $topSchools = \App\Models\House::query()
-                ->select('houses.ID', 'houses.House', 'houses.Number')
-                ->selectRaw('AVG(student_results.percentage) as avg_percentage, COUNT(student_results.id) as total_results')
-                ->join('student_results', 'student_results.school_number', '=', 'houses.Number')
-                ->groupBy('houses.ID', 'houses.House', 'houses.Number')
-                ->orderByDesc('avg_percentage')
-                ->take(5)
-                ->get();
+            $systemUsersByRole = User::select('user_role', DB::raw('count(*) as total'))
+                ->groupBy('user_role')
+                ->pluck('total', 'user_role');
 
-            $recentResults = DB::table('student_results')
-                ->leftJoin('students_basic', 'students_basic.Student_ID', '=', 'student_results.student_id')
-                ->select('student_results.*', 'students_basic.Student_Name')
-                ->orderByDesc('student_results.created_at')
+            [$registrationProgress, $marksEntryProgress] = $this->categoryProgress($categories, $activeYear, null);
+            $combinationBreakdown = $this->combinationBreakdown(null);
+        } else {
+            $school = House::find($schoolSessionId);
+            $houseName = $school->House ?? null;
+            $schoolNumber = $school->Number ?? null;
+
+            $unreadMessages = Helper::schoolUnreadBroadcastCount();
+
+            $studentsByCategory = $this->studentCategoryCounts($houseName);
+
+            $recentStudents = StudentBasic::where('House', $houseName)
+                ->orderByDesc('EntryDate')
                 ->take(6)
-                ->get();
+                ->get(['Student_ID', 'Student_Name', 'StudentSex', 'EntryDate']);
 
-            $recentSchools = \App\Models\House::orderByDesc('RegistrationDate')->take(5)->get();
-        } catch (\Throwable $e) {
-            $totalSchools = $totalSchools ?? 0;
-            $totalStudents = $totalStudents ?? 0;
-            $totalExamsConducted = $totalExamsConducted ?? 0;
-            $overallPassRate = $overallPassRate ?? 0;
-            $averagePercentage = $averagePercentage ?? 0;
-            $gradeDistribution = $gradeDistribution ?? collect();
-            $topSchools = $topSchools ?? collect();
-            $recentResults = $recentResults ?? collect();
-            $recentSchools = $recentSchools ?? collect();
+            [$registrationProgress, $marksEntryProgress] = $this->categoryProgress($categories, $activeYear, $schoolNumber);
+            $combinationBreakdown = $this->combinationBreakdown($schoolNumber);
         }
 
-        return view('dashboard', compact(
-            'systemSettings',
-            'totalSchools',
+        $totalStudents = array_sum($studentsByCategory);
+
+        return view('student.dashboard', compact(
+            'currentUser',
+            'roleLabel',
+            'isSystemAdmin',
+            'activeYear',
+            'categories',
+            'unreadMessages',
+            'recentBroadcasts',
+            'school',
+            'studentsByCategory',
             'totalStudents',
-            'totalExamsConducted',
-            'overallPassRate',
-            'averagePercentage',
-            'gradeDistribution',
+            'registrationProgress',
+            'marksEntryProgress',
+            'combinationBreakdown',
+            'recentStudents',
+            'recentSchools',
             'topSchools',
-            'recentResults',
-            'recentSchools'
+            'systemUsersByRole',
+            'totalSchools',
+            'activeSchoolsCount'
         ));
     }
 
+    private function studentCategoryCounts(?string $houseName = null): array
+    {
+        $query = DB::table('students_basic')
+            ->selectRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(Student_ID, '-', 3), '-', -1) as category, COUNT(*) as total")
+            ->groupBy('category');
+
+        if ($houseName !== null) {
+            $query->where('House', $houseName);
+        }
+
+        $rows = $query->pluck('total', 'category');
+
+        return [
+            'UCE' => (int) ($rows['UCE'] ?? 0),
+            'UACE' => (int) ($rows['UACE'] ?? 0),
+            'PLE' => (int) ($rows['PLE'] ?? 0),
+        ];
+    }
+
+    private function categoryProgress(array $categories, ?string $activeYear, ?string $schoolNumber): array
+    {
+        $registration = [];
+        $marksEntry = [];
+
+        foreach ($categories as $code => $label) {
+            $totalThisYear = 0;
+
+            if ($activeYear) {
+                $totalQuery = DB::table('students_basic')
+                    ->where('Student_ID', 'LIKE', "%-{$code}-%-{$activeYear}");
+
+                if ($schoolNumber) {
+                    $totalQuery->where('Student_ID', 'LIKE', "{$schoolNumber}-%");
+                }
+
+                $totalThisYear = $totalQuery->count();
+            }
+
+            $registeredBase = StudentSubjectRegistration::where('category', $code)
+                ->where('year', $activeYear ?? '__none__');
+
+            if ($schoolNumber) {
+                $registeredBase->where('school_number', $schoolNumber);
+            }
+
+            $registeredStudents = (clone $registeredBase)->distinct('student_id')->count('student_id');
+            $expectedPairs = (clone $registeredBase)->count();
+
+            $registration[$code] = [
+                'label' => $label,
+                'total' => $totalThisYear,
+                'registered' => $registeredStudents,
+                'pct' => $totalThisYear > 0 ? (int) round(min(100, $registeredStudents / $totalThisYear * 100)) : 0,
+            ];
+
+            $marksQuery = Mark::where('category', $code)->where('year', $activeYear ?? '__none__');
+
+            if ($schoolNumber) {
+                $marksQuery->where('school_number', $schoolNumber);
+            }
+
+            $marksEntered = $marksQuery->count();
+
+            $marksEntry[$code] = [
+                'label' => $label,
+                'expected' => $expectedPairs,
+                'entered' => $marksEntered,
+                'pct' => $expectedPairs > 0 ? (int) round(min(100, $marksEntered / $expectedPairs * 100)) : 0,
+            ];
+        }
+
+        return [$registration, $marksEntry];
+    }
+
+    private function combinationBreakdown(?string $schoolNumber)
+    {
+        return Combination::where('category', 'UACE')
+            ->active()
+            ->withCount([
+                'studentCombinations as students_count' => function ($q) use ($schoolNumber) {
+                    if ($schoolNumber) {
+                        $q->where('school_number', $schoolNumber);
+                    }
+                }
+            ])
+            ->orderByDesc('students_count')
+            ->take(8)
+            ->get(['id', 'code', 'name', 'status']);
+    }
     public function checkUser(Request $request)
     {
         $validator = Validator::make(

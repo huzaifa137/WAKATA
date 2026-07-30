@@ -43,22 +43,46 @@
         background: #038f16;
     }
 
-    .sr-table td.sticky-col,
-    .sr-table th.sticky-col {
-        position: sticky;
-        left: 0;
+    /* Plain (non-sticky) identity columns — just fixed widths so the
+       table renders predictably and scrolls as one simple block */
+    .sr-table td.id-col,
+    .sr-table th.id-col {
         background: #fff;
-        z-index: 1;
         text-align: left;
+        box-sizing: border-box;
     }
 
-    .sr-table thead th.sticky-col {
+    .sr-table thead th.id-col {
         background: #025c30;
-        z-index: 3;
     }
 
-    .sr-table tbody tr:nth-child(even) td.sticky-col {
+    .sr-table tbody tr:nth-child(even) td.id-col {
         background: #fafafa;
+    }
+
+    .sr-table .id-col-1 {
+        width: 40px;
+        min-width: 40px;
+        max-width: 40px;
+    }
+
+    .sr-table .id-col-2 {
+        width: 140px;
+        min-width: 140px;
+        max-width: 140px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .sr-table .id-col-3 {
+        width: 150px;
+        min-width: 150px;
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border-right: 2px solid #d5d5d5;
     }
 
     .subject-check {
@@ -176,6 +200,35 @@
     .sr-table.hide-compulsory .compulsory-col {
         display: none;
     }
+
+    /* Full toolbar responsive — stacks and enlarges on mobile */
+@media (max-width: 768px) {
+    .d-flex.flex-wrap.gap-3.justify-content-between.align-items-center {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+
+    .d-flex.flex-wrap.gap-3.justify-content-between.align-items-center > * {
+        width: 100%;
+    }
+
+    .toolbar-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .toolbar-actions .btn,
+    .toolbar-actions a {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 16px;
+        border-radius: 10px;
+        height: 48px;
+        min-height: 48px;
+    }
+}
 </style>
 
 <div class="card shadow-lg border-0">
@@ -251,6 +304,9 @@
         <button type="button" id="srToggleCompulsoryBtn" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
             <i class="fa fa-eye me-2"></i> <span id="srToggleCompulsoryLabel">Show Compulsory Subjects</span>
         </button>
+
+
+<a href="{{ url('combination-management') }}" class="btn btn-sm rounded-pill px-3" style="background-color: #0d6efd; color: white; border-color: #0d6efd;"><i class="fa fa-eye me-2"></i> <span>Add a Combination</span></a>            
     </div>
 </div>
 
@@ -263,9 +319,9 @@
                             <table class="sr-table hide-compulsory" id="srTable">
                                 <thead>
                                     <tr>
-                                        <th class="sticky-col" style="left:0;">#</th>
-                                        <th class="sticky-col" style="text-align:center;">Auto Student ID</th>
-                                        <th class="sticky-col" style="text-align:center;">Student Full Name</th>
+                                        <th class="id-col id-col-1">#</th>
+                                        <th class="id-col id-col-2" style="text-align:center;">Auto Student ID</th>
+                                        <th class="id-col id-col-3" style="text-align:center;">Student Full Name</th>
                                         @foreach ($compulsorySubjects as $subject)
                                             <th class="subject-col subject-compulsory compulsory-col">
                                                 {{ $subject->md_name }}
@@ -294,9 +350,9 @@
                                             $registeredIds = $registrations->get($studentId, collect());
                                         @endphp
                                         <tr data-search="{{ strtolower($studentId . ' ' . ($names[$studentId] ?? '')) }}">
-                                            <td class="sticky-col" style="left:0;">{{ $index + 1 }}</td>
-                                            <td class="sticky-col" style="left:40px;">{{ $studentId }}</td>
-                                            <td class="sticky-col" style="left:180px;">{{ $names[$studentId] ?? '—' }}</td>
+                                            <td class="id-col id-col-1">{{ $index + 1 }}</td>
+                                            <td class="id-col id-col-2">{{ $studentId }}</td>
+                                            <td class="id-col id-col-3">{{ $names[$studentId] ?? '—' }}</td>
                                             @foreach ($compulsorySubjects as $subject)
                                                 <td class="compulsory-col">
                                                     <input type="checkbox" class="subject-check"

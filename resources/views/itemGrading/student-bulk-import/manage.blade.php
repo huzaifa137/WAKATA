@@ -126,30 +126,63 @@
                 }
 
                 .sbi-search-input {
-    width: 100%;
-    padding: 10px 38px 10px 38px;
-    border: 1.5px solid #026837;
-    border-radius: 10px;
-    font-size: 14px;
-    color: #333;
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(2, 104, 55, 0.12);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    outline: none;
-}
+                    width: 100%;
+                    padding: 10px 38px 10px 38px;
+                    border: 1.5px solid #026837;
+                    border-radius: 10px;
+                    font-size: 14px;
+                    color: #333;
+                    background: #fff;
+                    box-shadow: 0 0 0 3px rgba(2, 104, 55, 0.12);
+                    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+                    outline: none;
+                }
 
-.sbi-search-input::placeholder {
-    color: #a3aca8;
-}
+                .sbi-search-input::placeholder {
+                    color: #a3aca8;
+                }
 
-.sbi-search-input:focus {
-    border-color: #026837;
-    box-shadow: 0 0 0 4px rgba(2, 104, 55, 0.18);
-}
+                .sbi-search-input:focus {
+                    border-color: #026837;
+                    box-shadow: 0 0 0 4px rgba(2, 104, 55, 0.18);
+                }
 
-.sbi-search-input:focus~.sbi-search-icon {
-    color: #026837;
-}
+                .sbi-search-input:focus~.sbi-search-icon {
+                    color: #026837;
+                }
+
+                /* Full toolbar responsive */
+                @media (max-width: 768px) {
+                    .d-flex.flex-wrap.gap-3.justify-content-between.align-items-center {
+                        flex-direction: column;
+                        align-items: stretch !important;
+                        gap: 12px !important;
+                    }
+
+                    .d-flex.flex-wrap.gap-3.justify-content-between.align-items-center>* {
+                        width: 100%;
+                    }
+
+                    .d-flex.flex-wrap.gap-3.justify-content-between.align-items-center a:first-child {
+                        text-align: center;
+                    }
+
+                    .toolbar-actions {
+                        flex-direction: column;
+                        width: 100%;
+                        gap: 8px;
+                    }
+
+                    .toolbar-actions .btn,
+                    .toolbar-actions a {
+                        width: 100%;
+                        justify-content: center;
+                        padding: 10px 16px;
+                        border-radius: 10px;
+                        height: 48px;
+                        min-height: 48px;
+                    }
+                }
             </style>
 
             <div class="card shadow-lg border-0">
@@ -189,7 +222,7 @@
                                     confirmButtonColor: '#d33'
                                 });
                             @endif
-                                                });
+                                                        });
                     </script>
 
                     {{-- Toolbar --}}
@@ -222,13 +255,13 @@
                                 </button>
                             @endif
 
-                            @if (!$isSchoolPortal && in_array($category, ['UCE', 'UACE']) && $studentRows->count() > 0)
-                                <a class="btn btn-dark btn-sm rounded-pill px-4 shadow-sm"
-                                    style="background-color:#6a123f; border-color:#6a123f;"
-                                    href="{{ route('subject.registration.manage', ['year' => $year, 'category' => $category, 'school_number' => $schoolNumber]) }}">
-                                    <i class="fa fa-list-check me-2"></i> Proceed to Subject Registration
-                                </a>
-                            @endif
+
+                            <a class="btn btn-dark btn-sm rounded-pill px-4 shadow-sm"
+                                style="background-color:#6a123f; border-color:#6a123f;"
+                                href="{{ route('subject.registration.manage', ['year' => $year, 'category' => $category, 'school_number' => $schoolNumber]) }}">
+                                <i class="fa fa-list-check me-2"></i> Proceed to Subject Registration
+                            </a>
+
                         </div>
                     </div>
 
@@ -308,7 +341,9 @@
     </div>
 
     {{-- Hidden form used to submit the "Clear All" wipe --}}
-    <form method="POST" action="{{ route($isSchoolPortal ? 'school.student.bulk.import.destroy.all' : 'student.bulk.import.destroy.all') }}" id="clearAllForm" class="d-none">
+    <form method="POST"
+        action="{{ route($isSchoolPortal ? 'school.student.bulk.import.destroy.all' : 'student.bulk.import.destroy.all') }}"
+        id="clearAllForm" class="d-none">
         @csrf
         @method('DELETE')
         <input type="hidden" name="year" value="{{ $year }}">
@@ -320,7 +355,9 @@
     <div class="modal fade" id="importModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="POST" action="{{ route($isSchoolPortal ? 'school.student.bulk.import.import' : 'student.bulk.import.import') }}" enctype="multipart/form-data">
+                <form method="POST"
+                    action="{{ route($isSchoolPortal ? 'school.student.bulk.import.import' : 'student.bulk.import.import') }}"
+                    enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="year" value="{{ $year }}">
                     <input type="hidden" name="category" value="{{ $category }}">
@@ -365,8 +402,7 @@
                     <div class="modal-header text-white" style="background-color:#026837;">
                         <h5 class="modal-title"><i class="fa fa-pen me-2"></i> Edit Student — <span
                                 id="editStudentIdLabel"></span></h5>
-                        <button type="button" class="close text-white" data-dismiss="modal"
-                            aria-label="Close">
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -385,8 +421,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary"
-                            data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn text-white" style="background-color:#026837;">
                             <i class="fa fa-check me-1"></i> Save Changes
                         </button>

@@ -25,22 +25,21 @@ use App\Http\Controllers\Helper;
                             <i class="fas fa-users text-white"></i> All Students
                         </a>
                     </div>
+
                     <div class="card-body bg-light">
                         <form id="createStudentForm" method="POST" action="{{ route('students.store') }}">
                             @csrf
 
-                            <div class="student-form-grid">
+                            <input type="hidden" name="School" value="{{ session('LoggedSchool') }}">
 
+                            <div class="student-form-grid">
                                 <div class="form-group">
-                                    <label>School <span class="text-danger">*</span></label>
-                                    <select name="School" class="form-control select2" required>
-                                        <option value="">-- Select School --</option>
-                                        @foreach ($schools as $school)
-                                            <option value="{{ $school->ID }}">
-                                                {{ $school->House }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                    <label>School</label>
+
+                                    <input type="hidden" name="School" value="{{ session('LoggedSchool') }}">
+
+                                    <input type="text" class="form-control" value="{{ session('LoggedSchoolName') }}"
+                                        readonly>
                                 </div>
 
                                 <div class="form-group">
@@ -58,35 +57,15 @@ use App\Http\Controllers\Helper;
                                     <select name="Admission_Year" id="year" class="form-control select2" required>
                                         <option value="">-- Select Year --</option>
                                         @foreach ($years as $year)
-                                            <option value="{{ $year->year_en}}">{{ $year->year_en }} - {{ $year->year_ar }}</option>
+                                            <option value="{{ $year->year_en}}">{{ $year->year_en }} - {{ $year->year_ar }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Student ID <span class="text-danger">*</span></label>
-                                    <input type="text" name="Student_ID" class="form-control" id="Student_ID" readonly
-                                        required>
-                                </div>
-
-                                <div class="form-group">
                                     <label>Student Name <span class="text-danger">*</span></label>
                                     <input type="text" name="Student_Name" class="form-control" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Student Name (AR)</label>
-                                    <input type="text" name="Student_Name_AR" class="form-control" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Date of Birth</label>
-                                    <input type="date" name="Date_of_Birth" class="form-control" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Student Nationality</label>
-                                    <input type="text" name="StudentNationality" class="form-control" required>
                                 </div>
 
                                 <div class="form-group">
@@ -144,14 +123,10 @@ use App\Http\Controllers\Helper;
 
                 let formData = {
                     Student_Name: $form.find('[name="Student_Name"]').val(),
-                    Student_Name_AR: $form.find('[name="Student_Name_AR"]').val(),
-                    date_of_birth: $form.find('[name="Date_of_Birth"]').val(),
-                    nationality: $form.find('[name="StudentNationality"]').val(),
                     StudentSex: $form.find('[name="StudentSex"]').val(),
                     school_id: $form.find('[name="School"]').val(),
                     Category: $form.find('[name="Category"]').val(),
-                    Admission_Year: $form.find('[name="Admission_Year"]').val(),
-                    Student_ID: $form.find('[name="Student_ID"]').val()
+                    Admission_Year: $form.find('[name="Admission_Year"]').val()
                 };
 
                 let originalHtml = $submitBtn.html();
@@ -161,6 +136,7 @@ use App\Http\Controllers\Helper;
                     url: $form.attr('action'),
                     method: 'POST',
                     data: formData,
+                    dataType: 'json', // force jQuery to expect JSON
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
@@ -169,41 +145,31 @@ use App\Http\Controllers\Helper;
                         $form[0].reset();
                         $('.select2').val('').trigger('change');
                     },
-                    error: function (data) {
-                        $('body').html(data.responseText);
+                    error: function (xhr) {
+                        // If response isn't valid JSON (e.g. dd() dump, 500 error page, validation error page)
+                        let contentType = xhr.getResponseHeader('content-type') || '';
+
+                        if (contentType.includes('application/json')) {
+                            // Real JSON error response (e.g. validation errors, ->json(['error' => ...]))
+                            let res = xhr.responseJSON || {};
+                            if (res.errors) {
+                                // Laravel validation error format
+                                let messages = Object.values(res.errors).flat().join('\n');
+                                Swal.fire('Validation Error', messages, 'error');
+                            } else {
+                                Swal.fire('Error', res.error || res.message || 'Something went wrong.', 'error');
+                            }
+                        } else {
+                            // Not JSON at all — likely dd() output, a stack trace, or an HTML error page
+                            console.log(xhr.responseText);
+                            $('body').html(xhr.responseText);
+                        }
                     },
                     complete: function () {
                         $submitBtn.prop('disabled', false).html(originalHtml);
                     }
                 });
             }
-
-            // Function to generate student ID dynamically
-            function updateStudentID() {
-                let schoolId = $('select[name="School"]').val();
-                let category = $('select[name="Category"]').val();
-                let year = $('select[name="Admission_Year"]').val();
-
-                if (schoolId && category && year) {
-                    $.ajax({
-                        url: '{{ route('students.generate-id') }}',
-                        data: {
-                            school_id: schoolId,
-                            category: category,
-                            year: year
-                        },
-                        success: function(res) {
-                            $('#Student_ID').val(res.student_id);
-                        }
-                    });
-                } else {
-                    $('#Student_ID').val('');
-                }
-            }
-
-            // Trigger Student ID update when selections change
-            $('select[name="School"], select[name="Category"], select[name="Admission_Year"]').on('change',
-                updateStudentID);
 
             // Form submission with validation and SweetAlert confirmation
             $('#createStudentForm').on('submit', function (e) {
@@ -216,10 +182,8 @@ use App\Http\Controllers\Helper;
                 $form.find('.form-control').removeClass('is-invalid');
                 $form.find('.invalid-feedback').remove();
 
-                // Required fields
-                let requiredFields = ['School', 'Category', 'Admission_Year', 'Student_ID', 'Student_Name',
-                    'StudentSex'
-                ];
+                // Required fields - only the ones that exist in your form
+                let requiredFields = ['Category', 'Admission_Year', 'Student_Name', 'StudentSex'];
 
                 requiredFields.forEach(field => {
                     let input = $form.find(`[name="${field}"]`);

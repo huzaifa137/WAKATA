@@ -24,11 +24,14 @@ class StudentAuth
         'search.iteb.students',
         'notifications.inbox',
         'notifications.inbox.read',
+        'sync.dashboard',
+        'sync.run',
     ];
 
     private const MARKS_ENTRANT_ALLOWED_PATHS = [
         'enter-marks',
         'class-allocation',
+        'sync',
     ];
 
     /**

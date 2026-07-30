@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Support\Sync\Syncable;
 use Illuminate\Database\Eloquent\Model;
 
 class MarkPaper extends Model
 {
+    use Syncable;
+
     protected $table = 'mark_papers';
 
     protected $fillable = [
@@ -19,4 +22,13 @@ class MarkPaper extends Model
         'category',
         'school_number',
     ];
+
+    public function syncKey(): array
+    {
+        return [
+            'student_id' => $this->student_id,
+            'subject_id' => $this->subject_id,
+            'paper_number' => $this->paper_number,
+        ];
+    }
 }

@@ -722,7 +722,7 @@
                         </div>
                     </div>
                 @empty
-                    <p class="text-muted">No data yet.</p>
+                    <p class="text-muted">No data yet.121</p>
                 @endforelse
             </div>
         </div>

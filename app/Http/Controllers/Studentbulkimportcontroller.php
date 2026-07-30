@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\AcademicYear;
 
 class StudentBulkImportController extends Controller
 {
@@ -333,5 +334,21 @@ class StudentBulkImportController extends Controller
         $request->merge(['school_id' => $house->ID ?? session('LoggedSchool')]);
 
         return $this->destroyAll($request, 'school.student.bulk.import.manage');
+    }
+
+    public function addNewStudent()
+    {
+        // Get years from academic_years table
+        $years = Helper::academicYears();
+
+        $schools = House::select('ID', 'House', 'Number')->get();
+
+        $activeYear = AcademicYear::where('status', 'Active')->first();
+        $currentYear = $activeYear ? $activeYear->year_en : date('Y');
+
+        $defaultSchoolNumber = $schools->first() ? $schools->first()->Number : 'IT-001';
+        $newStudentId = $defaultSchoolNumber . '-ID-001-' . $currentYear;
+
+        return view('student.add-new-student', compact('schools', 'years', 'newStudentId', 'currentYear'));
     }
 }

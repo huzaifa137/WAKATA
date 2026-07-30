@@ -164,6 +164,12 @@ Route::controller(MasterDataController::class)->group(function () {
 });
 
 Route::controller(StudentController::class)->group(function () {
+
+
+    Route::group(['middleware' => ['SchoolAuth']], function () {
+        Route::get('/school/add-new-student', 'addNewIndividualStudent')->name('school.add.new.student');
+    });
+    
     Route::group(['prefix' => '/users'], function () {
         Route::group(['middleware' => ['AdminAuth']], function () {
             Route::get('/register', 'register')->name('users.register');
@@ -421,17 +427,19 @@ Route::controller(\App\Http\Controllers\ReportsController::class)->group(functio
 });
 
 Route::controller(SubjectRegistrationController::class)->group(function () {
-    Route::group(['middleware' => ['StudentAuth']], function () {
+    // Route::group(['middleware' => ['StudentAuth']], function () {
         Route::get('/subject-registration', 'index')->name('subject.registration.index');
         Route::get('/subject-registration/manage', 'manage')->name('subject.registration.manage');
         Route::post('/subject-registration/toggle', 'toggle')->name('subject.registration.toggle');
         Route::post('/subject-registration/set-combination', 'setCombination')->name('subject.registration.set.combination');
         Route::get('/subject-registration/template', 'downloadTemplate')->name('subject.registration.template');
         Route::post('/subject-registration/import', 'import')->name('subject.registration.import');
-    });
+    // });
 });
 
 Route::controller(StudentBulkImportController::class)->group(function () {
+
+
     Route::group(['middleware' => ['StudentAuth']], function () {
         Route::get('/student-bulk-import', 'index')->name('student.bulk.import.index');
         Route::get('/student-bulk-import/manage', 'manage')->name('student.bulk.import.manage');
@@ -444,6 +452,7 @@ Route::controller(StudentBulkImportController::class)->group(function () {
             ->where('studentId', '.*')
             ->name('student.bulk.import.update.student');
         Route::delete('/student-bulk-import/clear', 'destroyAll')->name('student.bulk.import.destroy.all');
+
     });
 });
 
@@ -458,13 +467,13 @@ Route::controller(SubjectManagementController::class)->group(function () {
 });
 
 Route::controller(\App\Http\Controllers\CombinationManagementController::class)->group(function () {
-    Route::group(['middleware' => ['StudentAuth']], function () {
+    // Route::group(['middleware' => ['StudentAuth']], function () {
         Route::get('/combination-management', 'index')->name('combination.management.index');
         Route::post('/combination-management', 'store')->name('combination.management.store');
         Route::put('/combination-management/{id}', 'update')->name('combination.management.update');
         Route::delete('/combination-management/{id}', 'destroy')->name('combination.management.destroy');
         Route::post('/combination-management/{id}/toggle-status', 'toggleStatus')->name('combination.management.toggle.status');
-    });
+    // });
 });
 
 
@@ -564,6 +573,9 @@ Route::controller(SchoolsController::class)->group(function () {
 
             Route::get('/school/step3/students', 'step3Students')->name('school.step3.students');
             Route::post('/school/step3/submit', 'step3Submit')->name('school.step3.submit');
+
+            Route::post('/school/students/store', [\App\Http\Controllers\StudentController::class, 'storeStudent'])
+                ->name('school.students.store');
 
         });
     });
@@ -701,3 +713,30 @@ Route::controller(GradingSettingsController::class)->group(function () {
 
 Route::get('houses/create', [HouseController::class, 'create'])->name('houses.create');
 Route::post('houses/store', [HouseController::class, 'store'])->name('houses.store');
+
+/*
+|--------------------------------------------------------------------------
+| Offline sync UI
+|--------------------------------------------------------------------------
+| /sync           - "Sync Now" screen, used on school/office installs.
+| /sync/conflicts - central-only review screen for flagged conflicts.
+| Both sit behind StudentAuth (the normal logged-in guard) and are on the
+| marks-entrant allow-list in StudentAuth so a remote marks entrant can
+| trigger a sync without needing full admin rights.
+*/
+Route::group(['middleware' => ['StudentAuth']], function () {
+    Route::get('/sync', [App\Http\Controllers\SyncDashboardController::class, 'index'])->name('sync.dashboard');
+    Route::post('/sync/run', [App\Http\Controllers\SyncDashboardController::class, 'run'])->name('sync.run');
+    Route::get('/sync/conflicts', [App\Http\Controllers\SyncDashboardController::class, 'conflicts'])->name('sync.conflicts');
+    Route::post('/sync/conflicts/{conflict}/resolve', [App\Http\Controllers\SyncDashboardController::class, 'resolveConflict'])->name('sync.conflicts.resolve');
+
+    // One-time "connect this install" wizard (school side).
+    Route::get('/sync/setup', [App\Http\Controllers\SyncDashboardController::class, 'setupForm'])->name('sync.setup');
+    Route::post('/sync/setup', [App\Http\Controllers\SyncDashboardController::class, 'saveSetup'])->name('sync.setup.save');
+
+    // Token issuance + management (central side only — the controller
+    // itself 404s these if this install's role isn't 'central').
+    Route::get('/sync/tokens', [App\Http\Controllers\SyncDashboardController::class, 'tokens'])->name('sync.tokens');
+    Route::post('/sync/tokens', [App\Http\Controllers\SyncDashboardController::class, 'issueToken'])->name('sync.tokens.issue');
+    Route::post('/sync/tokens/{device}/revoke', [App\Http\Controllers\SyncDashboardController::class, 'revokeToken'])->name('sync.tokens.revoke');
+});
