@@ -6,7 +6,7 @@
 
             <style>
                 :root {
-                    --primary: #026837;
+                    --primary: #043AA1;
                     --primary-light: #1E7A3D;
                     --primary-lighter: #E8F5EC;
                     --primary-dark: #014425;
@@ -391,7 +391,7 @@
                 .progress-fill {
                     height: 100%;
                     border-radius: 999px;
-                    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+                    background: linear-gradient(90deg, var(--primary), #043AA1);
                 }
 
                 .progress-fill.amber {
@@ -643,7 +643,7 @@
 
                     <p>
                         @if($isSystemAdmin)
-                            Here's what's happening across all KAMSSA schools today.
+                            Here's what's happening across all WAKATA schools today.
                         @else
                             Here's what's happening at <strong>{{ $school->House ?? 'your school' }}</strong> today.
                         @endif
@@ -904,7 +904,7 @@
                                 <div class="announce-dot {{ $msg->priority }}"></div>
                                 <div class="announce-body">
                                     <div class="t1">{{ $msg->subject }}</div>
-                                    <div class="t2">{{ optional($msg->sender)->name ?? 'KAMSSA' }} &middot;
+                                    <div class="t2">{{ optional($msg->sender)->name ?? 'WAKATA' }} &middot;
                                         {{ \Carbon\Carbon::parse($msg->created_at)->diffForHumans() }}</div>
                                 </div>
                             </div>
@@ -952,7 +952,7 @@
                     {
                         label: 'Registration Complete %',
                         data: @json(collect($registrationProgress)->pluck('pct')->values()),
-                        backgroundColor: '#026837',
+                        backgroundColor: '#043AA1',
                         borderRadius: 6,
                         maxBarThickness: 46,
                     },
@@ -983,7 +983,7 @@
                 labels: categoryLabels,
                 datasets: [{
                     data: categoryData,
-                    backgroundColor: ['#026837', '#1D7FBF', '#E0A215'],
+                    backgroundColor: ['#043AA1', '#1D7FBF', '#E0A215'],
                     borderWidth: 0,
                 }]
             },

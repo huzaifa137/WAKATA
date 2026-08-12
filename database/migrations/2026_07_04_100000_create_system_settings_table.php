@@ -19,9 +19,9 @@ return new class extends Migration
             $table->id();
 
             // Identity
-            $table->string('system_name')->default('Kampala Integrated Secondary Schools Examination');
+            $table->string('system_name')->default('Wakiso Kampala Teachers Association');
             $table->string('system_name_ar')->nullable();
-            $table->string('short_name', 30)->default('KAMSSA'); // acronym e.g. KAMSSA, KAMSSA
+            $table->string('short_name', 30)->default('WAKATA'); // acronym e.g. WAKATA, WAKATA
             $table->string('tagline')->nullable();
 
             // Branding

@@ -204,7 +204,7 @@
                 }
 
                 #resultsTable thead th {
-                    background: #287C44;
+                    background: #0059ff;
                     color: white;
                     font-size: .8rem;
                     text-transform: uppercase;
@@ -710,11 +710,11 @@
                             <title>Grading Results - ${GR_META.schoolName} - ${GR_META.category} - ${GR_META.year}</title>
                             <style>
                                 body { font-family: Arial, sans-serif; padding: 20px; color: #1e293b; }
-                                .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #287C44; }
-                                .header h2 { color: #287C44; margin-bottom: 10px; }
+                                .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #0059ff; }
+                                .header h2 { color: #0059ff; margin-bottom: 10px; }
                                 .header p { color: #64748b; margin: 5px 0; }
                                 table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
-                                th { background: #287C44; color: white; padding: 12px 8px; text-align: left; font-weight: 600; }
+                                th { background: #0059ff; color: white; padding: 12px 8px; text-align: left; font-weight: 600; }
                                 td { padding: 10px 8px; border-bottom: 1px solid #e2e8f0; }
                                 tr:nth-child(even) { background: #f8fafc; }
                                 .footer { margin-top: 30px; text-align: center; color: #64748b; font-size: 12px; }

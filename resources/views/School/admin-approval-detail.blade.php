@@ -7,14 +7,14 @@
 .badge-returned { background:#ef4444; color:#fff; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:600; }
 .badge-photo    { background:#f59e0b; color:#fff; padding:4px 10px; border-radius:20px; font-size:11px; }
 .badge-attached { background:#3b82f6; color:#fff; padding:4px 10px; border-radius:20px; font-size:11px; }
-table thead th  { background:#026837; color:#fff; padding:12px 14px; font-size:13px; }
+table thead th  { background:#043AA1; color:#fff; padding:12px 14px; font-size:13px; }
 table tbody td  { padding:10px 14px; vertical-align:middle; border-bottom:1px solid #f1f5f9; font-size:13px; }
 tr.locked-row   { background:#f0fdf4 !important; }
 .slot-info-bar  { background:#f8fafc; border-radius:10px; padding:14px 18px; border:1px solid #e2e8f0; margin-bottom:18px; font-size:13px; }
 .action-bar     { background:#f8f9fa; border-radius:10px; padding:14px 18px; margin-bottom:18px; border:1px solid #e0e0e0; }
 .filter-tabs    { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; }
 .ftab { padding:7px 16px; border-radius:50px; border:1.5px solid #dee2e6; background:#fff; font-size:12px; font-weight:600; cursor:pointer; }
-.ftab.active { background:#026837; color:#fff; border-color:#026837; }
+.ftab.active { background:#043AA1; color:#fff; border-color:#043AA1; }
 </style>
 
 <div class="side-app">
@@ -22,7 +22,7 @@ tr.locked-row   { background:#f0fdf4 !important; }
         <div class="col-12">
             <div class="card">
                 <div class="card-header text-white d-flex justify-content-between align-items-center"
-                     style="background:#026837; border-radius:12px 12px 0 0;">
+                     style="background:#043AA1; border-radius:12px 12px 0 0;">
                     <div>
                         <h4 class="card-title mb-0"><i class="fas fa-user-check mr-2"></i>{{ $schoolPrefix }} — Student Registrations</h4>
                         <small style="opacity:.85;">{{ $schoolName }}</small>
@@ -86,7 +86,7 @@ tr.locked-row   { background:#f0fdf4 !important; }
                                 <span id="selectedCount" class="text-muted" style="font-size:13px;">0 selected</span>
                             </div>
                             <div class="d-flex" style="gap:8px; flex-wrap:wrap;">
-                                <button id="approveBtn" class="btn text-white btn-sm" style="background:#287C44; display:none;">
+                                <button id="approveBtn" class="btn text-white btn-sm" style="background:#0059ff; display:none;">
                                     <i class="fas fa-check mr-1"></i>Approve Selected
                                 </button>
                                 <button id="rejectBtn" class="btn btn-warning btn-sm" style="display:none;">
@@ -211,14 +211,14 @@ tr.locked-row   { background:#f0fdf4 !important; }
 <div class="modal fade" id="viewStudentModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header" style="background:#026837; color:#fff;">
+            <div class="modal-header" style="background:#043AA1; color:#fff;">
                 <h5 class="modal-title"><i class="fas fa-user mr-2"></i>Student Details</h5>
                 <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
                 <div class="text-center mb-4">
                     <img id="modal_photo" src="/assets/images/default-user.jpg"
-                        style="width:100px;height:120px;object-fit:cover;border-radius:10px;border:3px solid #287C44;">
+                        style="width:100px;height:120px;object-fit:cover;border-radius:10px;border:3px solid #0059ff;">
                     <h5 class="mt-2 mb-0" id="modal_name"></h5>
                     <p class="text-muted" id="modal_name_ar"></p>
                     <code id="modal_student_id"></code>
@@ -287,7 +287,7 @@ $('#approveBtn').on('click', function () {
         title: 'Approve ' + ids.length + ' student(s)?',
         text: 'They will be added to the main students database.',
         icon: 'question', showCancelButton: true,
-        confirmButtonColor: '#287C44', confirmButtonText: 'Yes, Approve'
+        confirmButtonColor: '#0059ff', confirmButtonText: 'Yes, Approve'
     }).then(r => {
         if (!r.isConfirmed) return;
         submitAction(ids, 'Approved');
@@ -316,7 +316,7 @@ function submitAction(ids, action) {
     }, function (res) {
         let msg = res.message;
         if (res.errors && res.errors.length) msg += '\n\nWarnings:\n' + res.errors.join('\n');
-        Swal.fire({ icon: 'success', title: 'Done', text: msg, confirmButtonColor: '#287C44' })
+        Swal.fire({ icon: 'success', title: 'Done', text: msg, confirmButtonColor: '#0059ff' })
             .then(() => location.reload());
     }).fail(xhr => Swal.fire('Error', xhr.responseJSON?.message || 'Something went wrong', 'error'));
 }
@@ -353,7 +353,7 @@ $(document).on('click', '.btn-toggle-lock', function () {
                 icon: 'success',
                 title: res.is_locked ? 'Locked' : 'Unlocked',
                 text: res.message,
-                confirmButtonColor: '#026837',
+                confirmButtonColor: '#043AA1',
                 timer: 2000,
                 showConfirmButton: false,
             }).then(() => location.reload());

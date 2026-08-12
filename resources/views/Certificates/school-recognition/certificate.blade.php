@@ -92,7 +92,7 @@
         .left h2 {
             margin: 0;
             font-size: 22px;
-            color: #026837;
+            color: #043AA1;
         }
 
         .red {
@@ -129,7 +129,7 @@
         .right h2 {
             margin: 0;
             font-size: 22px;
-            color: #026837;
+            color: #043AA1;
         }
 
         .right h3 {
@@ -153,7 +153,7 @@
             font-size: 17px;
             font-weight: 900;
             letter-spacing: 2px;
-            color: #026837;
+            color: #043AA1;
             border-bottom: 2.5px solid #b11226;
             padding-bottom: 3px;
             margin: 0;
@@ -254,12 +254,12 @@
 
         .reg-number-box {
             display: inline-block;
-            border: 1.5px solid #026837;
+            border: 1.5px solid #043AA1;
             border-radius: 6px;
             padding: 1px 7px;
             font-weight: bold;
             font-size: 13px;
-            color: #026837;
+            color: #043AA1;
             letter-spacing: 1px;
         }
 
@@ -298,12 +298,12 @@
 
                 <div class="left">
                     <h2>Kampala Integrated Secondary School Examination Bureau</h2>
-                    <h3 class="red">KAMSSA</h3>
+                    <h3 class="red">WAKATA</h3>
                     <h4>Kampala, Uganda</h4>
                 </div>
 
                 <div class="center-logo">
-                    <img src="{{ asset('assets/images/brand/uplogolight.png') }}" alt="KAMSSA logo"
+                    <img src="{{ asset('assets/images/brand/uplogolight.png') }}" alt="WAKATA logo"
                         style="max-width: 150%; max-height: 150%;">
                 </div>
 
@@ -339,8 +339,8 @@
                 registered under Board Reference No.&nbsp;<span
                     class="reg-number-box">{{ $cert->certificate_number }}</span>,
                 is a recognised institution known to and approved by the
-                <b>Kampala Integrated Secondary School Examination Bureau (KAMSSA)</b>.
-                This school is duly authorised to participate in KAMSSA examinations.
+                <b>Kampala Integrated Secondary School Examination Bureau (WAKATA)</b>.
+                This school is duly authorised to participate in WAKATA examinations.
                 This certificate is issued on <b>{{ \Carbon\Carbon::parse($cert->issued_date)->format('d F Y') }}</b>.
             </div>
 
@@ -353,7 +353,7 @@
                         <b><span class="ar-inline">{!! Helper::arabicWordSpacing('سكرتير التعليم للمجلس') !!}</span></b>
                         <div class="signature-space"></div>
                         <strong style="white-space:nowrap; direction:ltr; unicode-bidi:embed;">
-                            Secretary for Education (KAMSSA)
+                            Secretary for Education (WAKATA)
                         </strong>
                     </div>
                 </div>
@@ -377,7 +377,7 @@
                                 class="ar-inline">{!! Helper::arabicWordSpacing('السكرتير التنفيذي للهيئة') !!}</span></b>
                         <div class="signature-space"></div>
                         <strong style="white-space:nowrap; direction:ltr; unicode-bidi:embed;">
-                            Executive Secretary (KAMSSA)
+                            Executive Secretary (WAKATA)
                         </strong>
                     </div>
                 </div>

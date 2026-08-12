@@ -91,7 +91,7 @@ $(function(e){
 		  }
 		},
 		series: chartdata3,
-		color:[ '#026837', '#f72d66','#cedbfd']
+		color:[ '#043AA1', '#f72d66','#cedbfd']
 	};
 	var chart5 = document.getElementById('echart5');
 	var barChart5 = echarts.init(chart5);
@@ -114,8 +114,8 @@ $(function(e){
 				],
 				datasets: [{
 					data: [68, 55, 45, 34, 27],
-					backgroundColor: ['#026837', '#f72d66','#2dce89', '#45aaf2','#ecb403','#ff5b51'],
-					hoverBackgroundColor: ['#026837', '#f72d66','#2dce89', '#45aaf2','#ecb403','#ff5b51']
+					backgroundColor: ['#043AA1', '#f72d66','#2dce89', '#45aaf2','#ecb403','#ff5b51'],
+					hoverBackgroundColor: ['#043AA1', '#f72d66','#2dce89', '#45aaf2','#ecb403','#ff5b51']
 				}]
 			},
 			options: {

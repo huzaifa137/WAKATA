@@ -189,7 +189,7 @@
                 <div class="passlip-box">
                     <div class="slip-header">
                         <div class="logo-circle">
-                            <img src="{{ asset('assets/images/brand/uplogolight.png') }}" alt="KAMSSA Logo">
+                            <img src="{{ asset('assets/images/brand/uplogolight.png') }}" alt="WAKATA Logo">
                         </div>
 
                         <h1>KAMPALA INTEGRATED SECONDARY SCHOOLS'<br>EXAMINATION BUREAU {{ $year }}</h1>

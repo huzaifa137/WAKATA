@@ -28,7 +28,7 @@ use App\Http\Controllers\Helper;
         <div class="row">
             <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
                 <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center"  style="background-color: #026837;">
+                    <div class="card-header d-flex justify-content-between align-items-center"  style="background-color: #043AA1;">
                         <h4 class="card-title mb-0 text-white">Students List</h4>
                     </div>
 

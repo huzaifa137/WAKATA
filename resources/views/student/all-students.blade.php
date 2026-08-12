@@ -36,9 +36,9 @@ use App\Http\Controllers\Helper;
                 <div class="card mt-5">
 
                     <div class="card-header  text-white d-flex justify-content-between align-items-center"
-                        style="background-color: #026837;">
+                        style="background-color: #043AA1;">
                         <h3 class="card-title">All Students</h3>
-                        <a href="{{ route('students.add.new.student') }}" class="btn btn-sm" style="background-color: #287C44;">
+                        <a href="{{ route('students.add.new.student') }}" class="btn btn-sm" style="background-color: #0059ff;">
                             <span
                                 class="rounded-circle bg-white d-inline-flex align-items-center justify-content-center me-1"
                                 style="width: 20px; height: 20px;">
@@ -112,26 +112,26 @@ use App\Http\Controllers\Helper;
 
     <!-- Students Table -->
     @if (request()->anyFilled(['house_id', 'year', 'type']))
-        <div class="alert mb-3 text-white rounded-0" style="background-color: #287C44;">
+        <div class="alert mb-3 text-white rounded-0" style="background-color: #0059ff;">
             <strong>Active Filters : </strong>
 
             @if (request('house_id'))
                 @php
                     $selectedHouse = $houses->firstWhere('ID', request('house_id'));
                 @endphp
-                <span class="badge mr-2 rounded-0" style="background-color: #026837;">
+                <span class="badge mr-2 rounded-0" style="background-color: #043AA1;">
                     School: {{ $selectedHouse->House ?? '' }}
                 </span>
             @endif
 
             @if (request('year'))
-                <span class="badge mr-2 rounded-0" style="background-color: #026837;">
+                <span class="badge mr-2 rounded-0" style="background-color: #043AA1;">
                     Year: {{ request('year') }}
                 </span>
             @endif
 
             @if (request('type'))
-                <span class="badge mr-2 rounded-0" style="background-color: #026837;">
+                <span class="badge mr-2 rounded-0" style="background-color: #043AA1;">
                     Category: {{ request('type') === 'ple' ? 'Primary (PLE)' : ucfirst(request('type')) }}
                 </span>
             @endif

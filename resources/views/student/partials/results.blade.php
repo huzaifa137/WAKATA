@@ -35,7 +35,7 @@ use App\Http\Controllers\Helper;
                                 height: 50px;
                                 object-fit: cover;
                                 border-radius: 50%;
-                                border: 2px solid #287C44;
+                                border: 2px solid #0059ff;
                                 box-shadow: 0 2px 6px rgba(0,0,0,0.2);
                             ">
                         @else
@@ -49,7 +49,7 @@ use App\Http\Controllers\Helper;
                     <td>{{ $student->House }}</td>
                     <td class="text-center">
                         <button type="button" class="btn btn-sm view-student-details mr-1" data-toggle="modal"
-                            style="background-color:#287C44;color:#FFF;" data-target="#studentDetailsModal"
+                            style="background-color:#0059ff;color:#FFF;" data-target="#studentDetailsModal"
                             data-student-id="{{ $student->Student_ID }}" data-student-name="{{ $student->Student_Name }}"
                             data-student-name-ar="{{ $student->Student_Name_AR }}" data-student-sex="{{ $student->StudentSex }}"
                             data-student-sex-ar="{{ $student->StudentSex_AR }}"
@@ -127,7 +127,7 @@ use App\Http\Controllers\Helper;
         aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header text-white" style="background: linear-gradient(135deg, #026837 0%, #026837 100%);">
+                <div class="modal-header text-white" style="background: linear-gradient(135deg, #043AA1 0%, #043AA1 100%);">
                     <h5 class="modal-title" id="studentDetailsModalLabel">
                         <i class="fas fa-user-graduate mr-2"></i> Student Details
                     </h5>
@@ -152,7 +152,7 @@ use App\Http\Controllers\Helper;
         aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header text-white" style="background: linear-gradient(135deg, #287C44 0%, #287C44 100%);">
+                <div class="modal-header text-white" style="background: linear-gradient(135deg, #0059ff 0%, #0059ff 100%);">
                     <h5 class="modal-title" id="editStudentModalLabel">
                         <i class="fas fa-edit mr-2"></i> Edit Student
                     </h5>
@@ -169,7 +169,7 @@ use App\Http\Controllers\Helper;
                         <div class="text-center mb-4">
                             <div class="mb-3">
                                 <img id="editPhotoPreview" src="" alt="Student Photo"
-                                    style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 3px solid #287C44; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                                    style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%; border: 3px solid #0059ff; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
                             </div>
                             <div class="custom-file" style="max-width: 250px; margin: 0 auto;">
                                 <input type="file" class="custom-file-input" id="editPhoto" name="photo" accept="image/*">
@@ -318,7 +318,7 @@ use App\Http\Controllers\Helper;
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             <i class="fas fa-times mr-1"></i> Cancel
                         </button>
-                        <button type="submit" class="btn text-white" style="background-color:#287C44;">
+                        <button type="submit" class="btn text-white" style="background-color:#0059ff;">
                             <i class="fas fa-save mr-1"></i> Update Student
                         </button>
                     </div>
@@ -339,7 +339,7 @@ use App\Http\Controllers\Helper;
         }
 
         .modal-body .card-header {
-            background: linear-gradient(135deg, #026837 0%, #026837 100%);
+            background: linear-gradient(135deg, #043AA1 0%, #043AA1 100%);
             color: white;
             font-weight: 600;
             padding: 10px 15px;
@@ -405,14 +405,14 @@ use App\Http\Controllers\Helper;
                             resolve(`
                                         <div class="student-avatar mb-3">
                                             <img src="${photoWithTimestamp}" alt="Student Photo" 
-                                                style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 3px solid #026837; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                                                style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 3px solid #043AA1; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
                                         </div>
                                     `);
                         };
                         img.onerror = function () {
                             resolve(`
                                         <div class="student-avatar mb-3">
-                                            <i class="fas fa-user-circle fa-5x" style="color: #026837;"></i>
+                                            <i class="fas fa-user-circle fa-5x" style="color: #043AA1;"></i>
                                         </div>
                                     `);
                         };
@@ -563,7 +563,7 @@ use App\Http\Controllers\Helper;
                     text: 'Are you sure you want to update this student\'s information?',
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonColor: '#287C44',
+                    confirmButtonColor: '#0059ff',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Yes, update it!',
                     cancelButtonText: 'Cancel'
@@ -632,7 +632,7 @@ use App\Http\Controllers\Helper;
                                     icon: 'error',
                                     title: 'Update Failed',
                                     text: errorMessage,
-                                    confirmButtonColor: '#287C44'
+                                    confirmButtonColor: '#0059ff'
                                 });
                             }
                         });

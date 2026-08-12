@@ -115,7 +115,7 @@ class StudentController extends Controller
             $useremail = $registeredUser->email;
 
             $data = [
-                'subject' => 'KAMSSA Examination System REGISTRATION OTP',
+                'subject' => 'WAKATA Examination System REGISTRATION OTP',
                 'body' => 'Enter the Sent OTP to confirm registration : ',
                 'generatedOTP' => $generatedOTP,
                 'username' => $username,

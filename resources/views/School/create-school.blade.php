@@ -22,10 +22,10 @@ $controller = new Controller();
             <div class="col-lg-12 col-xl-12 col-md-12 col-sm-12">
                 <div class="card bg-primary">
                     <div class="card-header d-flex justify-content-between align-items-center"
-                        style="background-color: #026837;">
+                        style="background-color: #043AA1;">
                         <h4 class="card-title mb-0 text-white">Create New School</h4>
                         <a href="{{ route('school.allSchools') }}" class="btn text-white"
-                            style="background-color: #287C44;">
+                            style="background-color: #0059ff;">
                             <i class="fas fa-school me-2"></i> All Schools
                         </a>
                     </div>
@@ -99,7 +99,7 @@ $controller = new Controller();
                                 </div>
                             </div>
                             <div class="mt-4 text-left">
-                                <button type="submit" class="btn text-white" style="background-color: #287C44;">
+                                <button type="submit" class="btn text-white" style="background-color: #0059ff;">
                                     <i class="fas fa-paper-plane"></i> Submit
                                 </button>
                             </div>

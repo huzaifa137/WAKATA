@@ -168,7 +168,7 @@ $__loggedInMarksEntrant = Session('LoggedAdmin')
                 </a>
             </li>
 
-            <li class="slide has-sub">
+            <!-- <li class="slide has-sub">
                 <a class="side-menu__item" href="#" data-toggle="submenu">
                     <i class="fa fa-refresh fa-2x mr-3"></i>
                     <span>Offline Sync</span>
@@ -199,7 +199,7 @@ $__loggedInMarksEntrant = Session('LoggedAdmin')
                         </li>
                     @endif
                 </ul>
-            </li>
+            </li> -->
 
             <li class="slide">
                 <a class="side-menu__item" href="{{ route('school.passwords.setup') }}">
@@ -284,7 +284,7 @@ $__loggedInMarksEntrant = Session('LoggedAdmin')
 <div class="modal fade" id="passwordChangeModal" tabindex="-1" role="dialog" aria-labelledby="passwordChangeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: 0 20px 60px rgba(0,0,0,0.2);">
-            <div class="modal-header" style="background: linear-gradient(135deg, #026837 0%, #038F16 100%); border-radius: 16px 16px 0 0; padding: 20px 30px; border: none;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #043AA1 0%, #043AA1 100%); border-radius: 16px 16px 0 0; padding: 20px 30px; border: none;">
                 <div class="d-flex align-items-center">
                     <div style="background: rgba(255,255,255,0.2); border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
                         <i class="fas fa-key text-white" style="font-size: 20px;"></i>
@@ -358,7 +358,7 @@ $__loggedInMarksEntrant = Session('LoggedAdmin')
             </div>
             <div class="modal-footer" style="border-top: 1px solid #eee; padding: 20px 30px; border-radius: 0 0 16px 16px;">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" style="border-radius: 10px; padding: 10px 30px; font-weight: 600;">Skip for now</button>
-                <button type="button" class="btn btn-primary" id="updatePasswordBtn" style="background: linear-gradient(135deg, #026837 0%, #038F16 100%); border: none; border-radius: 10px; padding: 10px 35px; font-weight: 600; box-shadow: 0 4px 15px rgba(2,104,55,0.3);">
+                <button type="button" class="btn btn-primary" id="updatePasswordBtn" style="background: linear-gradient(135deg, #043AA1 0%, #043AA1 100%); border: none; border-radius: 10px; padding: 10px 35px; font-weight: 600; box-shadow: 0 4px 15px rgba(2,104,55,0.3);">
                     <i class="fas fa-save me-2"></i> Update Password
                 </button>
             </div>
@@ -470,7 +470,7 @@ $('#updatePasswordBtn').on('click', function() {
         showCancelButton: true,
         confirmButtonText: 'Yes, update it',
         cancelButtonText: 'Cancel',
-        confirmButtonColor: '#026837',
+        confirmButtonColor: '#043AA1',
         cancelButtonColor: '#d33',
         reverseButtons: true
     }).then((result) => {
@@ -499,7 +499,7 @@ function submitPasswordUpdate($btn, currentPassword, newPassword) {
                     icon: 'success',
                     title: 'Password Updated!',
                     text: 'Your password has been changed successfully.',
-                    confirmButtonColor: '#026837'
+                    confirmButtonColor: '#043AA1'
                 }).then(function() {
                     $('#passwordChangeModal').modal('hide');
                     location.reload();
@@ -631,7 +631,7 @@ function submitPasswordUpdate($btn, currentPassword, newPassword) {
 
     .side-menu__item:hover,
     .slide.active>.side-menu__item {
-        background: linear-gradient(135deg, #026837 0%, #038F16 100%);
+        background: linear-gradient(135deg, #043AA1 0%, #043AA1 100%);
         color: #fff !important;
         transform: translateX(4px);
     }
@@ -686,7 +686,7 @@ function submitPasswordUpdate($btn, currentPassword, newPassword) {
     }
 
     .sub-menu li a:hover {
-        background: linear-gradient(135deg, #026837 0%, #038F16 100%);
+        background: linear-gradient(135deg, #043AA1 0%, #043AA1 100%);
         color: #fff !important;
         transform: translateX(4px);
     }
@@ -803,7 +803,7 @@ function submitPasswordUpdate($btn, currentPassword, newPassword) {
 
     .app-sidebar3 ul.side-menu li.slide .sub-menu li a:hover,
     .app-sidebar3 ul.side-menu li.slide .sub-menu li a:focus {
-        background: linear-gradient(135deg, #026837 0%, #038F16 100%) !important;
+        background: linear-gradient(135deg, #043AA1 0%, #043AA1 100%) !important;
         transform: translateX(4px);
         color: #fff !important;
     }
@@ -829,7 +829,7 @@ function submitPasswordUpdate($btn, currentPassword, newPassword) {
    border-radius: 0 0 16px 16px;
     }
     .form-control:focus {
-        border-color: #026837 !important ;
+        border-color: #043AA1 !important ;
        
    box-shadow: 0 0 0 0.2rem rgba(2,104,55,0.15) !important;
     }

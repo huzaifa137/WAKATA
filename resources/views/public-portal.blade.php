@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>KAMSSA - Check Your Results</title>
+    <title>WAKATA - Check Your Results</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -29,18 +29,18 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ asset('asset/css/bootstrap.min.css') }}" rel="stylesheet">
 
-    <!-- Template Stylesheet (KAMSSA green theme) -->
+    <!-- Template Stylesheet (WAKATA green theme) -->
     <link href="{{ asset('asset/css/style.css') }}" rel="stylesheet">
 
     <!-- Custom Portal Styles (green theme overrides & portal components) -->
     <style>
         :root {
-            --iteb-green: #026837;
+            --iteb-green: #043AA1;
             --iteb-green-light: #1E7A3D;
             --iteb-green-dark: #0A3A18;
         }
 
-        /* Override Bootstrap primary color with KAMSSA green */
+        /* Override Bootstrap primary color with WAKATA green */
         .btn-primary {
             background-color: var(--iteb-green) !important;
             border-color: var(--iteb-green) !important;
@@ -158,7 +158,7 @@
 
         .grade-b {
             background-color: rgba(13, 75, 30, 0.12);
-            color: #026837;
+            color: #043AA1;
         }
 
         .grade-c {
@@ -210,8 +210,8 @@
         <!-- Navbar Start (exact structure from about page, with Student Portal link added and active) -->
         <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5 py-lg-0">
             <a href="{{ route('home.page') }}" class="navbar-brand d-flex align-items-center">
-                <img src="{{ $systemSettings->logo_url ?? URL::asset('assets/images/brand/logo.png') }}" alt="KAMSSA Logo" class="navbar-logo me-3">
-                <h1 style="color: #FE5D37" class="m-0 text-primary">KAMSSA</h1>
+                <img src="{{ $systemSettings->logo_url ?? URL::asset('assets/images/brand/logo.png') }}" alt="WAKATA Logo" class="navbar-logo me-3">
+                <h1 style="color: #FE5D37" class="m-0 text-primary">WAKATA</h1>
             </a>
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
@@ -556,7 +556,7 @@
                         <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
                             <div class="p-5">
                                 <h1 class="mb-4 text-primary">Register Your School</h1>
-                                <p class="mb-4">Join the KAMSSA family and ensure your students receive accurate,
+                                <p class="mb-4">Join the WAKATA family and ensure your students receive accurate,
                                     timely, and secure examination results. Our platform offers seamless results
                                     submission, tracking, and comprehensive reports.</p>
                                 <a href="{{ route('contact.us') }}" class="btn btn-primary py-3 px-5 rounded-pill">
@@ -642,7 +642,7 @@
                 <div class="copyright">
                     <div class="row">
                         <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                            &copy; <a class="border-bottom" href="#">KAMSSA</a>, All Right Reserved.
+                            &copy; <a class="border-bottom" href="#">WAKATA</a>, All Right Reserved.
                         </div>
                         <div class="col-md-6 text-center text-md-end">
                             <div class="footer-menu">
@@ -836,7 +836,7 @@
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>Official Results - KAMSSA</title>
+                    <title>Official Results - WAKATA</title>
                     <style>
                         body { font-family: 'Heebo', sans-serif; padding: 2rem; }
                         .portal-card { max-width: 1000px; margin: 0 auto; }
@@ -845,7 +845,7 @@
                         .grade-b { background: #d1ecf1; color: #0c5460; }
                         .grade-c { background: #fff3cd; color: #856404; }
                         .results-table { width: 100%; border-collapse: collapse; }
-                        .results-table th { background: #026837; color: white; padding: 12px; }
+                        .results-table th { background: #043AA1; color: white; padding: 12px; }
                         .results-table td { padding: 10px; border-bottom: 1px solid #ddd; }
                     </style>
                 </head>

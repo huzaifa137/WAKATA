@@ -6,7 +6,7 @@ return [
     |--------------------------------------------------------------------------
     | Sync role
     |--------------------------------------------------------------------------
-    | 'central'  -> the main KAMSSA server. Accepts pushes, serves pulls.
+    | 'central'  -> the main WAKATA server. Accepts pushes, serves pulls.
     | 'school'   -> a remote/offline installation (XAMPP at a school or
     |               town field office). Queues local changes and pushes
     |               them to the central server when internet is available.

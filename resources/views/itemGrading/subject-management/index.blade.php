@@ -43,7 +43,7 @@
                 }
 
                 .sm-table thead th {
-                    background: #026837;
+                    background: #043AA1;
                     color: white;
                 }
 
@@ -119,7 +119,7 @@
 
             <div class="card shadow-lg border-0">
                 <div class="card-header text-white d-flex justify-content-between align-items-center flex-wrap gap-2"
-                    style="background-color:#026837;">
+                    style="background-color:#043AA1;">
                     <h4 class="mb-0">
                         <i class="fa fa-book me-2"></i> UCE / UACE Subject Management
                     </h4>
@@ -137,7 +137,7 @@
                     <script>
                         document.addEventListener('DOMContentLoaded', function () {
                             @if (session('success'))
-                                Swal.fire({ icon: 'success', title: 'Success!', text: @json(session('success')), confirmButtonColor: '#026837' });
+                                Swal.fire({ icon: 'success', title: 'Success!', text: @json(session('success')), confirmButtonColor: '#043AA1' });
                             @endif
 
                             @if ($errors->any())
@@ -180,7 +180,7 @@
                                     <i class="fa fa-circle" style="color:#17a2b8;font-size:8px;"></i> Optional &nbsp;
                                     <i class="fa fa-circle" style="color:#a71d2a;font-size:8px;"></i> Inactive (dimmed)
                                 </div>
-                                <button type="button" class="btn btn-sm text-white" style="background-color:#026837;"
+                                <button type="button" class="btn btn-sm text-white" style="background-color:#043AA1;"
                                     onclick="smOpenAddModal('{{ $code }}')">
                                     <i class="fa fa-plus me-1"></i> Add {{ $label }} Subject
                                 </button>
@@ -296,7 +296,7 @@
                     <input type="hidden" name="_method" id="subjectFormMethod" value="POST">
                     <input type="hidden" name="category" id="subjectCategory" value="">
 
-<div class="modal-header text-white" style="background-color:#026837;">
+<div class="modal-header text-white" style="background-color:#043AA1;">
     <h5 class="modal-title" id="subjectModalTitle"><i class="fa fa-plus me-2"></i> Add Subject
     </h5>
     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
@@ -359,7 +359,7 @@
                     </div>
                     <div class="modal-footer">
 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn text-white" style="background-color:#026837;">
+                        <button type="submit" class="btn text-white" style="background-color:#043AA1;">
                             <i class="fa fa-check me-1"></i> Save
                         </button>
                     </div>
@@ -493,7 +493,7 @@ function smOpenEditModal(id, category, code, name, status, totalPapers, maxScore
                     icon: 'warning',
                     title: 'Cannot delete "' + name + '"',
                     html: 'This subject already has <strong>' + registrationCount + '</strong> student registration(s) and <strong>' + markCount + '</strong> mark(s) recorded against it.<br><br>Deactivate it instead to keep historic records intact.',
-                    confirmButtonColor: '#026837'
+                    confirmButtonColor: '#043AA1'
                 });
                 return;
             }
@@ -519,7 +519,7 @@ function smOpenEditModal(id, category, code, name, status, totalPapers, maxScore
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {
-                            Swal.fire({ icon: 'success', title: 'Deleted', text: data.message, confirmButtonColor: '#026837' })
+                            Swal.fire({ icon: 'success', title: 'Deleted', text: data.message, confirmButtonColor: '#043AA1' })
                                 .then(() => location.reload());
                         } else {
                             Swal.fire({ icon: 'error', title: 'Could not delete', text: data.message || 'Please try again.', confirmButtonColor: '#d33' });

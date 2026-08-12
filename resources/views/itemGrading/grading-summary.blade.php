@@ -64,15 +64,15 @@
             }
 
             .bg-gradient-primary {
-                background: linear-gradient(0, #026837 0%, #026837 100%);
+                background: linear-gradient(0, #043AA1 0%, #043AA1 100%);
             }
 
             .bg-gradient-success {
-                background: linear-gradient(135deg, #287C44 0%, #287C44 100%);
+                background: linear-gradient(135deg, #0059ff 0%, #0059ff 100%);
             }
 
             .bg-gradient-info {
-                background: linear-gradient(135deg, #026837 0%, #026837 100%);
+                background: linear-gradient(135deg, #043AA1 0%, #043AA1 100%);
             }
 
             @media (max-width: 768px) {
@@ -129,7 +129,7 @@
 
             .form-select:focus,
             .form-control:focus {
-                border-color: #287C44;
+                border-color: #0059ff;
                 box-shadow: 0 0 0 0.2rem rgba(40, 124, 68, 0.1);
             }
 
@@ -278,7 +278,7 @@
             /* Hover effect */
             .form-select:hover,
             .form-control:hover {
-                border-color: #287C44;
+                border-color: #0059ff;
             }
 
             /* Button hover effect */
@@ -395,7 +395,7 @@
 
             <div class="card shadow-lg border-0">
                 <div class="card-header text-white d-flex justify-content-between align-items-center"
-                    style="background-color: #287C44;">
+                    style="background-color: #0059ff;">
                     <h4 class="mb-0">
                         <i class="fas fa-chart-bar me-2"></i>
                         Grading & Examination Summary
@@ -406,7 +406,7 @@
 
                     <!-- Examination Statistics Form -->
                     <div>
-                        <h5 class="mb-3" style="color: #287C44;">
+                        <h5 class="mb-3" style="color: #0059ff;">
                             <i class="fas fa-poll me-2"></i>
                             General Examinations Report
                         </h5>
@@ -458,7 +458,7 @@
                             <div class="row mt-4 justify-content-center">
                                 <div class="col-12 col-md-4">
                                     <button type="submit" class="btn"
-                                        style="background-color: #287C44; color: white; width: 100%; min-height: 44px;">
+                                        style="background-color: #0059ff; color: white; width: 100%; min-height: 44px;">
                                         <i class="fas fa-magnifying-glass-chart me-2"></i>
                                         General Report
                                     </button>
@@ -470,7 +470,7 @@
 
                     <!-- Grading Summary Form -->
                     <div class="mb-4 pb-3 mt-4 border-bottom">
-                        <h5 class="mb-3" style="color: #287C44">
+                        <h5 class="mb-3" style="color: #0059ff">
                             <i class="fas fa-calculator me-2"></i> Schools Grading Report
                         </h5>
 
@@ -532,7 +532,7 @@
                             <div class="row justify-content-center">
                                 <div class="col-12 col-md-4">
                                     <button type="submit" class="btn"
-                                        style="background-color: #287C44; color: white; width: 100%; min-height: 44px;">
+                                        style="background-color: #0059ff; color: white; width: 100%; min-height: 44px;">
                                         <i class="fas fa-magnifying-glass-chart me-2"></i>
                                         Generate School Reports
                                     </button>

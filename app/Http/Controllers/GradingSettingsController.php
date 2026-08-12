@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\GradingSetting;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Database\QueryException;
 
 class GradingSettingsController extends Controller
 {
@@ -41,16 +43,36 @@ class GradingSettingsController extends Controller
 
     public function update(Request $request, $id)
     {
+        $setting = GradingSetting::findOrFail($id);
+
         $request->validate([
-            'grade' => 'required|string|max:30',
+            'grade' => [
+                'required',
+                'string',
+                'max:30',
+                Rule::unique('grading_settings', 'grade')
+                    ->where(fn ($query) => $query
+                        ->where('category', $setting->category)
+                        ->where('type', $setting->type))
+                    ->ignore($setting->id),
+            ],
             'from_mark' => 'required|numeric|min:0|max:100',
             'to_mark' => 'required|numeric|min:0|max:100|gte:from_mark',
             'comment' => 'nullable|string|max:100',
             'weight' => 'required|numeric',
+        ], [
+            'grade.unique' => "A grade named \"{$request->grade}\" already exists for this category and type. Please choose a different name.",
         ]);
 
-        $setting = GradingSetting::findOrFail($id);
-        $setting->update($request->only(['grade', 'from_mark', 'to_mark', 'comment', 'weight']));
+        try {
+            $setting->update($request->only(['grade', 'from_mark', 'to_mark', 'comment', 'weight']));
+        } catch (QueryException $e) {
+            // Fallback safety net in case of a race condition past the validation above.
+            return response()->json([
+                'success' => false,
+                'message' => 'Could not update this grade — a grade with this name already exists for this category and type.',
+            ], 422);
+        }
 
         return response()->json(['success' => true, 'message' => 'Grade updated successfully.']);
     }

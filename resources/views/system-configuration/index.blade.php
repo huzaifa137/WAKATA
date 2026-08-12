@@ -37,7 +37,7 @@
 
         .level-chip .short-code {
             font-weight: bold;
-            color: #026837;
+            color: #043AA1;
             margin-right: 6px;
         }
 
@@ -62,7 +62,7 @@
         {{-- ============================================================= --}}
         <div class="card mb-4">
             <div class="card-header text-white d-flex justify-content-between align-items-center"
-                style="background-color:#026837;">
+                style="background-color:#043AA1;">
                 <h4 class="card-title mb-0">
                     <i class="fas fa-cogs mr-2"></i>
                     System Configuration &mdash; Identity &amp; Branding
@@ -86,13 +86,13 @@
                             <label>System / Examination Body Name <span class="text-danger">*</span></label>
                             <input type="text" name="system_name" class="form-control"
                                 value="{{ old('system_name', $settings->system_name) }}"
-                                placeholder="e.g. Kampala Integrated Secondary Schools Examination Bureau" required>
+                                placeholder="e.g. Wakiso Kampala Teachers Association Bureau" required>
                         </div>
 
                         <div class="col-md-3 mb-3">
                             <label>Acronym / Short Name <span class="text-danger">*</span></label>
                             <input type="text" name="short_name" class="form-control"
-                                value="{{ old('short_name', $settings->short_name) }}" placeholder="e.g. KAMSSA"
+                                value="{{ old('short_name', $settings->short_name) }}" placeholder="e.g. WAKATA"
                                 required>
                         </div>
 
@@ -159,7 +159,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn text-white" style="background-color:#287C44;">
+                    <button type="submit" class="btn text-white" style="background-color:#0059ff;">
                         <i class="fas fa-save"></i> Save System Settings
                     </button>
                 </form>
@@ -171,12 +171,12 @@
         {{-- ============================================================= --}}
         <div class="card mb-4">
             <div class="card-header text-white d-flex justify-content-between align-items-center"
-                style="background-color:#026837;">
+                style="background-color:#043AA1;">
                 <h4 class="card-title mb-0">
                     <i class="fas fa-layer-group mr-2"></i>
                     Examination Categories &amp; Levels
                 </h4>
-                <button class="btn btn-sm text-white" style="background-color:#287C44;" data-toggle="modal"
+                <button class="btn btn-sm text-white" style="background-color:#0059ff;" data-toggle="modal"
                     data-target="#addCategoryModal">
                     <i class="fas fa-plus"></i> Add Category
                 </button>
@@ -289,7 +289,7 @@
                     @csrf
                     <input type="hidden" name="_method" id="categoryFormMethod" value="POST">
 
-                    <div class="modal-header text-white" style="background-color:#026837;">
+                    <div class="modal-header text-white" style="background-color:#043AA1;">
                         <h5 class="modal-title" id="categoryModalTitle">Add Examination Category</h5>
                         <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
                     </div>
@@ -336,7 +336,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn text-white" style="background-color:#287C44;">Save</button>
+                        <button type="submit" class="btn text-white" style="background-color:#0059ff;">Save</button>
                     </div>
                 </form>
             </div>
@@ -354,7 +354,7 @@
                     <input type="hidden" name="_method" id="levelFormMethod" value="POST">
                     <input type="hidden" name="examination_category_id" id="level_category_id">
 
-                    <div class="modal-header text-white" style="background-color:#026837;">
+                    <div class="modal-header text-white" style="background-color:#043AA1;">
                         <h5 class="modal-title" id="levelModalTitle">Add Examination Level</h5>
                         <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
                     </div>
@@ -403,7 +403,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn text-white" style="background-color:#287C44;">Save</button>
+                        <button type="submit" class="btn text-white" style="background-color:#0059ff;">Save</button>
                     </div>
                 </form>
             </div>

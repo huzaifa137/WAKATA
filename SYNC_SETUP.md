@@ -1,6 +1,6 @@
-# KAMSSA Offline Sync — Setup Guide
+# WAKATA Offline Sync — Setup Guide
 
-This adds offline-capable data entry to KAMSSA — marks entry, student
+This adds offline-capable data entry to WAKATA — marks entry, student
 registrations, and submission documents — for schools/offices with
 unreliable or no internet. A school runs its own local copy of this same
 app (e.g. under XAMPP), works completely offline, then presses **Sync

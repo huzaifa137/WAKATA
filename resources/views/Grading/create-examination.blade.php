@@ -194,15 +194,15 @@ use App\Http\Controllers\Helper;
                 </div>
 
                 <div class="mb-3"
-                    style="background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%); padding: 20px; border-radius: 10px; border-left: 4px solid #026837;">
+                    style="background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%); padding: 20px; border-radius: 10px; border-left: 4px solid #043AA1;">
                     <label for="yearFilter" class="form-label"
-                        style="font-weight: 600; color: #026837; font-size: 16px; margin-bottom: 10px; display: block;">
-                        <i class="fas fa-calendar-alt" style="margin-right: 8px; color: #026837;"></i>Select Year
+                        style="font-weight: 600; color: #043AA1; font-size: 16px; margin-bottom: 10px; display: block;">
+                        <i class="fas fa-calendar-alt" style="margin-right: 8px; color: #043AA1;"></i>Select Year
                     </label>
 
                     <button type="button" id="toggleActiveExamsBtn" class="btn btn-sm mb-3"
                         style="
-        background-color:#026837;
+        background-color:#043AA1;
         color:white;
         border-radius:20px;
         padding:6px 14px;
@@ -246,7 +246,7 @@ use App\Http\Controllers\Helper;
                     <select id="yearFilter" class="form-control"
                         style="
                             border-radius: 8px;
-                            border: 2px solid #026837;
+                            border: 2px solid #043AA1;
                             padding: 0 15px;
                             height: 44px;
                             line-height: 44px;
@@ -265,7 +265,7 @@ use App\Http\Controllers\Helper;
                     <table id="examsTable" class="table table-striped table-bordered"
                         style="margin-bottom: 0; border: none;">
                         <thead
-                            style="background: linear-gradient(90deg, #026837 0%, #026837 100%); color: white; display:none;">
+                            style="background: linear-gradient(90deg, #043AA1 0%, #043AA1 100%); color: white; display:none;">
                             <tr>
                                 <th style="padding: 16px 12px; border: none; font-weight: 600; text-align: center;">No</th>
                                 <th style="padding: 16px 12px; border: none; font-weight: 600;">Examination Name</th>

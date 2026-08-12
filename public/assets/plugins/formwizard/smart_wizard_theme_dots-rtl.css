@@ -89,7 +89,7 @@
     margin-top: 20px;
     display: block;
     border-radius: 50%;
-    color: #026837;
+    color: #043AA1;
     background: #f3f4f7;
     border: none;
     width: 30px;
@@ -130,7 +130,7 @@
 }
 /* Active anchors */
 .sw-theme-dots > ul.step-anchor > li.active > a {
-    color: #026837;
+    color: #043AA1;
 }
 
 .sw-theme-dots > ul.step-anchor > li.active > a:hover {
@@ -138,7 +138,7 @@
 }
 
 .sw-theme-dots > ul.step-anchor > li.active > a:after {
-    background: #026837;
+    background: #043AA1;
 }
 /* Done anchors */
 .sw-theme-dots > ul.step-anchor > li.done > a {

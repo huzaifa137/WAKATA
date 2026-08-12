@@ -13,7 +13,7 @@
         <div class="row justify-content-center">
             <div class="col-md-7">
                 <div class="card border-0 shadow-sm text-center" style="border-radius: 18px; padding: 2.5rem 2rem;">
-                    <div style="font-size: 4rem; color: #026837; margin-bottom: 1rem;">
+                    <div style="font-size: 4rem; color: #043AA1; margin-bottom: 1rem;">
                         <i class="fas fa-certificate"></i>
                     </div>
                     <h4 class="font-weight-bold text-dark">Certificate Not Yet Issued</h4>

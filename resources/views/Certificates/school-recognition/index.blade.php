@@ -14,7 +14,7 @@
             <div class="col-12">
                 <div class="card shadow-sm border-0" style="border-radius: 16px; overflow: hidden;">
                     <div class="card-header d-flex justify-content-between align-items-center"
-                        style="background: linear-gradient(135deg, #026837 0%, #4ecf04 100%); padding: 1.2rem 1.6rem;">
+                        style="background: linear-gradient(135deg, #043AA1 0%, #4ecf04 100%); padding: 1.2rem 1.6rem;">
                         <h5 class="mb-0 text-white font-weight-bold">
                             <i class="fas fa-certificate mr-2"></i> Issued Recognition Certificates
                         </h5>
@@ -42,7 +42,7 @@
                         @else
                             <div class="table-responsive">
                                 <table class="table table-hover mb-0" style="font-size: 0.92rem;">
-                                    <thead style="background-color: #026837; color: #FFF;">
+                                    <thead style="background-color: #043AA1; color: #FFF;">
                                         <tr>
                                             <th class="pl-4" style="color: #FFF;">#</th>
                                             <th style="color: #FFF;">Certificate No.</th>
@@ -209,7 +209,7 @@
             title: '{!! session('swal_title') !!}',
             html: '{!! session('swal_text') !!}',
             icon: '{!! session('swal_icon') !!}',
-            confirmButtonColor: '#026837',
+            confirmButtonColor: '#043AA1',
             confirmButtonText: '{!! session('swal_confirm_text', 'OK') !!}',
             @if(session('swal_confirm_url'))
             showCancelButton: true,

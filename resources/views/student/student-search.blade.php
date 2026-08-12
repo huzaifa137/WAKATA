@@ -41,7 +41,7 @@ use App\Http\Controllers\Helper;
 
                             <div class="mt-3">
                                 <button type="submit" class="btn d-none text-white" id="searchBtn"
-                                    style="background-color:#287C44;">
+                                    style="background-color:#0059ff;">
                                     <i class="fas fa-search"></i> Search
                                 </button>
                             </div>
@@ -51,7 +51,7 @@ use App\Http\Controllers\Helper;
 
                 <!-- Results -->
                 <div class="card mt-4 d-none" id="resultsCard">
-                    <div class="card-header text-white" style="background-color:#026837;">
+                    <div class="card-header text-white" style="background-color:#043AA1;">
                         <h5 class="mb-0">Search Results</h5>
                     </div>
                     <div class="card-body bg-white" id="searchResults">

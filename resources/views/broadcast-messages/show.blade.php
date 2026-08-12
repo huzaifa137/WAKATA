@@ -59,7 +59,7 @@
                 }
 
                 .rr-table thead th {
-                    background: #026837;
+                    background: #043AA1;
                     color: #fff;
                 }
 
@@ -111,7 +111,7 @@
 
             <div class="card shadow-lg border-0 mb-4">
                 <div class="card-header text-white d-flex justify-content-between align-items-center flex-wrap gap-2"
-                    style="background-color:#026837;">
+                    style="background-color:#043AA1;">
                     <h4 class="mb-0"><i class="fa fa-envelope-open-text me-2"></i> {{ $message->subject }}</h4>
                     <span class="priority-pill {{ $message->priority }}">{{ $message->priority_label }}</span>
                 </div>

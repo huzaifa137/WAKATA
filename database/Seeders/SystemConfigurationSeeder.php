@@ -19,7 +19,7 @@ class SystemConfigurationSeeder extends Seeder
     public function run(): void
     {
         SystemSetting::query()->firstOrCreate([], [
-            'system_name' => 'Kampala Integrated Secondary Schools Examination',
+            'system_name' => 'Wakiso Kampala Teachers Association',
             'short_name'  => 'Kamssa',
             'tagline'     => "Uganda's trusted secondary examination board for O-LEVEL and A-LEVEL",
             'address'     => 'Kampala, Uganda',

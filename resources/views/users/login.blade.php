@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Login - KAMSSA</title>
+    <title>Login - WAKATA</title>
     <!-- Google Fonts & Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,10 +16,10 @@
            AJAX, CSRF, error handling, dynamic labels)
         ------------------------------------------------------------ */
         :root {
-            --orange: #026837;
+            --orange: #043AA1;
             /* repurposed variable name kept for minimal changes */
             --orange-dark: #410a2b;
-            --orange-light: #287C44;
+            --orange-light: #0059ff;
             --orange-subtle: #ecfdf5;
             --black: #0a0a0a;
             --gray-900: #18181b;
@@ -396,36 +396,36 @@
                         box-shadow:
                             0 8px 32px -8px rgba(157,26,104,0.28),
                             0 0 0 6px #fff,
-                            0 0 0 9px #287C44;
+                            0 0 0 9px #0059ff;
                         display:flex;
                         align-items:center;
                         justify-content:center;
                         margin:0 auto 1rem;
                         background:#fff;
                     ">
-                <img src="{{ asset('asset/images/logo.png') }}" alt="KAMSSA Logo"
+                <img src="{{ asset('asset/images/logo.png') }}" alt="WAKATA Logo"
                     style="width:80px; height:100px; object-fit:contain;">
             </div>
 
             <div style="font-size: 1.55rem; font-weight: 800; letter-spacing: -0.02em;
                 color: #0a0a0a; margin-bottom: 0.15rem; line-height: 1.2;">
-                <span style="color: #026837;">K</span>ampala <span style="color: #026837;">I</span>ntegrated
-                <span style="color: #026837;">S</span>econdary <span style="color: #026837;">S</span>chools
-                <span style="color: #026837;">E</span>xamination
+                <span style="color: #043AA1;">K</span>ampala <span style="color: #043AA1;">I</span>ntegrated
+                <span style="color: #043AA1;">S</span>econdary <span style="color: #043AA1;">S</span>chools
+                <span style="color: #043AA1;">E</span>xamination
             </div>
 
             <div style="font-size: 0.78rem; font-weight: 700; letter-spacing: 3px;
-                color: #026837; text-transform: uppercase; margin-bottom: 0.6rem;">
-                KAMSSA — Uganda
+                color: #043AA1; text-transform: uppercase; margin-bottom: 0.6rem;">
+                WAKATA — Uganda
             </div>
 
             <div style="width: 60px; height: 3px; border-radius: 2px;
-                background: linear-gradient(90deg, #026837, #287C44);
+                background: linear-gradient(90deg, #043AA1, #0059ff);
                 margin: 0 auto 1rem;"></div>
         </div>
 
         <div class="welcome-text" style="text-align: center; margin-bottom: 1.8rem;">
-            <i class="fas fa-hand-sparkles" style="color: #026837;"></i>
+            <i class="fas fa-hand-sparkles" style="color: #043AA1;"></i>
             <strong>Welcome back!</strong><br>
             <span style="color: #71717a; font-size: 0.92rem;">Please sign in to your span account to continue</span>
         </div>

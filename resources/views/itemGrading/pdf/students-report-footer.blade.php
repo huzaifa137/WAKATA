@@ -17,7 +17,7 @@
 
         .end-message {
             font-size: 16px;
-            color: #287C44;
+            color: #0059ff;
             margin: 20px 0;
         }
 
@@ -55,7 +55,7 @@
         </div>
 
         <div class="stats-summary">
-            <h4 style="color: #287C44;">Report Summary</h4>
+            <h4 style="color: #0059ff;">Report Summary</h4>
             <p><strong>Total Pages:</strong> {{ ceil($total / 100) + 2 }}</p>
             <p><strong>Generated:</strong> {{ now()->format('Y-m-d H:i:s') }}</p>
             <p><strong>Report ID:</strong> {{ uniqid() }}</p>

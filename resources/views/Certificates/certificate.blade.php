@@ -244,8 +244,8 @@
             <div class="header">
 
                 <div class="left">
-                    <h2 style="color: #026837;">Kampala Integrated Secondary School Examination Bureau</h2>
-                    <h3 class="red">KAMSSA</h3>
+                    <h2 style="color: #043AA1;">Kampala Integrated Secondary School Examination Bureau</h2>
+                    <h3 class="red">WAKATA</h3>
                     @if ($level == "A'LEVEL")
                         <h3 style="text-align: center;"><strong>'A' LEVEL Certificate </strong></h3>
                     @else
@@ -255,13 +255,13 @@
 
 
                 <div class="center-logo">
-                    <img src="{{ asset('assets/images/brand/uplogolight.png') }}" alt="KAMSSA logo"
+                    <img src="{{ asset('assets/images/brand/uplogolight.png') }}" alt="WAKATA logo"
                         style="max-width: 150%; max-height: 150%;">
                 </div>
 
 
                 <div class="right">
-                    <h2 style="color: #026837;">Uganda</h2>
+                    <h2 style="color: #043AA1;">Uganda</h2>
                     <h3 class="red">Secondary Examinations Board</h3>
                 </div>
             </div>
@@ -314,7 +314,7 @@
                     <div class="sign">
                         <div class="signature-space"></div>
                         <strong style="white-space: nowrap;">Secretary for
-                            Education (KAMSSA)</strong>
+                            Education (WAKATA)</strong>
                     </div>
                 </div>
 
@@ -333,7 +333,7 @@
                     <div class="sign">
                         <div class="signature-space"></div>
                         <strong style="white-space: nowrap;">Executive Secretary
-                            (KAMSSA)</strong>
+                            (WAKATA)</strong>
 
                     </div>
                 </div>

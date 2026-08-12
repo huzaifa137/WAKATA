@@ -183,10 +183,10 @@
 
         {{-- HEADER --}}
         <header>
-            <div class="header-english">KAMSSA — KAMPALA INTEGRATED SECONDARY SCHOOL EXAMINATION BUREAU</div>
+            <div class="header-english">WAKATA — KAMPALA INTEGRATED SECONDARY SCHOOL EXAMINATION BUREAU</div>
             <div class="logo-section">
                 <div class="logo-placeholder">
-                    <img src="{{ asset('assets/images/brand/uplogolight.png') }}" alt="KAMSSA logo"
+                    <img src="{{ asset('assets/images/brand/uplogolight.png') }}" alt="WAKATA logo"
                         style="max-width: 120%; max-height: 120%; object-fit: contain;">
                 </div>
             </div>

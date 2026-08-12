@@ -128,13 +128,13 @@
                         }
 
                         .nav.panel-tabs li a.active {
-                            background-color: #026837;
+                            background-color: #043AA1;
                             color: white;
                         }
 
                         .nav.panel-tabs li a:hover {
                             background-color: #e9ecef;
-                            color: #026837;
+                            color: #043AA1;
                         }
 
 

@@ -5,8 +5,8 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 :root {
-  --blue: #026837;
-  --indigo: #287C44;
+  --blue: #043AA1;
+  --indigo: #0059ff;
   --purple: #6f42c1;
   --pink: #e83e8c;
   --red: #dc3545;
@@ -18,7 +18,7 @@
   --white: #fff;
   --gray: #6c757d;
   --gray-dark: #343a40;
-  --primary: #026837;
+  --primary: #043AA1;
   --secondary: #6c757d;
   --success: #28a745;
   --info: #17a2b8;
@@ -168,7 +168,7 @@ sup {
 }
 
 a {
-  color: #026837;
+  color: #043AA1;
   text-decoration: none;
   background-color: transparent;
 }
@@ -3129,8 +3129,8 @@ fieldset:disabled a.btn {
 
 .btn-primary {
   color: #fff;
-  background-color: #026837;
-  border-color: #026837;
+  background-color: #043AA1;
+  border-color: #043AA1;
 }
 
 .btn-primary:hover {
@@ -3151,8 +3151,8 @@ fieldset:disabled a.btn {
 .btn-primary.disabled,
 .btn-primary:disabled {
   color: #fff;
-  background-color: #026837;
-  border-color: #026837;
+  background-color: #043AA1;
+  border-color: #043AA1;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active,
@@ -3472,14 +3472,14 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary {
-  color: #026837;
-  border-color: #026837;
+  color: #043AA1;
+  border-color: #043AA1;
 }
 
 .btn-outline-primary:hover {
   color: #fff;
-  background-color: #026837;
-  border-color: #026837;
+  background-color: #043AA1;
+  border-color: #043AA1;
 }
 
 .btn-outline-primary:focus,
@@ -3490,7 +3490,7 @@ fieldset:disabled a.btn {
 
 .btn-outline-primary.disabled,
 .btn-outline-primary:disabled {
-  color: #026837;
+  color: #043AA1;
   background-color: transparent;
 }
 
@@ -3498,8 +3498,8 @@ fieldset:disabled a.btn {
 .btn-outline-primary:not(:disabled):not(.disabled).active,
 .show>.btn-outline-primary.dropdown-toggle {
   color: #fff;
-  background-color: #026837;
-  border-color: #026837;
+  background-color: #043AA1;
+  border-color: #043AA1;
 }
 
 .btn-outline-primary:not(:disabled):not(.disabled):active:focus,
@@ -3777,7 +3777,7 @@ fieldset:disabled a.btn {
 
 .btn-link {
   font-weight: 400;
-  color: #026837;
+  color: #043AA1;
   text-decoration: none;
 }
 
@@ -4096,7 +4096,7 @@ input[type="button"].btn-block {
 .dropdown-item:active {
   color: #fff;
   text-decoration: none;
-  background-color: #026837;
+  background-color: #043AA1;
 }
 
 .dropdown-item.disabled,
@@ -4493,8 +4493,8 @@ input[type="button"].btn-block {
 
 .custom-control-input:checked~.custom-control-label::before {
   color: #fff;
-  border-color: #026837;
-  background-color: #026837;
+  border-color: #043AA1;
+  background-color: #043AA1;
 }
 
 .custom-control-input:focus~.custom-control-label::before {
@@ -4561,8 +4561,8 @@ input[type="button"].btn-block {
 }
 
 .custom-checkbox .custom-control-input:indeterminate~.custom-control-label::before {
-  border-color: #026837;
-  background-color: #026837;
+  border-color: #043AA1;
+  background-color: #043AA1;
 }
 
 .custom-checkbox .custom-control-input:indeterminate~.custom-control-label::after {
@@ -4804,7 +4804,7 @@ input[type="button"].btn-block {
   width: 1rem;
   height: 1rem;
   margin-top: -0.25rem;
-  background-color: #026837;
+  background-color: #043AA1;
   border: 0;
   border-radius: 1rem;
   -webkit-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
@@ -4841,7 +4841,7 @@ input[type="button"].btn-block {
 .custom-range::-moz-range-thumb {
   width: 1rem;
   height: 1rem;
-  background-color: #026837;
+  background-color: #043AA1;
   border: 0;
   border-radius: 1rem;
   -webkit-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
@@ -4881,7 +4881,7 @@ input[type="button"].btn-block {
   margin-top: 0;
   margin-right: 0.2rem;
   margin-left: 0.2rem;
-  background-color: #026837;
+  background-color: #043AA1;
   border: 0;
   border-radius: 1rem;
   -webkit-transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
@@ -5038,7 +5038,7 @@ input[type="button"].btn-block {
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
   color: #fff;
-  background-color: #026837;
+  background-color: #043AA1;
 }
 
 .nav-fill .nav-item {
@@ -5907,7 +5907,7 @@ input[type="button"].btn-block {
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1.25;
-  color: #026837;
+  color: #043AA1;
   background-color: #fff;
   border: 1px solid #dee2e6;
 }
@@ -5941,8 +5941,8 @@ input[type="button"].btn-block {
 .page-item.active .page-link {
   z-index: 3;
   color: #fff;
-  background-color: #026837;
-  border-color: #026837;
+  background-color: #043AA1;
+  border-color: #043AA1;
 }
 
 .page-item.disabled .page-link {
@@ -6032,7 +6032,7 @@ a.badge:focus {
 
 .badge-primary {
   color: #fff;
-  background-color: #026837;
+  background-color: #043AA1;
 }
 
 a.badge-primary:hover,
@@ -6380,7 +6380,7 @@ a.badge-dark.focus {
   color: #fff;
   text-align: center;
   white-space: nowrap;
-  background-color: #026837;
+  background-color: #043AA1;
   -webkit-transition: width 0.6s ease;
   -o-transition: width 0.6s ease;
   transition: width 0.6s ease;
@@ -6488,8 +6488,8 @@ a.badge-dark.focus {
 .list-group-item.active {
   z-index: 2;
   color: #fff;
-  background-color: #026837;
-  border-color: #026837;
+  background-color: #043AA1;
+  border-color: #043AA1;
 }
 
 .list-group-item+.list-group-item {
@@ -7789,7 +7789,7 @@ a.close.disabled {
 }
 
 .bg-primary {
-  background-color: #026837 !important;
+  background-color: #043AA1 !important;
 }
 
 a.bg-primary:hover,
@@ -7925,7 +7925,7 @@ button.bg-dark:focus {
 }
 
 .border-primary {
-  border-color: #026837 !important;
+  border-color: #043AA1 !important;
 }
 
 .border-secondary {
@@ -11837,7 +11837,7 @@ button.bg-dark:focus {
 }
 
 .text-primary {
-  color: #026837 !important;
+  color: #043AA1 !important;
 }
 
 a.text-primary:hover,

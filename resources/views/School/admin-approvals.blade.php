@@ -2,8 +2,8 @@
 @section('content')
     <style>
         :root {
-            --forest: #026837;
-            --green: #287C44;
+            --forest: #043AA1;
+            --green: #0059ff;
             --green-light: #3da05a;
             --mint: #e8f5e9;
             --amber: #f59e0b;
@@ -13,7 +13,7 @@
         }
 
         .page-hero {
-            background: linear-gradient(135deg, #026837 0%, #287C44 100%);
+            background: linear-gradient(135deg, #043AA1 0%, #0059ff 100%);
             color: #fff;
             border-radius: 16px;
             padding: 24px 28px;
@@ -78,7 +78,7 @@
         }
 
         .sc-head {
-            background: linear-gradient(135deg, #026837, #287C44);
+            background: linear-gradient(135deg, #043AA1, #0059ff);
             color: #fff;
             padding: 16px 18px 12px;
         }
@@ -602,7 +602,7 @@
 <div class="modal fade" id="editPeriodModal" tabindex="-1">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
-            <div class="modal-header" style="background:#026837; color:#fff;">
+            <div class="modal-header" style="background:#043AA1; color:#fff;">
                 <h5 class="modal-title"><i class="fas fa-edit mr-2"></i>Edit Registration Period</h5>
                 <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
             </div>
@@ -782,7 +782,7 @@
             reason: $('#slotReason').val()
         }, function (res) {
             $('#assignSlotsModal').modal('hide');
-            Swal.fire({ icon: 'success', title: 'Slots Assigned', text: res.message, confirmButtonColor: '#287C44' });
+            Swal.fire({ icon: 'success', title: 'Slots Assigned', text: res.message, confirmButtonColor: '#0059ff' });
             searchSchools(currentSearchPage);
         }).fail(function (xhr) {
             Swal.fire('Error', xhr.responseJSON?.message || 'Something went wrong', 'error');
@@ -796,7 +796,7 @@
         const open = $(this).data('open') == '1' ? 0 : 1;
         const msg  = open ? 'Open registration for this school?' : 'Close registration for this school?';
 
-        Swal.fire({ title: msg, icon: 'question', showCancelButton: true, confirmButtonColor: '#287C44', confirmButtonText: 'Yes' }).then(r => {
+        Swal.fire({ title: msg, icon: 'question', showCancelButton: true, confirmButtonColor: '#0059ff', confirmButtonText: 'Yes' }).then(r => {
             if (!r.isConfirmed) return;
             $.post('{{ route("admin.school.slots.toggle") }}', {
                 _token: '{{ csrf_token() }}', school_id: id, admission_year: year, open
@@ -849,7 +849,7 @@
         Swal.fire({
             title: 'Activate this registration period?',
             text: 'This will deactivate any currently active period.',
-            icon: 'question', showCancelButton: true, confirmButtonColor: '#026837',
+            icon: 'question', showCancelButton: true, confirmButtonColor: '#043AA1',
         }).then(r => {
             if (!r.isConfirmed) {
                 $btn.prop('disabled', false).html('<i class="fas fa-save mr-1"></i>Save & Activate Period');
@@ -903,7 +903,7 @@
         const id = $(this).data('id');
         Swal.fire({
             title: 'Open global registration?',
-            icon: 'question', showCancelButton: true, confirmButtonColor: '#026837',
+            icon: 'question', showCancelButton: true, confirmButtonColor: '#043AA1',
             confirmButtonText: 'Yes, open it'
         }).then(r => {
             if (!r.isConfirmed) return;
@@ -969,7 +969,7 @@
     $('#periodsTableWrap').html(`
         @if($globalPeriod)
             <table class="table table-sm table-bordered" style="font-size:13px;">
-                <thead style="background:#026837; color:#fff;">
+                <thead style="background:#043AA1; color:#fff;">
                     <tr><th>Name</th><th>Year</th><th>Opens</th><th>Closes</th><th>Status</th><th>Action</th></tr>
                 </thead>
                 <tbody>
@@ -1033,7 +1033,7 @@
                 ? 'Schools will be able to register students globally.'
                 : 'Schools will no longer be able to register students globally.',
             icon: 'question', showCancelButton: true,
-            confirmButtonColor: isActive ? '#026837' : '#dc2626',
+            confirmButtonColor: isActive ? '#043AA1' : '#dc2626',
             confirmButtonText: `Yes, ${action} it`
         }).then(r => {
             if (!r.isConfirmed) {

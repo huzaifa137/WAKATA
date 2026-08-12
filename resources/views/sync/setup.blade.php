@@ -35,7 +35,7 @@
                 <div class="card-body">
                     <h6>What you need before starting</h6>
                     <p class="text-muted">
-                        Ask whoever manages the central KAMSSA server for a sync token for this school —
+                        Ask whoever manages the central WAKATA server for a sync token for this school —
                         it's created on their side under <strong>Offline Sync &rarr; Manage Tokens</strong> and
                         looks like a block of 5 lines starting with <code>SYNC_ROLE=</code>. You only need to
                         do this once per machine.

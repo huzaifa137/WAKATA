@@ -32,7 +32,7 @@
                 }
 
                 .subject-tabs::-webkit-scrollbar-thumb {
-                    background: #287C44;
+                    background: #0059ff;
                     border-radius: 10px;
                 }
 
@@ -56,15 +56,15 @@
 
                 .subject-tab:hover {
                     background-color: #f0f7f2;
-                    border-color: #287C44;
+                    border-color: #0059ff;
                     transform: translateY(-4px);
                     box-shadow: 0 8px 16px rgba(40, 124, 68, 0.15);
                 }
 
                 .subject-tab.active {
-                    background-color: #287C44;
+                    background-color: #0059ff;
                     color: white;
-                    border-color: #287C44;
+                    border-color: #0059ff;
                     box-shadow: 0 8px 20px rgba(40, 124, 68, 0.25);
                     transform: translateY(-2px);
                 }
@@ -352,7 +352,7 @@
                 }
 
                 .student-search-input:focus {
-                    border-color: #287C44 !important;
+                    border-color: #0059ff !important;
                     box-shadow: 0 0 0 3px rgba(40, 124, 68, 0.12) !important;
                 }
 
@@ -433,7 +433,7 @@
                     left: 14px;
                     top: 50%;
                     transform: translateY(-50%);
-                    color: #287C44;
+                    color: #0059ff;
                     /* Always green, not gray */
                     font-size: 14px;
                     pointer-events: none;
@@ -445,7 +445,7 @@
                     padding-left: 40px !important;
                     padding-right: 40px !important;
                     border-radius: 12px !important;
-                    border: 2px solid #287C44 !important;
+                    border: 2px solid #0059ff !important;
                     /* Always green border */
                     background: #ffffff !important;
                     /* Always white */
@@ -487,7 +487,7 @@
                     transform: translateY(-50%);
                     border: none;
                     background: #e8f5ee;
-                    color: #287C44;
+                    color: #0059ff;
                     width: 26px;
                     height: 26px;
                     border-radius: 50%;
@@ -522,7 +522,7 @@
                     transform: translateY(-50%);
                     font-size: 11px;
                     font-weight: 600;
-                    color: #287C44;
+                    color: #0059ff;
                     background: #e8f5ee;
                     padding: 3px 12px;
                     border-radius: 20px;
@@ -546,7 +546,7 @@
                     left: 0;
                     width: 100%;
                     height: 2px;
-                    background: linear-gradient(90deg, #287C44, #34ce57, #287C44);
+                    background: linear-gradient(90deg, #0059ff, #34ce57, #0059ff);
                     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
                     border-radius: 2px;
                     opacity: 1;
@@ -659,7 +659,7 @@
 
             <div class="card shadow-lg border-0">
                 <div class="card-header text-white d-flex justify-content-between align-items-center"
-                    style="background-color: #026837;">
+                    style="background-color: #043AA1;">
                     <h4 class="mb-0">
                         <i class="fa fa-school me-2"></i> School NAME - {{ $schoolName ?? 'N/A' }}
                     </h4>
@@ -947,7 +947,7 @@
                                                             <i class="fa fa-eraser me-1"></i> Clear All
                                                         </button>
                                                     </div>
-                                                    <button type="submit" class="btn text-white" style="background-color: #287C44;">
+                                                    <button type="submit" class="btn text-white" style="background-color: #0059ff;">
                                                         <i class="fa fa-save me-2"></i> Save {{ $subject->md_name }}
                                                     </button>
                                                 </div>

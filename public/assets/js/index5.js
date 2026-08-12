@@ -368,7 +368,7 @@ $(function(e){
 		  }
 		},
 		series: chartdata,
-		color:[ '#026837','#f72d66']
+		color:[ '#043AA1','#f72d66']
 	};
 	barChart.setOption(option);
 	/*-----End echart1-----*/

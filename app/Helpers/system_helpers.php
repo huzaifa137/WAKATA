@@ -25,7 +25,7 @@ if (! function_exists('system_settings')) {
 if (! function_exists('system_name')) {
     function system_name(): string
     {
-        return system_settings()->system_name ?? 'Kampala Integrated Secondary Schools Examination';
+        return system_settings()->system_name ?? 'Wakiso Kampala Teachers Association';
     }
 }
 

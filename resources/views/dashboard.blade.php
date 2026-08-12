@@ -8,14 +8,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         /* ============================================
-                   ROOT VARIABLES (KAMSSA Green Theme)
+                   ROOT VARIABLES (WAKATA Green Theme)
                    ============================================ */
         :root {
-            --primary: #026837;
+            --primary: #043AA1;
             --primary-light: #1E7A3D;
             --primary-lighter: #35804E;
             --primary-dark: #0C4A26;
-            --primary-gradient: linear-gradient(135deg, #026837, #1E7A3D);
+            --primary-gradient: linear-gradient(135deg, #043AA1, #1E7A3D);
             --light: #E8F0E9;
             --white: #FFFFFF;
             --dark: #0C2915;
@@ -789,7 +789,7 @@
             <a href="{{ route('school.allSchools') }}" class="quick-card animate-card" style="animation-delay:0.6s;">
                 <div class="quick-icon"><i class="fas fa-list-alt"></i></div>
                 <div class="quick-info">
-                    <h5>All Schools</h5>
+                    <h5>All Schools</h5> <span style="color:blue;"></span>
                     <p>Manage institutions</p>
                 </div>
             </a>
@@ -861,7 +861,7 @@
                         labels: {!! json_encode($gradeDistribution->pluck('grade')) !!},
                         datasets: [{
                             data: {!! json_encode($gradeDistribution->pluck('total')) !!},
-                            backgroundColor: ['#026837', '#1E7A3D', '#35804E', '#7CB88F', '#FFC107', '#DC3545'],
+                            backgroundColor: ['#043AA1', '#1E7A3D', '#35804E', '#7CB88F', '#FFC107', '#DC3545'],
                             borderWidth: 0
                         }]
                     },

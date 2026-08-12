@@ -25,9 +25,9 @@
     <style>
         /* ─── Design Tokens ─────────────────────────────────────────── */
         :root {
-            --emerald: #026837;
-            --emerald-mid: #287C44;
-            --emerald-lt: #287C44;
+            --emerald: #043AA1;
+            --emerald-mid: #0059ff;
+            --emerald-lt: #0059ff;
             --gold: #f0a500;
             --gold-lt: #f7c23e;
             --gold-pale: #fff8ec;
@@ -36,9 +36,9 @@
             --mist: #fdf4f9;
             --white: #ffffff;
             --radius: 12px;
-            --shadow-sm: 0 2px 12px #287C44;
-            --shadow-md: 0 8px 40px #287C44;
-            --shadow-lg: 0 20px 70px #287C44;
+            --shadow-sm: 0 2px 12px #0059ff;
+            --shadow-md: 0 8px 40px #0059ff;
+            --shadow-lg: 0 20px 70px #0059ff;
             --transition: .3s cubic-bezier(.4, 0, .2, 1);
         }
 
@@ -357,7 +357,7 @@
             position: relative;
             display: flex;
             align-items: center;
-            background: linear-gradient(135deg, #1a0612 0%, #026837 55%, #2a0a1a 100%);
+            background: linear-gradient(135deg, #1a0612 0%, #043AA1 55%, #2a0a1a 100%);
             overflow: hidden;
         }
 
@@ -622,7 +622,7 @@
         }
 
         .about-main-card {
-            background: linear-gradient(135deg, #1a0612 0%, #026837 100%);
+            background: linear-gradient(135deg, #1a0612 0%, #043AA1 100%);
             border-radius: 20px;
             padding: 48px 40px;
             color: var(--white);
@@ -1724,7 +1724,7 @@
                     <img src="{{ $systemSettings->logo_url ?? asset('asset/images/logo.png') }}"
                         alt="{{ $systemSettings->short_name ?? 'Kamssa' }} Logo">
                     <div class="nav-logo-text">
-                        <strong>KAMSSA</strong>
+                        <strong>WAKATA</strong>
                     </div>
                 </a>
                 <ul class="nav-links">
@@ -1933,7 +1933,7 @@ Official Passlips &amp; Transcripts
                 <div class="section-label">The Platform</div>
                 <h2 class="section-heading">Everything You Need, <span>Built In</span></h2>
                 <p class="section-sub">
-                    The KAMSSA portal covers the complete examination lifecycle — from school registration and student
+                    The WAKATA portal covers the complete examination lifecycle — from school registration and student
                     onboarding to automated grading, passlip generation, and recognition certificates.
                 </p>
             </div>
@@ -1964,7 +1964,7 @@ Official Passlips &amp; Transcripts
                     <div class="feat-icon gold"><i class="fa-solid fa-chart-line"></i></div>
                     <h3>Automated Grading Engine</h3>
                     <p>Configurable grading scales for each academic year — the system automatically converts raw scores
-                        to letter grades and division/class classifications per KAMSSA standards.</p>
+                        to letter grades and division/class classifications per WAKATA standards.</p>
                     <span class="feat-tag">Grading</span>
                 </div>
                 <div class="feat-card reveal" style="transition-delay:.32s">
@@ -1979,7 +1979,7 @@ Official Passlips &amp; Transcripts
                     <div class="feat-icon gold"><i class="fa-solid fa-certificate"></i></div>
                     <h3>Recognition Certificates</h3>
                     <p>Issue school recognition certificates with a full audit trail — confirming institutional
-                        compliance and authorisation to participate in KAMSSA examinations.</p>
+                        compliance and authorisation to participate in WAKATA examinations.</p>
                     <span class="feat-tag">Compliance</span>
                 </div>
             </div>
@@ -2078,7 +2078,7 @@ Official Passlips &amp; Transcripts
                         style="color:var(--gold-lt);">Results</span></h2>
                 <p class="section-sub" style="color:rgba(255,255,255,.55);margin:16px auto 0;">
                     A streamlined four-stage pipeline that takes each candidate from enrolment to a certified result —
-                    entirely managed through the KAMSSA portal.
+                    entirely managed through the WAKATA portal.
                 </p>
             </div>
             <div class="how-steps">
@@ -2086,7 +2086,7 @@ Official Passlips &amp; Transcripts
                     <div class="step-number s1">01</div>
                     <h4>School Submission</h4>
                     <p>Participating schools submit their candidate data and examination entries through the secure
-                        KAMSSA
+                        WAKATA
                         portal with built-in validation.</p>
                 </div>
                 <div class="how-step reveal" style="transition-delay:.1s">
@@ -2105,7 +2105,7 @@ Official Passlips &amp; Transcripts
                     <div class="step-number s4">04</div>
                     <h4>Certification</h4>
                     <p>Approved results trigger instant generation of individual passlips, full transcripts, and
-                        official KAMSSA certificates.</p>
+                        official WAKATA certificates.</p>
                 </div>
             </div>
         </div>
@@ -2269,12 +2269,12 @@ Official Passlips &amp; Transcripts
                     <div class="section-label">Common Questions</div>
                     <h2 class="section-heading">Got <span>Questions?</span></h2>
                     <p class="section-sub">
-                        Everything you need to know about the O-LEVEL and A-LEVEL examination system and the KAMSSA
+                        Everything you need to know about the O-LEVEL and A-LEVEL examination system and the WAKATA
                         portal.
                     </p>
                     <div class="faq-sidebar-cta">
                         <h4>Can't find your answer?</h4>
-                        <p>Reach out to the KAMSSA team directly — we're happy to help.</p>
+                        <p>Reach out to the WAKATA team directly — we're happy to help.</p>
                         <a href="mailto:info@kamssa.ug" class="btn-primary" style="font-size:.85rem;padding:11px 24px;">
                             <i class="fa-solid fa-envelope"></i> Email Us
                         </a>
@@ -2355,7 +2355,7 @@ Official Passlips &amp; Transcripts
 
                     <div class="faq-item">
                         <div class="faq-question">
-                            <h4>How does the KAMSSA portal handle grading?</h4>
+                            <h4>How does the WAKATA portal handle grading?</h4>
                             <div class="faq-toggle"><i class="fa-solid fa-plus"></i></div>
                         </div>
                         <div class="faq-answer">
@@ -2386,7 +2386,7 @@ Official Passlips &amp; Transcripts
                     <span style="background:var(--gold-lt);"></span>
                 </div>
                 <h2 class="cta-title">
-                    Ready to Access the <em>KAMSSA Portal?</em>
+                    Ready to Access the <em>WAKATA Portal?</em>
                 </h2>
                 <p class="cta-sub">
                     Schools, administrators, and authorised examiners can log in to the portal to manage registrations,
@@ -2432,7 +2432,7 @@ Official Passlips &amp; Transcripts
                     <h4>Navigation</h4>
                     <ul>
                         <li><a href="{{ route('home.page') }}">Home</a></li>
-                        <li><a href="#about">About KAMSSA</a></li>
+                        <li><a href="#about">About WAKATA</a></li>
                         <li><a href="#features">System Features</a></li>
                         <li><a href="#subjects">Subjects</a></li>
                         <li><a href="#faq">FAQ</a></li>

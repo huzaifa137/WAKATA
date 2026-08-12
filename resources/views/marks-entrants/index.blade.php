@@ -13,7 +13,7 @@
                 }
 
                 .su-table thead th {
-                    background: #026837;
+                    background: #043AA1;
                     color: #fff;
                 }
 
@@ -82,9 +82,9 @@
                 }
 
                 .me-tab.active {
-                    background: #026837;
+                    background: #043AA1;
                     color: #fff;
-                    border-color: #026837;
+                    border-color: #043AA1;
                 }
 
                 .me-subject-row {
@@ -124,7 +124,7 @@
 
             <div class="card shadow-lg border-0">
                 <div class="card-header text-white d-flex justify-content-between align-items-center flex-wrap gap-2"
-                    style="background-color:#026837;">
+                    style="background-color:#043AA1;">
                     <h4 class="mb-0"><i class="fa fa-users-cog me-2"></i> System Users</h4>
                     <button type="button" class="btn btn-sm btn-outline-light px-4 py-2 rounded-pill" data-toggle="modal"
                         data-target="#createUserModal">
@@ -137,7 +137,7 @@
                     <script>
                         document.addEventListener('DOMContentLoaded', function () {
                             @if (session('success'))
-                                Swal.fire({ icon: 'success', title: 'Success!', text: @json(session('success')), confirmButtonColor: '#026837' });
+                                Swal.fire({ icon: 'success', title: 'Success!', text: @json(session('success')), confirmButtonColor: '#043AA1' });
                             @endif
                             @if (session('fail'))
                                 Swal.fire({ icon: 'error', title: 'Error', text: @json(session('fail')), confirmButtonColor: '#d33' });
@@ -238,7 +238,7 @@
 
                     @csrf
                     <div class="modal-header text-white" style="background-color:#FFF;">
-                        <h5 class="modal-title" style="color:#026837;"><i class="fa fa-user-plus me-2"></i>Add System User
+                        <h5 class="modal-title" style="color:#043AA1;"><i class="fa fa-user-plus me-2"></i>Add System User
                         </h5>
                         <button type="button" class="close text-dark" data-dismiss="modal"><span>&times;</span></button>
                     </div>
@@ -296,7 +296,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn text-white" style="background-color:#026837;">Create User</button>
+                        <button type="submit" class="btn text-white" style="background-color:#043AA1;">Create User</button>
                     </div>
                 </form>
             </div>
@@ -310,7 +310,7 @@
                 <form method="POST" id="editUserForm" action="">
                     @csrf
                     @method('PUT')
-                    <div class="modal-header text-white" style="background-color:#026837;">
+                    <div class="modal-header text-white" style="background-color:#043AA1;">
                         <h5 class="modal-title"><i class="fa fa-user-edit me-2"></i> Edit System User</h5>
                         <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
                     </div>
@@ -369,7 +369,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn text-white" style="background-color:#026837;">Save Changes</button>
+                        <button type="submit" class="btn text-white" style="background-color:#043AA1;">Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -429,7 +429,7 @@
                 .then(r => r.json())
                 .then(data => {
                     if (data.success) {
-                        Swal.fire({ icon: 'success', title: 'Updated', text: data.message, confirmButtonColor: '#026837' })
+                        Swal.fire({ icon: 'success', title: 'Updated', text: data.message, confirmButtonColor: '#043AA1' })
                             .then(() => window.location.reload());
                     } else {
                         Swal.fire({ icon: 'error', title: 'Could not update', text: data.message || 'Please try again.', confirmButtonColor: '#d33' });
@@ -459,7 +459,7 @@
                     .then(r => r.json())
                     .then(data => {
                         if (data.success) {
-                            Swal.fire({ icon: 'success', title: 'Deleted', text: data.message, confirmButtonColor: '#026837' })
+                            Swal.fire({ icon: 'success', title: 'Deleted', text: data.message, confirmButtonColor: '#043AA1' })
                                 .then(() => window.location.reload());
                         } else {
                             Swal.fire({ icon: 'error', title: 'Could not delete', text: data.message || 'Please try again.', confirmButtonColor: '#d33' });
@@ -499,7 +499,7 @@
                 text: 'Are you sure you want to create this system user?',
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonColor: '#026837',
+                confirmButtonColor: '#043AA1',
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: 'Yes, Create User',
                 cancelButtonText: 'Cancel'

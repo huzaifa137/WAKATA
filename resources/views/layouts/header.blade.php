@@ -32,7 +32,7 @@ use App\Http\Controllers\Helper;
                     .google-avatar-sm {
                         width: 40px;
                         height: 40px;
-                        background-color: #287C44;
+                        background-color: #0059ff;
                         color: white;
                         font-size: 16px;
                         font-weight: bold;

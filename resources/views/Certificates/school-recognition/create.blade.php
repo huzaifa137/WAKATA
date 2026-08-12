@@ -13,7 +13,7 @@
             <div class="col-lg-7">
                 <div class="card shadow-sm border-0" style="border-radius: 16px; overflow: hidden;">
                     <div class="card-header"
-                        style="background: linear-gradient(135deg, #026837 0%, #09d82c 100%); padding: 1.2rem 1.6rem;">
+                        style="background: linear-gradient(135deg, #043AA1 0%, #09d82c 100%); padding: 1.2rem 1.6rem;">
                         <h5 class="mb-0 text-white font-weight-bold">
                             <i class="fas fa-stamp mr-2"></i> Issue New School Recognition Certificate
                         </h5>
@@ -74,7 +74,7 @@
                                     <i class="fas fa-arrow-left mr-1"></i> Back
                                 </a>
                                 <button type="submit" class="btn btn-success font-weight-bold"
-                                    style="border-radius: 10px; padding: 0.55rem 2rem; background: #026837; border-color: #026837;">
+                                    style="border-radius: 10px; padding: 0.55rem 2rem; background: #043AA1; border-color: #043AA1;">
                                     <i class="fas fa-certificate mr-2"></i> Issue Certificate
                                 </button>
                             </div>
@@ -110,7 +110,7 @@
                 title: 'Validation Error!',
                 html: errorMessages,
                 icon: 'error',
-                confirmButtonColor: '#026837',
+                confirmButtonColor: '#043AA1',
                 confirmButtonText: 'OK'
             });
         @endif
@@ -121,7 +121,7 @@
                 title: 'Success!',
                 html: '{!! addslashes(session('success')) !!}',
                 icon: 'success',
-                confirmButtonColor: '#026837',
+                confirmButtonColor: '#043AA1',
                 confirmButtonText: 'OK'
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -136,7 +136,7 @@
                 title: 'Error!',
                 html: '{!! addslashes(session('error')) !!}',
                 icon: 'error',
-                confirmButtonColor: '#026837',
+                confirmButtonColor: '#043AA1',
                 confirmButtonText: 'OK'
             });
         @endif
@@ -148,7 +148,7 @@
                 title: alert.title || 'Error!',
                 html: alert.message,
                 icon: alert.icon || 'error',
-                confirmButtonColor: '#026837',
+                confirmButtonColor: '#043AA1',
                 confirmButtonText: alert.confirmButtonText || 'OK',
             };
 

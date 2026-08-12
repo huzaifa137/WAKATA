@@ -15,6 +15,7 @@
         border-spacing: 0;
         font-size: 0.85rem;
         white-space: nowrap;
+        width: 100%;
     }
 
     .sr-table th,
@@ -26,7 +27,7 @@
     }
 
     .sr-table thead th {
-        background: #026837;
+        background: #043AA1;
         color: white;
         position: sticky;
         top: 0;
@@ -36,6 +37,16 @@
     .sr-table th.subject-col {
         min-width: 90px;
         max-width: 120px;
+        white-space: normal;
+    }
+
+    /* Combination column (UACE) — the only column with no fixed width,
+       so on wide screens it grows to absorb the table's leftover width
+       (the table itself is width:100%) instead of leaving blank space
+       to the right of the table. */
+    .sr-table th.combo-col,
+    .sr-table td.combo-col {
+        min-width: 340px;
         white-space: normal;
     }
 
@@ -96,6 +107,98 @@
         cursor: not-allowed;
     }
 
+    /* Searchable combination picker (plain JS, no jQuery plugin). There
+       can be a lot of combinations, so this is a type-to-filter text box
+       + dropdown instead of a long <select> the user has to scroll
+       through. A single dropdown panel (#comboPickerPortal, built in JS)
+       is reused for every row and positioned under whichever input is
+       focused, so it always renders above the table and is never clipped
+       by the table's horizontal scroll area. */
+    .combo-picker {
+        position: relative;
+        min-width: 320px;
+    }
+
+    .combo-picker-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 6px 26px 6px 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        white-space: normal;
+        background: #fff;
+    }
+
+    .combo-picker-input:focus {
+        outline: none;
+        border-color: #043AA1;
+        box-shadow: 0 0 0 2px rgba(2, 104, 55, 0.15);
+    }
+
+    .combo-picker-input:disabled {
+        background: #f3f3f3;
+        opacity: 0.8;
+    }
+
+    .combo-picker-input.combo-picker-saving {
+        opacity: 0.6;
+    }
+
+    .combo-picker-clear {
+        position: absolute;
+        right: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        border: none;
+        background: transparent;
+        color: #999;
+        font-size: 15px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 2px 5px;
+    }
+
+    .combo-picker-clear:hover {
+        color: #d33;
+    }
+
+    #comboPickerPortal {
+        position: fixed;
+        z-index: 99999;
+        background: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 6px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        max-height: 260px;
+        overflow-y: auto;
+        display: none;
+    }
+
+    .combo-picker-option {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        text-align: left;
+        white-space: normal;
+        cursor: pointer;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .combo-picker-option:last-child {
+        border-bottom: none;
+    }
+
+    .combo-picker-option:hover {
+        background: #eaf6ee;
+    }
+
+    .combo-picker-empty {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+        color: #888;
+        text-align: center;
+    }
+
     .compulsory-tag {
         font-size: 0.65rem;
         display: block;
@@ -152,12 +255,12 @@
     }
 
     .sr-search-input:focus {
-        border-color: #026837;
+        border-color: #043AA1;
         box-shadow: 0 0 0 3px rgba(2, 104, 55, 0.12);
     }
 
     .sr-search-input:focus ~ .sr-search-icon {
-        color: #026837;
+        color: #043AA1;
     }
 
     .sr-search-clear {
@@ -233,7 +336,7 @@
 
 <div class="card shadow-lg border-0">
     <div class="card-header text-white d-flex justify-content-between align-items-center flex-wrap gap-2"
-        style="background-color:#026837;">
+        style="background-color:#043AA1;">
         <h4 class="mb-0">
             <i class="fa fa-list-check me-2"></i>
             {{ $category }} Subject Registration — {{ $schoolNumber }} ({{ $schoolName }}) — {{ $year }}
@@ -248,7 +351,7 @@
                     <script>
                         document.addEventListener('DOMContentLoaded', function () {
                             @if (session('success'))
-                                Swal.fire({ icon: 'success', title: 'Success!', text: @json(session('success')), confirmButtonColor: '#026837' });
+                                Swal.fire({ icon: 'success', title: 'Success!', text: @json(session('success')), confirmButtonColor: '#043AA1' });
                             @endif
 
                             @if (session('import_skipped') && count(session('import_skipped')))
@@ -256,7 +359,7 @@
                                     icon: 'warning',
                                     title: 'Some rows were skipped',
                                     html: `<ul style="text-align:left;">{!! collect(session('import_skipped'))->map(fn($m) => '<li>' . e($m) . '</li>')->join('') !!}</ul>`,
-                                    confirmButtonColor: '#026837'
+                                    confirmButtonColor: '#043AA1'
                                 });
                             @endif
 
@@ -274,7 +377,7 @@
 {{-- Toolbar: legend / search / download template / import filled sheet --}}
 <div class="d-flex flex-wrap gap-3 justify-content-between align-items-center mb-4 p-3 bg-light rounded-3 shadow-sm">
     <div class="text-muted small">
-        <i class="fa fa-circle" style="color:#026837;font-size:8px;"></i> Compulsory (auto-registered) &nbsp;
+        <i class="fa fa-circle" style="color:#043AA1;font-size:8px;"></i> Compulsory (auto-registered) &nbsp;
         <i class="fa fa-square" style="color:#bd059e;font-size:8px;"></i> Optional (tick what each student sat)
     </div>
 
@@ -296,7 +399,7 @@
             <i class="fa fa-download me-2"></i> Download Excel Template
         </a>
 
-        <button type="button" class="btn btn-sm text-white rounded-pill px-4 shadow-sm" style="background-color:#026837;"
+        <button type="button" class="btn btn-sm text-white rounded-pill px-4 shadow-sm" style="background-color:#043AA1;"
             data-toggle="modal" data-target="#importModal">
             <i class="fa fa-upload me-2"></i> Import Filled Template
         </button>
@@ -315,7 +418,26 @@
                             @php
                                 $compulsorySubjects = $subjects->where('md_misc1', 'Compulsory');
                                 $optionalSubjects = $subjects->where('md_misc1', '!=', 'Compulsory');
+                                $combinationsById = $category === 'UACE'
+                                    ? collect($combinationsList ?? [])->keyBy('id')
+                                    : collect();
                             @endphp
+
+                            @if ($category === 'UACE')
+                                {{-- All combinations, shared by every row's search picker (see JS
+                                     below). Sent once as JSON rather than repeating <option> tags
+                                     hundreds of times in the HTML. --}}
+                                <script id="srCombinationsData" type="application/json">
+                                    {!! collect($combinationsList ?? [])
+                                        ->map(fn ($c) => [
+                                            'id' => $c->id,
+                                            'text' => $c->code . ' — ' . $c->name,
+                                        ])
+                                        ->values()
+                                        ->toJson() !!}
+                                </script>
+                            @endif
+
                             <table class="sr-table hide-compulsory" id="srTable">
                                 <thead>
                                     <tr>
@@ -329,7 +451,7 @@
                                             </th>
                                         @endforeach
                                         @if ($category === 'UACE')
-                                            <th class="subject-col" style="min-width:170px;">
+                                            <th class="subject-col combo-col">
                                                 Combination
                                                 <span class="compulsory-tag">Optional (principal subjects)</span>
                                             </th>
@@ -362,17 +484,25 @@
                                                 </td>
                                             @endforeach
                                             @if ($category === 'UACE')
-                                                <td>
-                                                    <select class="form-control form-select-sm combination-select"
-                                                        data-student="{{ $studentId }}" style="min-width:150px; white-space:normal;">
-                                                        <option value="">— Select —</option>
-                                                        @foreach ($combinationsList as $combination)
-                                                            <option value="{{ $combination->id }}"
-                                                                {{ ($studentCombinations[$studentId] ?? null) == $combination->id ? 'selected' : '' }}>
-                                                                {{ $combination->code }} — {{ $combination->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
+                                                @php
+                                                    $currentComboId = $studentCombinations[$studentId] ?? null;
+                                                    $currentCombo = $currentComboId ? $combinationsById->get($currentComboId) : null;
+                                                    $currentComboText = $currentCombo
+                                                        ? ($currentCombo->code . ' — ' . $currentCombo->name)
+                                                        : '';
+                                                @endphp
+                                                <td class="combo-col">
+                                                    <div class="combo-picker" data-student="{{ $studentId }}">
+                                                        <input type="text"
+                                                            class="combo-picker-input"
+                                                            autocomplete="off"
+                                                            placeholder="Search combination..."
+                                                            value="{{ $currentComboText }}"
+                                                            data-selected-id="{{ $currentComboId }}">
+                                                        <button type="button" class="combo-picker-clear"
+                                                            title="Clear"
+                                                            style="{{ $currentComboId ? '' : 'display:none;' }}">&times;</button>
+                                                    </div>
                                                 </td>
                                             @else
                                                 @foreach ($optionalSubjects as $subject)
@@ -414,7 +544,7 @@
                     <input type="hidden" name="category" value="{{ $category }}">
                     <input type="hidden" name="school_number" value="{{ $schoolNumber }}">
 
-                    <div class="modal-header text-white" style="background-color:#026837;">
+                    <div class="modal-header text-white" style="background-color:#043AA1;">
                         <h5 class="modal-title"><i class="fa fa-upload me-2"></i> Import Subject Registrations</h5>
                         <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -438,7 +568,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn text-white" style="background-color:#026837;">
+                        <button type="submit" class="btn text-white" style="background-color:#043AA1;">
                             <i class="fa fa-check me-1"></i> Import
                         </button>
                     </div>
@@ -453,6 +583,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
     <script>
         $(document).ready(function () {
@@ -483,45 +614,198 @@
                 });
             });
 
-            $(document).on('change', '.combination-select', function () {
-                const select = $(this);
-                const previousValue = select.data('previous-value') ?? '';
-                const newValue = select.val();
+            // Searchable combination picker — plain JS, no jQuery plugin
+            // involved, so it can't run into jQuery-version conflicts.
+            // There can be a lot of combinations, so this lets the user
+            // type the code or name (e.g. "PCM" or "Physics") to filter
+            // instead of scrolling a long list. One dropdown panel is
+            // built once and reused for every row, positioned under
+            // whichever input is currently focused.
+            (function () {
+                const dataEl = document.getElementById('srCombinationsData');
+                const combinations = dataEl ? JSON.parse(dataEl.textContent || '[]') : [];
+                if (combinations.length === 0 && !dataEl) return; // not a UACE page
 
-                select.prop('disabled', true);
+                const portal = document.createElement('div');
+                portal.id = 'comboPickerPortal';
+                document.body.appendChild(portal);
 
-                $.ajax({
-                    url: '{{ route('subject.registration.set.combination') }}',
-                    method: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        student_id: select.data('student'),
-                        combination_id: newValue,
-                        year: '{{ $year }}',
-                        category: '{{ $category }}',
-                        school_number: '{{ $schoolNumber }}',
-                    },
-                    success: function () {
-                        select.data('previous-value', newValue);
-                    },
-                    error: function (xhr) {
-                        select.val(previousValue); // revert on failure
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Could not update combination',
-                            text: xhr.responseJSON?.message || 'Please try again.',
-                            confirmButtonColor: '#d33'
-                        });
-                    },
-                    complete: function () {
-                        select.prop('disabled', false);
+                let activeInput = null;
+
+                function closePortal() {
+                    portal.style.display = 'none';
+                    portal.innerHTML = '';
+                    activeInput = null;
+                }
+
+                function positionPortal(input) {
+                    const rect = input.getBoundingClientRect();
+                    portal.style.left = rect.left + 'px';
+                    portal.style.top = (rect.bottom + 4) + 'px';
+                    portal.style.width = Math.max(rect.width, 220) + 'px';
+                }
+
+                function renderOptions(input) {
+                    const term = input.value.trim().toLowerCase();
+                    const matches = term === ''
+                        ? combinations.slice(0, 50)
+                        : combinations.filter(c => c.text.toLowerCase().indexOf(term) > -1).slice(0, 50);
+
+                    portal.innerHTML = '';
+
+                    if (matches.length === 0) {
+                        const empty = document.createElement('div');
+                        empty.className = 'combo-picker-empty';
+                        empty.textContent = 'No matching combinations.';
+                        portal.appendChild(empty);
+                        return;
                     }
-                });
-            });
 
-            $('.combination-select').each(function () {
-                $(this).data('previous-value', $(this).val());
-            });
+                    matches.forEach(function (combo) {
+                        const opt = document.createElement('div');
+                        opt.className = 'combo-picker-option';
+                        opt.textContent = combo.text;
+                        // mousedown (not click) fires before the input's blur
+                        // event, so we can act on the selection before the
+                        // blur handler snaps the text back / closes things.
+                        opt.addEventListener('mousedown', function (e) {
+                            e.preventDefault();
+                            selectCombo(input, combo);
+                        });
+                        portal.appendChild(opt);
+                    });
+                }
+
+                function openPortal(input) {
+                    activeInput = input;
+                    positionPortal(input);
+                    renderOptions(input);
+                    portal.style.display = 'block';
+                }
+
+                function toggleClearButton(input) {
+                    const wrap = input.closest('.combo-picker');
+                    const btn = wrap ? wrap.querySelector('.combo-picker-clear') : null;
+                    if (btn) btn.style.display = input.dataset.selectedId ? '' : 'none';
+                }
+
+                function selectCombo(input, combo) {
+                    const previousId = input.dataset.savedId ?? '';
+                    const previousText = input.dataset.savedText ?? '';
+
+                    input.value = combo.text;
+                    input.dataset.selectedId = combo.id;
+                    // Set these immediately (optimistic update). The input
+                    // loses focus right after this runs, which fires the
+                    // focusout handler a moment later — if savedText/savedId
+                    // weren't already updated here, that handler would see
+                    // the old (blank) saved value and snap the box back to
+                    // it before the AJAX call below even finishes.
+                    input.dataset.savedId = combo.id;
+                    input.dataset.savedText = combo.text;
+                    toggleClearButton(input);
+                    closePortal();
+                    saveCombination(input, combo.id, previousId, previousText);
+                }
+
+                function clearCombo(input) {
+                    const previousId = input.dataset.savedId ?? '';
+                    const previousText = input.dataset.savedText ?? '';
+
+                    input.value = '';
+                    input.dataset.selectedId = '';
+                    input.dataset.savedId = '';
+                    input.dataset.savedText = '';
+                    toggleClearButton(input);
+                    saveCombination(input, '', previousId, previousText);
+                }
+
+                function saveCombination(input, combinationId, previousId, previousText) {
+                    const wrap = input.closest('.combo-picker');
+                    const studentId = wrap.dataset.student;
+
+                    // A CSS class only (not the `disabled` property) — setting
+                    // an input's `disabled` property while it has focus forces
+                    // an immediate browser blur, which was the actual cause of
+                    // the "reverts to blank" bug.
+                    input.classList.add('combo-picker-saving');
+
+                    $.ajax({
+                        url: '{{ route('subject.registration.set.combination') }}',
+                        method: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            student_id: studentId,
+                            combination_id: combinationId,
+                            year: '{{ $year }}',
+                            category: '{{ $category }}',
+                            school_number: '{{ $schoolNumber }}',
+                        },
+                        error: function (xhr) {
+                            // The optimistic update above was wrong — put
+                            // everything back the way it was.
+                            input.value = previousText;
+                            input.dataset.selectedId = previousId;
+                            input.dataset.savedId = previousId;
+                            input.dataset.savedText = previousText;
+                            toggleClearButton(input);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Could not update combination',
+                                text: xhr.responseJSON?.message || 'Please try again.',
+                                confirmButtonColor: '#d33'
+                            });
+                        },
+                        complete: function () {
+                            input.classList.remove('combo-picker-saving');
+                        }
+                    });
+                }
+
+                document.querySelectorAll('.combo-picker-input').forEach(function (input) {
+                    input.dataset.savedId = input.dataset.selectedId || '';
+                    input.dataset.savedText = input.value || '';
+                });
+
+                document.addEventListener('input', function (e) {
+                    if (!e.target.classList.contains('combo-picker-input')) return;
+                    openPortal(e.target);
+                });
+
+                document.addEventListener('focusin', function (e) {
+                    if (!e.target.classList.contains('combo-picker-input')) return;
+                    openPortal(e.target);
+                });
+
+                document.addEventListener('focusout', function (e) {
+                    if (!e.target.classList.contains('combo-picker-input')) return;
+                    const input = e.target;
+                    // Delay so a mousedown on a dropdown option (above) has
+                    // already run before we decide whether to snap the text
+                    // back to the last saved selection.
+                    setTimeout(function () {
+                        if (activeInput === input) closePortal();
+                        const savedText = input.dataset.savedText || '';
+                        if (input.value !== savedText) {
+                            input.value = savedText;
+                        }
+                    }, 150);
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (!e.target.classList.contains('combo-picker-clear')) return;
+                    const input = e.target.closest('.combo-picker').querySelector('.combo-picker-input');
+                    clearCombo(input);
+                });
+
+                window.addEventListener('scroll', function () {
+                    if (activeInput) closePortal();
+                }, true);
+
+                window.addEventListener('resize', function () {
+                    if (activeInput) closePortal();
+                });
+            })();
 
             document.querySelector('#importModal form').addEventListener('submit', function () {
                 Swal.fire({

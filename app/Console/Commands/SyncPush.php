@@ -11,7 +11,7 @@ class SyncPush extends Command
 {
     protected $signature = 'sync:push';
 
-    protected $description = 'Push queued offline changes (marks, etc.) to the central KAMSSA server';
+    protected $description = 'Push queued offline changes (marks, etc.) to the central WAKATA server';
 
     public function handle(SyncClient $client): int
     {

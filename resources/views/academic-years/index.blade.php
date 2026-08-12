@@ -19,7 +19,7 @@
         <div class="card">
 
             <div class="card-header text-white d-flex justify-content-between align-items-center"
-                style="background-color:#026837;">
+                style="background-color:#043AA1;">
 
                 <h4 class="card-title mb-0">
                     <i class="fas fa-calendar-alt mr-2"></i>
@@ -75,7 +75,7 @@
 
                     <table class="table table-bordered table-hover">
 
-                        <thead class="text-white" style="background-color:#026837;">
+                        <thead class="text-white" style="background-color:#043AA1;">
 
                             <tr>
                                 <th style="width:1px;">#</th>
@@ -158,7 +158,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
 
-                    <div class="modal-header text-white" style="background-color:#026837;">
+                    <div class="modal-header text-white" style="background-color:#043AA1;">
                         <h5 class="modal-title">Edit Academic Year</h5>
                         <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
                     </div>
@@ -233,7 +233,7 @@
                             icon: 'success',
                             title: 'Success!',
                             text: response.message || 'Academic year created successfully',
-                            confirmButtonColor: '#287C44'
+                            confirmButtonColor: '#0059ff'
                         }).then(() => {
                             location.reload();
                         });
@@ -253,7 +253,7 @@
                             icon: 'error',
                             title: 'Validation Error',
                             text: message,
-                            confirmButtonColor: '#287C44'
+                            confirmButtonColor: '#0059ff'
                         });
 
                     },
@@ -311,7 +311,7 @@
                     title: 'Edit Academic Year?',
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonColor: '#287C44',
+                    confirmButtonColor: '#0059ff',
                     cancelButtonColor: '#6c757d',
                     confirmButtonText: 'Yes, edit it!'
                 }).then((result) => {
@@ -374,7 +374,7 @@
                             icon: 'success',
                             title: 'Updated!',
                             text: response.message,
-                            confirmButtonColor: '#287C44'
+                            confirmButtonColor: '#0059ff'
                         }).then(() => {
                             location.reload();
                         });

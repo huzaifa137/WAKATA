@@ -17,12 +17,12 @@
         .header {
             text-align: center;
             margin-bottom: 20px;
-            border-bottom: 2px solid #287C44;
+            border-bottom: 2px solid #0059ff;
             padding-bottom: 10px;
         }
 
         .header h1 {
-            color: #287C44;
+            color: #0059ff;
             font-size: 24px;
             margin: 0 0 5px 0;
         }
@@ -55,7 +55,7 @@
         }
 
         th {
-            background-color: #287C44;
+            background-color: #0059ff;
             color: white;
             font-weight: bold;
             padding: 10px 5px;

@@ -29,11 +29,11 @@ $controller = new Controller();
         {{-- Form Card --}}
         <div class="row">
             <div class="col-lg-12 col-xl-12 col-md-10 col-sm-12 mx-auto">
-                <div class="card shadow-sm" style="border-top: 4px solid #026837; border-radius: 10px;">
+                <div class="card shadow-sm" style="border-top: 4px solid #043AA1; border-radius: 10px;">
 
                     {{-- Card Header --}}
                     <div class="card-header d-flex justify-content-between align-items-center"
-                        style="background-color: #026837; border-radius: 6px 6px 0 0;">
+                        style="background-color: #043AA1; border-radius: 6px 6px 0 0;">
                         <div class="d-flex align-items-center gap-2">
                             <div style="background: rgba(255,255,255,0.15); border-radius: 8px; width:38px; height:38px;
                                                 display:flex; align-items:center; justify-content:center;">
@@ -59,17 +59,17 @@ $controller = new Controller();
                                 style="display: flex; align-items: center; justify-content: space-between; max-width: 600px; margin: 0 auto;">
                                 <div style="text-align: center;">
                                     <div
-                                        style="width: 40px; height: 40px; background: #026837; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;">
+                                        style="width: 40px; height: 40px; background: #043AA1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px;">
                                         <i class="fas fa-check" style="color: white; font-size: 16px;"></i>
                                     </div>
                                     <span
-                                        style="color: #026837; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">School</span>
+                                        style="color: #043AA1; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">School</span>
                                 </div>
                                 <div style="flex: 1; height: 2px; background: #2a3a4a; margin: 0 10px;"></div>
                                 <div style="text-align: center;">
                                     <div
-                                        style="width: 40px; height: 40px; background: #2a3a4a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; border: 2px solid #026837;">
-                                        <span style="color: #026837; font-weight: 700; font-size: 14px;">2</span>
+                                        style="width: 40px; height: 40px; background: #2a3a4a; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; border: 2px solid #043AA1;">
+                                        <span style="color: #043AA1; font-weight: 700; font-size: 14px;">2</span>
                                     </div>
                                     <span
                                         style="color: #8899aa; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Details</span>
@@ -94,7 +94,7 @@ $controller = new Controller();
                                 <div
                                     style="display: inline-block; background: rgba(0, 208, 132, 0.1); padding: 8px 30px; border-radius: 50px; margin-top: 8px; border: 1px solid rgba(0, 208, 132, 0.2);">
                                     <span
-                                        style="color: #026837; font-size: 22px; font-weight: 700; letter-spacing: 3px; font-family: 'Courier New', monospace;">
+                                        style="color: #043AA1; font-size: 22px; font-weight: 700; letter-spacing: 3px; font-family: 'Courier New', monospace;">
                                         {{ $school->registration_code }}
                                     </span>
                                 </div>
@@ -117,7 +117,7 @@ $controller = new Controller();
                                 <h6
                                     style="color: #1a2a3a; font-weight: 700; font-size: 16px; margin-bottom: 25px; display: flex; align-items: center;">
                                     <span
-                                        style="display: inline-block; width: 4px; height: 20px; background: #026837; border-radius: 4px; margin-right: 12px;"></span>
+                                        style="display: inline-block; width: 4px; height: 20px; background: #043AA1; border-radius: 4px; margin-right: 12px;"></span>
                                     School Information
                                 </h6>
 
@@ -126,14 +126,14 @@ $controller = new Controller();
                                         <label
                                             style="display: block; color: #4a5a6a; font-size: 13px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
                                             <i class="fas fa-university"
-                                                style="color: #026837; margin-right: 8px; width: 16px;"></i>
+                                                style="color: #043AA1; margin-right: 8px; width: 16px;"></i>
                                             School Name
                                         </label>
                                         <input type="text" name="House" id="House"
                                             class="form-control @error('House') is-invalid @enderror"
                                             placeholder="Type school name..." value="{{ old('House', $school->House) }}" required
                                             style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; background: white; transition: all 0.25s ease;"
-                                            onfocus="this.style.borderColor='#026837'; this.style.boxShadow='0 0 0 4px rgba(0,208,132,0.08)'"
+                                            onfocus="this.style.borderColor='#043AA1'; this.style.boxShadow='0 0 0 4px rgba(0,208,132,0.08)'"
                                             onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
                                         @error('House')
                                             <div style="color: #e74c3c; font-size: 12px; margin-top: 5px;">{{ $message }}</div>
@@ -144,14 +144,14 @@ $controller = new Controller();
                                         <label
                                             style="display: block; color: #4a5a6a; font-size: 13px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
                                             <i class="fas fa-location-dot"
-                                                style="color: #026837; margin-right: 8px; width: 16px;"></i>
+                                                style="color: #043AA1; margin-right: 8px; width: 16px;"></i>
                                             District
                                         </label>
                                         <input type="text" name="Location" id="Location"
                                             class="form-control @error('Location') is-invalid @enderror"
                                             placeholder="Enter district..." value="{{ old('Location', $school->Location) }}" required
                                             style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; background: white; transition: all 0.25s ease;"
-                                            onfocus="this.style.borderColor='#026837'; this.style.boxShadow='0 0 0 4px rgba(0,208,132,0.08)'"
+                                            onfocus="this.style.borderColor='#043AA1'; this.style.boxShadow='0 0 0 4px rgba(0,208,132,0.08)'"
                                             onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
                                         @error('Location')
                                             <div style="color: #e74c3c; font-size: 12px; margin-top: 5px;">{{ $message }}</div>
@@ -166,7 +166,7 @@ $controller = new Controller();
                                 <h6
                                     style="color: #1a2a3a; font-weight: 700; font-size: 16px; margin-bottom: 20px; display: flex; align-items: center;">
                                     <span
-                                        style="display: inline-block; width: 4px; height: 20px; background: #026837; border-radius: 4px; margin-right: 12px;"></span>
+                                        style="display: inline-block; width: 4px; height: 20px; background: #043AA1; border-radius: 4px; margin-right: 12px;"></span>
                                     Category Selection
                                 </h6>
 
@@ -177,8 +177,8 @@ $controller = new Controller();
                                         <input type="radio" name="Category" id="categoryAnswers" value="Answer Sheets"
                                             style="display: none;" {{ old('Category', $school->category) == 'Answer Sheets' ? 'checked' : '' }}>
                                         <div
-                                            style="padding: 20px; border: 2px solid {{ old('Category', $school->category) == 'Answer Sheets' ? '#026837' : '#e2e8f0' }}; border-radius: 12px; background: {{ old('Category', $school->category) == 'Answer Sheets' ? '#f0fdf4' : 'transparent' }}; text-align: center; transition: all 0.3s ease;">
-                                            <div style="font-size: 32px; margin-bottom: 8px; color: #026837;">
+                                            style="padding: 20px; border: 2px solid {{ old('Category', $school->category) == 'Answer Sheets' ? '#043AA1' : '#e2e8f0' }}; border-radius: 12px; background: {{ old('Category', $school->category) == 'Answer Sheets' ? '#f0fdf4' : 'transparent' }}; text-align: center; transition: all 0.3s ease;">
+                                            <div style="font-size: 32px; margin-bottom: 8px; color: #043AA1;">
                                                 <i class="fas fa-file-pen"></i>
                                             </div>
                                             <div style="font-weight: 700; color: #1a2a3a; font-size: 15px;">Answer Sheets
@@ -222,9 +222,9 @@ $controller = new Controller();
                                 <h6
                                     style="color: #1a2a3a; font-weight: 700; font-size: 16px; margin-bottom: 25px; display: flex; align-items: center; position: relative; z-index: 1;">
                                     <span
-                                        style="display: inline-block; width: 4px; height: 20px; background: #026837; border-radius: 4px; margin-right: 12px;"></span>
+                                        style="display: inline-block; width: 4px; height: 20px; background: #043AA1; border-radius: 4px; margin-right: 12px;"></span>
                                     <i class="fas fa-user-tie"
-                                        style="color: #026837; margin-right: 10px; font-size: 18px;"></i>
+                                        style="color: #043AA1; margin-right: 10px; font-size: 18px;"></i>
                                     Administrator Details
                                 </h6>
 
@@ -234,7 +234,7 @@ $controller = new Controller();
                                         <label
                                             style="display: block; color: #4a5a6a; font-size: 13px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
                                             <i class="fas fa-user"
-                                                style="color: #026837; margin-right: 8px; width: 16px;"></i>
+                                                style="color: #043AA1; margin-right: 8px; width: 16px;"></i>
                                             Full Name(s)
                                         </label>
                                         <input type="text" name="AdministratorNames" id="AdministratorNames"
@@ -242,7 +242,7 @@ $controller = new Controller();
                                             placeholder="Enter administrator name..."
                                             value="{{ old('AdministratorNames', $school->administrator_names) }}" required
                                             style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; background: white; transition: all 0.25s ease;"
-                                            onfocus="this.style.borderColor='#026837'; this.style.boxShadow='0 0 0 4px rgba(0,208,132,0.08)'"
+                                            onfocus="this.style.borderColor='#043AA1'; this.style.boxShadow='0 0 0 4px rgba(0,208,132,0.08)'"
                                             onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
                                         @error('AdministratorNames')
                                             <div style="color: #e74c3c; font-size: 12px; margin-top: 5px;">{{ $message }}</div>
@@ -253,7 +253,7 @@ $controller = new Controller();
                                         <label
                                             style="display: block; color: #4a5a6a; font-size: 13px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
                                             <i class="fas fa-phone"
-                                                style="color: #026837; margin-right: 8px; width: 16px;"></i>
+                                                style="color: #043AA1; margin-right: 8px; width: 16px;"></i>
                                             Telephone
                                         </label>
                                         <input type="text" name="AdministratorTelephones" id="AdministratorTelephones"
@@ -261,7 +261,7 @@ $controller = new Controller();
                                             placeholder="e.g. 0712-345-678" value="{{ old('AdministratorTelephones', $school->administrator_telephones) }}"
                                             required
                                             style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; background: white; transition: all 0.25s ease;"
-                                            onfocus="this.style.borderColor='#026837'; this.style.boxShadow='0 0 0 4px rgba(0,208,132,0.08)'"
+                                            onfocus="this.style.borderColor='#043AA1'; this.style.boxShadow='0 0 0 4px rgba(0,208,132,0.08)'"
                                             onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
                                         @error('AdministratorTelephones')
                                             <div style="color: #e74c3c; font-size: 12px; margin-top: 5px;">{{ $message }}</div>
@@ -272,7 +272,7 @@ $controller = new Controller();
                                         <label
                                             style="display: block; color: #4a5a6a; font-size: 13px; font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
                                             <i class="fas fa-briefcase"
-                                                style="color: #026837; margin-right: 8px; width: 16px;"></i>
+                                                style="color: #043AA1; margin-right: 8px; width: 16px;"></i>
                                             Position Title
                                         </label>
                                         <input type="text" name="Title" id="Title"
@@ -280,7 +280,7 @@ $controller = new Controller();
                                             placeholder="e.g. Headteacher, Principal, Director..."
                                             value="{{ old('Title', $school->title) }}" required
                                             style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; background: white; transition: all 0.25s ease;"
-                                            onfocus="this.style.borderColor='#026837'; this.style.boxShadow='0 0 0 4px rgba(0,208,132,0.08)'"
+                                            onfocus="this.style.borderColor='#043AA1'; this.style.boxShadow='0 0 0 4px rgba(0,208,132,0.08)'"
                                             onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none'">
                                         @error('Title')
                                             <div style="color: #e74c3c; font-size: 12px; margin-top: 5px;">{{ $message }}</div>
@@ -301,7 +301,7 @@ $controller = new Controller();
                                 </a>
 
                                 <button type="submit" id="submitBtn"
-                                    style="padding: 12px 40px; background: linear-gradient(135deg, #026837 0%, #026837 100%); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,208,132,0.3); display: inline-flex; align-items: center;"
+                                    style="padding: 12px 40px; background: linear-gradient(135deg, #043AA1 0%, #043AA1 100%); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,208,132,0.3); display: inline-flex; align-items: center;"
                                     onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 25px rgba(0,208,132,0.4)'"
                                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(0,208,132,0.3)'">
                                     <i class="fas fa-save" style="margin-right: 10px;"></i>
@@ -363,7 +363,7 @@ $controller = new Controller();
                         icon: 'warning',
                         title: 'Incomplete Form',
                         text: 'Please fill in all required fields.',
-                        confirmButtonColor: '#026837'
+                        confirmButtonColor: '#043AA1'
                     });
                     return;
                 }
@@ -396,7 +396,7 @@ $controller = new Controller();
                                     icon: 'success',
                                     title: 'Updated!',
                                     text: response.message || 'School has been updated successfully.',
-                                    confirmButtonColor: '#287C44'
+                                    confirmButtonColor: '#0059ff'
                                 }).then(function() {
                                     window.location.href = '{{ route('school.allSchools') }}';
                                 });
@@ -419,7 +419,7 @@ $controller = new Controller();
             const otherLabel = document.querySelector(`label[for="${otherId}"] div`);
 
             // Update selected category styling
-            selectedLabel.style.borderColor = selectedId === 'categoryAnswers' ? '#026837' : '#e74c3c';
+            selectedLabel.style.borderColor = selectedId === 'categoryAnswers' ? '#043AA1' : '#e74c3c';
             selectedLabel.style.background = selectedId === 'categoryAnswers' ? '#f0fdf4' : '#fdf2f2';
 
             // Reset the other category styling

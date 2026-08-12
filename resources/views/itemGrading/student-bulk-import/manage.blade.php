@@ -14,7 +14,7 @@
                 }
 
                 .sbi-table thead th {
-                    background: #026837;
+                    background: #043AA1;
                     color: white;
                 }
 
@@ -86,12 +86,12 @@
                 }
 
                 .sbi-search-input:focus {
-                    border-color: #026837;
+                    border-color: #043AA1;
                     box-shadow: 0 0 0 3px rgba(2, 104, 55, 0.12);
                 }
 
                 .sbi-search-input:focus~.sbi-search-icon {
-                    color: #026837;
+                    color: #043AA1;
                 }
 
                 .sbi-search-clear {
@@ -128,7 +128,7 @@
                 .sbi-search-input {
                     width: 100%;
                     padding: 10px 38px 10px 38px;
-                    border: 1.5px solid #026837;
+                    border: 1.5px solid #043AA1;
                     border-radius: 10px;
                     font-size: 14px;
                     color: #333;
@@ -143,12 +143,12 @@
                 }
 
                 .sbi-search-input:focus {
-                    border-color: #026837;
+                    border-color: #043AA1;
                     box-shadow: 0 0 0 4px rgba(2, 104, 55, 0.18);
                 }
 
                 .sbi-search-input:focus~.sbi-search-icon {
-                    color: #026837;
+                    color: #043AA1;
                 }
 
                 /* Full toolbar responsive */
@@ -187,7 +187,7 @@
 
             <div class="card shadow-lg border-0">
                 <div class="card-header text-white d-flex justify-content-between align-items-center flex-wrap gap-2"
-                    style="background-color:#026837;">
+                    style="background-color:#043AA1;">
                     <h4 class="mb-0">
                         <i class="fa fa-users me-2"></i>
                         {{ $category }} Student Import — {{ $schoolNumber }} ({{ $schoolName }}) — {{ $year }}
@@ -202,7 +202,7 @@
                     <script>
                         document.addEventListener('DOMContentLoaded', function () {
                             @if (session('success'))
-                                Swal.fire({ icon: 'success', title: 'Success!', text: @json(session('success')), confirmButtonColor: '#026837' });
+                                Swal.fire({ icon: 'success', title: 'Success!', text: @json(session('success')), confirmButtonColor: '#043AA1' });
                             @endif
 
                             @if (session('import_skipped') && count(session('import_skipped')))
@@ -210,7 +210,7 @@
                                     icon: 'warning',
                                     title: 'Some rows were skipped',
                                     html: `<ul style="text-align:left;">{!! collect(session('import_skipped'))->map(fn($m) => '<li>' . e($m) . '</li>')->join('') !!}</ul>`,
-                                    confirmButtonColor: '#026837'
+                                    confirmButtonColor: '#043AA1'
                                 });
                             @endif
 
@@ -363,7 +363,7 @@
                     <input type="hidden" name="category" value="{{ $category }}">
                     <input type="hidden" name="school_id" value="{{ $schoolId }}">
 
-                    <div class="modal-header text-white" style="background-color:#026837;">
+                    <div class="modal-header text-white" style="background-color:#043AA1;">
                         <h5 class="modal-title"><i class="fa fa-upload me-2"></i> Import Students</h5>
                         <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
@@ -379,7 +379,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn text-white" style="background-color:#026837;">
+                        <button type="submit" class="btn text-white" style="background-color:#043AA1;">
                             <i class="fa fa-check me-1"></i> Import
                         </button>
                     </div>
@@ -399,7 +399,7 @@
                     <input type="hidden" name="category" value="{{ $category }}">
                     <input type="hidden" name="school_id" value="{{ $schoolId }}">
 
-                    <div class="modal-header text-white" style="background-color:#026837;">
+                    <div class="modal-header text-white" style="background-color:#043AA1;">
                         <h5 class="modal-title"><i class="fa fa-pen me-2"></i> Edit Student — <span
                                 id="editStudentIdLabel"></span></h5>
                         <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
@@ -422,7 +422,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn text-white" style="background-color:#026837;">
+                        <button type="submit" class="btn text-white" style="background-color:#043AA1;">
                             <i class="fa fa-check me-1"></i> Save Changes
                         </button>
                     </div>

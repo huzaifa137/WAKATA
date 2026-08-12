@@ -13,7 +13,7 @@
         }
 
         .header-container {
-            border-bottom: 3px solid #287C44;
+            border-bottom: 3px solid #0059ff;
             padding-bottom: 10px;
             margin-bottom: 20px;
         }
@@ -21,7 +21,7 @@
         .header-title {
             font-size: 20px;
             font-weight: bold;
-            color: #287C44;
+            color: #0059ff;
             margin: 0;
         }
 
@@ -37,7 +37,7 @@
         }
 
         th {
-            background-color: #287C44;
+            background-color: #0059ff;
             color: #ffffff;
             font-weight: bold;
             border: 1px solid #1e5e33;

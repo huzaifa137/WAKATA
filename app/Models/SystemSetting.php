@@ -36,7 +36,7 @@ class SystemSetting extends Model
     {
         return Cache::rememberForever(self::CACHE_KEY, function () {
             return self::query()->first() ?? self::create([
-                'system_name' => 'Kampala Integrated Secondary Schools Examination',
+                'system_name' => 'Wakiso Kampala Teachers Association',
                 'short_name'  => 'Kamssa',
             ]);
         });

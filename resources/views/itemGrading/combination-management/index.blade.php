@@ -11,7 +11,7 @@
                 text-align: center;
                 vertical-align: middle;
             }
-            .cm-table thead th { background: #026837; color: #fff; }
+            .cm-table thead th { background: #043AA1; color: #fff; }
             .cm-table tbody tr:nth-child(even) { background: #fafafa; }
             .cm-table tbody tr.inactive-row { opacity: .55; }
 
@@ -45,7 +45,7 @@
         </style>
 
         <div class="card shadow-lg border-0">
-            <div class="card-header d-flex justify-content-between align-items-center" style="background:#026837;">
+            <div class="card-header d-flex justify-content-between align-items-center" style="background:#043AA1;">
                 <h5 class="text-white mb-0"><i class="fa fa-layer-group me-2"></i> UACE Combinations</h5>
                 <button class="btn btn-light btn-sm" onclick="cmOpenAddModal()">
                     <i class="fa fa-plus me-1"></i> Add Combination
@@ -151,7 +151,7 @@
                 @csrf
                 <input type="hidden" name="_method" id="combinationFormMethod" value="POST">
                 <input type="hidden" name="category" value="UACE">
-                <div class="modal-header" style="background:#026837;">
+                <div class="modal-header" style="background:#043AA1;">
                     <h5 class="modal-title text-white" id="combinationModalTitle">Add Combination</h5>
                     <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -325,7 +325,7 @@
                 icon: 'warning',
                 title: 'Cannot delete "' + code + '"',
                 html: 'This combination already has <strong>' + studentCount + '</strong> student(s) assigned to it.<br><br>Deactivate it instead to keep historic records intact.',
-                confirmButtonColor: '#026837'
+                confirmButtonColor: '#043AA1'
             });
             return;
         }
@@ -348,7 +348,7 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        Swal.fire({ icon: 'success', title: 'Deleted', text: data.message, confirmButtonColor: '#026837' })
+                        Swal.fire({ icon: 'success', title: 'Deleted', text: data.message, confirmButtonColor: '#043AA1' })
                             .then(() => location.reload());
                     } else {
                         Swal.fire({ icon: 'error', title: 'Could not delete', text: data.message || 'Please try again.', confirmButtonColor: '#d33' });

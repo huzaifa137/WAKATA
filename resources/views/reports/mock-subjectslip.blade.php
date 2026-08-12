@@ -157,7 +157,7 @@
         <div class="box">
             <div class="box-header">
     <div class="logo-circle">
-        <img src="{{ asset('assets/images/brand/uplogolight.png') }}" alt="KAMSSA Logo">
+        <img src="{{ asset('assets/images/brand/uplogolight.png') }}" alt="WAKATA Logo">
     </div>
 
     <h1>

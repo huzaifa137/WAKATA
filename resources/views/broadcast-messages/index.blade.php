@@ -13,7 +13,7 @@
                 }
 
                 .nb-table thead th {
-                    background: #026837;
+                    background: #043AA1;
                     color: #fff;
                 }
 
@@ -85,8 +85,8 @@
                     font-size: 0.75rem;
                     font-weight: 600;
                     background: #eef6f0;
-                    color: #026837;
-                    border: 1px solid #026837;
+                    color: #043AA1;
+                    border: 1px solid #043AA1;
                     white-space: nowrap;
                 }
 
@@ -159,9 +159,9 @@
                 }
 
                 .nb-tabs .nav-link.active {
-                    background: #026837 !important;
+                    background: #043AA1 !important;
                     color: #fff !important;
-                    border-color: #026837;
+                    border-color: #043AA1;
                 }
 
                 .subject-cell {
@@ -185,13 +185,13 @@
                 .read-progress span {
                     display: block;
                     height: 100%;
-                    background: #026837;
+                    background: #043AA1;
                 }
             </style>
 
             <div class="card shadow-lg border-0">
                 <div class="card-header text-white d-flex justify-content-between align-items-center flex-wrap gap-2"
-                    style="background-color:#026837;">
+                    style="background-color:#043AA1;">
                     <h4 class="mb-0"><i class="fa fa-bullhorn me-2"></i> Notifications</h4>
                     <div class="d-flex">
                         <a href="{{ route('notifications.inbox') }}"
@@ -215,7 +215,7 @@
                     <script>
                         document.addEventListener('DOMContentLoaded', function () {
                             @if (session('success'))
-                                Swal.fire({ icon: 'success', title: 'Success!', text: @json(session('success')), confirmButtonColor: '#026837' });
+                                Swal.fire({ icon: 'success', title: 'Success!', text: @json(session('success')), confirmButtonColor: '#043AA1' });
                             @endif
                             @if (session('fail'))
                                 Swal.fire({ icon: 'error', title: 'Error', text: @json(session('fail')), confirmButtonColor: '#d33' });
@@ -307,7 +307,7 @@
             <div class="modal-content">
                 <form method="POST" action="{{ route('notifications.store') }}" id="composeMessageForm">
                     @csrf
-                    <div class="modal-header text-white" style="background-color:#026837;">
+                    <div class="modal-header text-white" style="background-color:#043AA1;">
                         <h5 class="modal-title"><i class="fa fa-paper-plane me-2"></i> Compose Message</h5>
                         <button type="button" class="close text-white" data-dismiss="modal"><span>&times;</span></button>
                     </div>
@@ -347,7 +347,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn text-white" style="background-color:#026837;">
+                        <button type="submit" class="btn text-white" style="background-color:#043AA1;">
                             <i class="fa fa-paper-plane me-2"></i>Send Message
                         </button>
                     </div>
@@ -435,17 +435,17 @@
             const usersMode = document.querySelector('input[name="users_mode"]:checked').value;
 
             if (schoolsMode === 'none' && usersMode === 'none') {
-                Swal.fire({ icon: 'warning', title: 'No recipients selected', text: 'Please choose Schools and/or System Users to receive this message.', confirmButtonColor: '#026837' });
+                Swal.fire({ icon: 'warning', title: 'No recipients selected', text: 'Please choose Schools and/or System Users to receive this message.', confirmButtonColor: '#043AA1' });
                 return;
             }
 
             if (schoolsMode === 'selected' && document.querySelectorAll('.nb-school-check:checked').length === 0) {
-                Swal.fire({ icon: 'warning', title: 'Pick at least one school', text: 'You chose "specific schools" but haven\'t selected any yet.', confirmButtonColor: '#026837' });
+                Swal.fire({ icon: 'warning', title: 'Pick at least one school', text: 'You chose "specific schools" but haven\'t selected any yet.', confirmButtonColor: '#043AA1' });
                 return;
             }
 
             if (usersMode === 'selected' && document.querySelectorAll('.nb-user-check:checked').length === 0) {
-                Swal.fire({ icon: 'warning', title: 'Pick at least one system user', text: 'You chose "specific users" but haven\'t selected any yet.', confirmButtonColor: '#026837' });
+                Swal.fire({ icon: 'warning', title: 'Pick at least one system user', text: 'You chose "specific users" but haven\'t selected any yet.', confirmButtonColor: '#043AA1' });
                 return;
             }
 
@@ -454,7 +454,7 @@
                 text: 'Are you sure you want to deliver this notification to the selected recipients?',
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonColor: '#026837',
+                confirmButtonColor: '#043AA1',
                 cancelButtonColor: '#6c757d',
                 confirmButtonText: 'Yes, Send It',
                 cancelButtonText: 'Cancel',
@@ -496,7 +496,7 @@
                     .then(r => r.json())
                     .then(data => {
                         if (data.success) {
-                            Swal.fire({ icon: 'success', title: 'Deleted', text: data.message, confirmButtonColor: '#026837' })
+                            Swal.fire({ icon: 'success', title: 'Deleted', text: data.message, confirmButtonColor: '#043AA1' })
                                 .then(() => window.location.reload());
                         } else {
                             Swal.fire({ icon: 'error', title: 'Could not delete', text: data.message || 'Please try again.', confirmButtonColor: '#d33' });

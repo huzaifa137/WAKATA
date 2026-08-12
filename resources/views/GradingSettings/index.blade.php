@@ -4,7 +4,7 @@
 
     <style>
         :root {
-            --primary: #026837;
+            --primary: #043AA1;
             --primary-light: #1a6b30;
             --primary-pale: #e8f5ec;
             --accent-ple: #E65100;
@@ -243,6 +243,32 @@
             font-weight: 700;
             font-size: 0.82rem;
             letter-spacing: 0.3px;
+        }
+
+        /* Editable Grade input — kept looking like the pill, but editable.
+           NOTE: placed here (before the .pill-* color rules below) on purpose,
+           so the pill-* background/color still win the cascade over these
+           base input styles. Only .grade-input:focus (higher specificity)
+           is guaranteed to override the pill color while typing. */
+        .grade-input {
+            display: inline-block;
+            width: 90px;
+            border: 1.5px solid transparent;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            letter-spacing: 0.3px;
+            text-align: center;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .grade-input:focus {
+            outline: none;
+            background: #f0f7ff !important;
+            color: #222 !important;
+            border-color: #007bff;
         }
 
         .pill-D1 {
@@ -845,7 +871,8 @@
                         <tr data-id="${g.id}">
                             <td style="color:#999; font-size:0.82rem; font-weight:600;">${i + 1}</td>
                             <td>
-                                <span class="grade-pill ${pillClass}">${g.grade}</span>
+                                <input type="text" class="grade-input edit-grade ${pillClass}"
+                                    value="${g.grade}" maxlength="30" placeholder="Grade…">
                             </td>
                             <td>
                                 <div style="display:flex; align-items:center; gap:6px;">
@@ -869,7 +896,7 @@
                             </td>
                             <td style="text-align:center;">
                                 <div style="display:flex; gap:6px; justify-content:center;">
-                                    <button class="btn-action btn-save btn-save-grade" data-id="${g.id}" data-grade="${g.grade}">
+                                    <button class="btn-action btn-save btn-save-grade" data-id="${g.id}">
                                         <i class="fas fa-check"></i> Save
                                     </button>
                                     <button class="btn-action btn-delete btn-delete-grade" data-id="${g.id}" data-grade="${g.grade}">
@@ -914,15 +941,30 @@
                 return 'pill-default';
             }
 
+            // ── Live pill recolor while editing the Grade field ────────────
+            $(document).on('input', '.edit-grade', function () {
+                const newClass = getPillClass($(this).val());
+                $(this)
+                    .removeClass(function (i, className) {
+                        return (className.match(/(^|\s)pill-\S+/g) || []).join(' ');
+                    })
+                    .addClass(newClass);
+            });
+
             // ── Save individual grade ──────────────────────────────────────
             $(document).on('click', '.btn-save-grade', function () {
                 const id = $(this).data('id');
                 const row = $(this).closest('tr');
-                const grade = $(this).data('grade');
+                const grade = row.find('.edit-grade').val().trim();
                 const from = row.find('.edit-from').val();
                 const to = row.find('.edit-to').val();
                 const comment = row.find('.edit-comment').val();
                 const weight = row.find('.edit-weight').val();
+
+                if (!grade) {
+                    Swal.fire('Validation Error', 'Grade name cannot be empty.', 'warning');
+                    return;
+                }
 
                 if (parseFloat(to) < parseFloat(from)) {
                     Swal.fire('Validation Error', 'To mark must be ≥ From mark.', 'warning');
@@ -940,7 +982,10 @@
                         }
                     },
                     error: function (xhr) {
-                        const msg = xhr.responseJSON?.message || 'Failed to save. Please check your values.';
+                        const errors = xhr.responseJSON?.errors;
+                        const msg = (errors && Object.values(errors)[0]?.[0])
+                            || xhr.responseJSON?.message
+                            || 'Failed to save. Please check your values.';
                         Swal.fire('Error', msg, 'error');
                     }
                 });
@@ -993,7 +1038,7 @@
                         data: { _token: '{{ csrf_token() }}' },
                         success: function (res) {
                             if (res.success) {
-                                Swal.fire({ icon: 'success', title: 'Reset!', text: res.message, confirmButtonColor: '#026837' })
+                                Swal.fire({ icon: 'success', title: 'Reset!', text: res.message, confirmButtonColor: '#043AA1' })
                                     .then(() => loadGrades(activeCategory));
                             }
                         },

@@ -10,7 +10,7 @@
         overflow: hidden;
         transition: box-shadow .15s ease;
     }
-    .inbox-item.unread { border-left-color: #026837; background: #f7fbf8; }
+    .inbox-item.unread { border-left-color: #043AA1; background: #f7fbf8; }
     .inbox-item:hover { box-shadow: 0 2px 10px rgba(0,0,0,.06); }
 
     .inbox-item-head {
@@ -40,7 +40,7 @@
 
     .unread-dot {
         width: 9px; height: 9px; border-radius: 50%;
-        background: #026837; display: inline-block; margin-right: 8px;
+        background: #043AA1; display: inline-block; margin-right: 8px;
         flex-shrink: 0;
     }
 
