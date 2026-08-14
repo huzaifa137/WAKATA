@@ -32,7 +32,7 @@
                 }
 
                 .subject-tabs::-webkit-scrollbar-thumb {
-                    background: #0059ff;
+                    background: #287C44;
                     border-radius: 10px;
                 }
 
@@ -56,15 +56,15 @@
 
                 .subject-tab:hover {
                     background-color: #f0f7f2;
-                    border-color: #0059ff;
+                    border-color: #287C44;
                     transform: translateY(-4px);
                     box-shadow: 0 8px 16px rgba(40, 124, 68, 0.15);
                 }
 
                 .subject-tab.active {
-                    background-color: #0059ff;
+                    background-color: #287C44;
                     color: white;
-                    border-color: #0059ff;
+                    border-color: #287C44;
                     box-shadow: 0 8px 20px rgba(40, 124, 68, 0.25);
                     transform: translateY(-2px);
                 }
@@ -352,7 +352,7 @@
                 }
 
                 .student-search-input:focus {
-                    border-color: #0059ff !important;
+                    border-color: #287C44 !important;
                     box-shadow: 0 0 0 3px rgba(40, 124, 68, 0.12) !important;
                 }
 
@@ -433,7 +433,7 @@
                     left: 14px;
                     top: 50%;
                     transform: translateY(-50%);
-                    color: #0059ff;
+                    color: #287C44;
                     /* Always green, not gray */
                     font-size: 14px;
                     pointer-events: none;
@@ -445,7 +445,7 @@
                     padding-left: 40px !important;
                     padding-right: 40px !important;
                     border-radius: 12px !important;
-                    border: 2px solid #0059ff !important;
+                    border: 2px solid #287C44 !important;
                     /* Always green border */
                     background: #ffffff !important;
                     /* Always white */
@@ -487,7 +487,7 @@
                     transform: translateY(-50%);
                     border: none;
                     background: #e8f5ee;
-                    color: #0059ff;
+                    color: #287C44;
                     width: 26px;
                     height: 26px;
                     border-radius: 50%;
@@ -522,7 +522,7 @@
                     transform: translateY(-50%);
                     font-size: 11px;
                     font-weight: 600;
-                    color: #0059ff;
+                    color: #287C44;
                     background: #e8f5ee;
                     padding: 3px 12px;
                     border-radius: 20px;
@@ -546,7 +546,7 @@
                     left: 0;
                     width: 100%;
                     height: 2px;
-                    background: linear-gradient(90deg, #0059ff, #34ce57, #0059ff);
+                    background: linear-gradient(90deg, #287C44, #34ce57, #287C44);
                     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
                     border-radius: 2px;
                     opacity: 1;
@@ -659,13 +659,18 @@
 
             <div class="card shadow-lg border-0">
                 <div class="card-header text-white d-flex justify-content-between align-items-center"
-                    style="background-color: #043AA1;">
+                    style="background-color: #026837;">
                     <h4 class="mb-0">
                         <i class="fa fa-school me-2"></i> School NAME - {{ $schoolName ?? 'N/A' }}
                     </h4>
-                    <span class="badge bg-light text-dark">
-                        <i class="fa fa-users me-1"></i> {{ $records->count() }} Students
-                    </span>
+                    <div class="d-flex align-items-center">
+                        <span class="badge bg-light text-dark">
+                            <i class="fa fa-users me-1"></i> {{ $records->count() }} Students
+                        </span>
+                        @if ($records->count() > 0)
+                            @include('itemGrading.partials.scan-marks-modal')
+                        @endif
+                    </div>
                 </div>
 
                 <div class="card-body">
@@ -947,7 +952,7 @@
                                                             <i class="fa fa-eraser me-1"></i> Clear All
                                                         </button>
                                                     </div>
-                                                    <button type="submit" class="btn text-white" style="background-color: #0059ff;">
+                                                    <button type="submit" class="btn text-white" style="background-color: #287C44;">
                                                         <i class="fa fa-save me-2"></i> Save {{ $subject->md_name }}
                                                     </button>
                                                 </div>
@@ -990,6 +995,34 @@
             const subjects = @json($subjects->pluck('md_id'));
             const existingMarks = @json($existingMarks);
             const studentNamesMap = @json($studentNames);
+
+            // Exposed for resources/views/itemGrading/partials/scan-marks-modal.blade.php
+            // so the "Scan & Auto-Fill Marks" tool knows, per subject, which
+            // students belong on that subject's roster and how many papers
+            // it has — without re-querying the server.
+            window.studentNamesMap = studentNamesMap;
+            @php
+                // Built as a plain PHP array first (not inline inside @json()).
+                // @json() takes a single expression, and Blade's directive
+                // parser splits that expression on top-level commas — the
+                // commas inside this closure's array literal were being
+                // read as extra @json() arguments, which is what produced
+                // the "Unclosed '[' on line 1017" error. Pre-computing the
+                // value here and handing @json() a bare variable avoids
+                // that entirely. $subjects is already in scope in this view
+                // (it's used above in the @foreach that renders each tab).
+                $subjectMetaForJs = $subjects->mapWithKeys(function ($subject) {
+                    return [
+                        $subject->md_id => [
+                            'name' => $subject->md_name,
+                            'totalPapers' => $subject->total_papers,
+                            'studentIds' => array_values($subject->student_ids ?? []),
+                            'allowedPapers' => $subject->allowed_papers,
+                        ],
+                    ];
+                })->all();
+            @endphp
+            window.subjectMeta = @json($subjectMetaForJs);
 
             // ==================== TAB SWITCHING ====================
             $('.subject-tab').on('click', function() {
@@ -1166,6 +1199,9 @@
                 // Update tab progress
                 updateTabProgress(input.closest('.tab-pane').data('subject-id'));
             }
+            // Exposed so the "Scan & Auto-Fill Marks" tool can apply the same
+            // saved/pending/unsaved styling to inputs it fills in from a scan.
+            window.updateMarkStatus = updateMarkStatus;
 
             // ==================== KEYBOARD NAVIGATION ====================
             $(document).on('keydown', '.tab-pane.active .mark-input', function(e) {

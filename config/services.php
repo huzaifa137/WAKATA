@@ -30,4 +30,28 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // Used by App\Http\Controllers\ScoreScanController for the AI-vision
+    // fallback when Tesseract can't confidently read a handwritten or
+    // low-quality score sheet photo. Optional — scanning still works with
+    // Tesseract alone if this is left blank, just without the fallback.
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+    ],
+
+    // Optional overrides for the OCR command-line tools used by
+    // ScoreScanController. Leave blank to auto-detect from PATH (works on
+    // Linux/Mac out of the box). On Windows, if `tesseract --version` /
+    // `pdftoppm -v` / `magick --version` work fine in Command Prompt but
+    // the /iteb/scan-score-sheet/check endpoint still reports them missing,
+    // it usually means the terminal PHP is launched from doesn't have the
+    // same PATH — set the full .exe path here instead, e.g.:
+    //   TESSERACT_PATH="C:\Program Files\Tesseract-OCR\tesseract.exe"
+    //   PDFTOPPM_PATH="C:\poppler\Library\bin\pdftoppm.exe"
+    //   IMAGEMAGICK_PATH="C:\Program Files\ImageMagick-7.1.1-Q16\magick.exe"
+    'ocr' => [
+        'tesseract_path' => env('TESSERACT_PATH'),
+        'pdftoppm_path' => env('PDFTOPPM_PATH'),
+        'imagemagick_path' => env('IMAGEMAGICK_PATH'),
+    ],
+
 ];

@@ -17,6 +17,7 @@
         "realrashid/sweet-alert": "^7.2",
         "setasign/fpdf": "^1.8",
         "setasign/fpdi": "^2.6",
+        "smalot/pdfparser": "^2.12",
         "spatie/browsershot": "^5.2",
         "symfony/polyfill-intl-icu": "^1.33",
         "yajra/laravel-datatables-oracle": "^11.1"

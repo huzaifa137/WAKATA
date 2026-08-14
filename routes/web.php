@@ -22,6 +22,7 @@ use App\Http\Controllers\HouseController;
 use App\Http\Controllers\SubjectManagementController;
 use App\Http\Controllers\MarksEntrantController;
 use App\Http\Controllers\BroadcastMessageController;
+use App\Http\Controllers\ScoreScanController;
 use App\Models\House;
 use App\Models\SchoolPassword;
 use Illuminate\Support\Facades\Hash;
@@ -414,6 +415,15 @@ Route::controller(ItebController::class)->group(function () {
     Route::post('exam-statistics/download/students', 'downloadStudentsReport')->name('iteb.exam.statistics.download.students');
     Route::post('exam-statistics/download/schools', 'downloadSchoolsReport')->name('iteb.exam.statistics.download.schools');
 
+});
+
+// Score-sheet scanning (OCR / AI-vision) used by the "Scan & Auto-Fill" tool
+// on the marks entry screen (resources/views/itemGrading/results.blade.php).
+Route::controller(ScoreScanController::class)->group(function () {
+    Route::group(['middleware' => ['StudentAuth']], function () {
+        Route::post('/iteb/scan-score-sheet', 'scan')->name('iteb.scan.score.sheet');
+        Route::get('/iteb/scan-score-sheet/check', 'check')->name('iteb.scan.score.sheet.check');
+    });
 });
 
 Route::controller(\App\Http\Controllers\ReportsController::class)->group(function () {
