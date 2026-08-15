@@ -32,7 +32,7 @@
                 }
 
                 .subject-tabs::-webkit-scrollbar-thumb {
-                    background: #287C44;
+                    background: #0059ff;
                     border-radius: 10px;
                 }
 
@@ -56,15 +56,15 @@
 
                 .subject-tab:hover {
                     background-color: #f0f7f2;
-                    border-color: #287C44;
+                    border-color: #0059ff;
                     transform: translateY(-4px);
                     box-shadow: 0 8px 16px rgba(40, 124, 68, 0.15);
                 }
 
                 .subject-tab.active {
-                    background-color: #287C44;
+                    background-color: #0059ff;
                     color: white;
-                    border-color: #287C44;
+                    border-color: #0059ff;
                     box-shadow: 0 8px 20px rgba(40, 124, 68, 0.25);
                     transform: translateY(-2px);
                 }
@@ -216,7 +216,7 @@
                 }
 
                 /* Over-max values must always show red, regardless of
-                       whether the input also carries .saved/.unsaved */
+                           whether the input also carries .saved/.unsaved */
                 .mark-input.is-invalid,
                 .mark-input.border-danger {
                     border-color: #dc3545 !important;
@@ -225,8 +225,8 @@
                 }
 
                 /* Keep the table from squishing columns on small screens —
-                       let it scroll horizontally instead so every value stays
-                       fully readable/editable on any device. */
+                           let it scroll horizontally instead so every value stays
+                           fully readable/editable on any device. */
                 .table-responsive table {
                     min-width: 560px;
                 }
@@ -352,7 +352,7 @@
                 }
 
                 .student-search-input:focus {
-                    border-color: #287C44 !important;
+                    border-color: #0059ff !important;
                     box-shadow: 0 0 0 3px rgba(40, 124, 68, 0.12) !important;
                 }
 
@@ -416,7 +416,7 @@
                 }
 
                 /* Let the marks column scroll horizontally instead of wrapping when there
-       are many papers, so boxes never stack vertically */
+           are many papers, so boxes never stack vertically */
                 .table-responsive table {
                     min-width: 700px;
                 }
@@ -433,7 +433,7 @@
                     left: 14px;
                     top: 50%;
                     transform: translateY(-50%);
-                    color: #287C44;
+                    color: #0059ff;
                     /* Always green, not gray */
                     font-size: 14px;
                     pointer-events: none;
@@ -445,7 +445,7 @@
                     padding-left: 40px !important;
                     padding-right: 40px !important;
                     border-radius: 12px !important;
-                    border: 2px solid #287C44 !important;
+                    border: 2px solid #0059ff !important;
                     /* Always green border */
                     background: #ffffff !important;
                     /* Always white */
@@ -487,7 +487,7 @@
                     transform: translateY(-50%);
                     border: none;
                     background: #e8f5ee;
-                    color: #287C44;
+                    color: #0059ff;
                     width: 26px;
                     height: 26px;
                     border-radius: 50%;
@@ -522,7 +522,7 @@
                     transform: translateY(-50%);
                     font-size: 11px;
                     font-weight: 600;
-                    color: #287C44;
+                    color: #0059ff;
                     background: #e8f5ee;
                     padding: 3px 12px;
                     border-radius: 20px;
@@ -546,7 +546,7 @@
                     left: 0;
                     width: 100%;
                     height: 2px;
-                    background: linear-gradient(90deg, #287C44, #34ce57, #287C44);
+                    background: linear-gradient(90deg, #0059ff, #34ce57, #0059ff);
                     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
                     border-radius: 2px;
                     opacity: 1;
@@ -655,20 +655,153 @@
                     border-color: #0d6efd;
                     background-color: #eef5ff;
                 }
+
+                /* ══════════ SCAN & AUTO-FILL MARKS (inlined, no partial) ══════════ */
+                #scanMarksModal .modal-content {
+                    border-radius: 14px;
+                    border: none;
+                }
+
+                #scanMarksModal .modal-header {
+                    background-color: #043AA1;
+                    color: #fff;
+                    border-radius: 14px 14px 0 0;
+                }
+
+                #scanMarksModal .modal-header .close {
+                    color: #fff;
+                    opacity: .9;
+                }
+
+                .scan-dropzone {
+                    border: 2.5px dashed #0059ff;
+                    border-radius: 14px;
+                    background: #f2f7ff;
+                    padding: 30px 20px;
+                    text-align: center;
+                    cursor: pointer;
+                    transition: all .2s ease;
+                }
+
+                .scan-dropzone:hover,
+                .scan-dropzone.drag-over {
+                    background: #e6f0ff;
+                    border-color: #043AA1;
+                }
+
+                .scan-dropzone i {
+                    font-size: 2.2rem;
+                    color: #0059ff;
+                }
+
+                .scan-type-toggle .btn.active {
+                    background-color: #0059ff;
+                    color: #fff;
+                    border-color: #0059ff;
+                }
+
+                #scanReviewTable {
+                    font-size: 1rem;
+                    background: #ffffff;
+                }
+
+                #scanReviewTable th {
+                    background-color: #043AA1;
+                    color: #ffffff;
+                    font-weight: 700;
+                    white-space: nowrap;
+                    position: sticky;
+                    top: 0;
+                    z-index: 2;
+                }
+
+                #scanReviewTable td {
+                    vertical-align: middle;
+                    color: #111827;
+                    font-weight: 500;
+                }
+
+                #scanReviewTable tbody tr:nth-child(odd) {
+                    background-color: #fbfdfc;
+                }
+
+                #scanReviewTable .ocr-name {
+                    font-weight: 700;
+                    font-size: 1.02rem;
+                    color: #0b2a5c;
+                }
+
+                #scanReviewTable .score-pill {
+                    display: inline-block;
+                    background: #eef4ff;
+                    border: 1px solid #cfdcf5;
+                    color: #0b2a5c;
+                    border-radius: 8px;
+                    padding: 2px 8px;
+                    margin: 1px 3px 1px 0;
+                    font-weight: 700;
+                    font-size: .85rem;
+                }
+
+                .match-confidence {
+                    font-weight: 700;
+                    border-radius: 20px;
+                    padding: 4px 10px;
+                    font-size: .78rem;
+                    white-space: nowrap;
+                }
+
+                .match-confidence.high {
+                    background: #d8e9f5;
+                    color: #043AA1;
+                }
+
+                .match-confidence.medium {
+                    background: #fff3cd;
+                    color: #7a5b00;
+                }
+
+                .match-confidence.low {
+                    background: #fde2e2;
+                    color: #9c1c1c;
+                }
+
+                .match-select {
+                    min-width: 240px;
+                    font-weight: 600;
+                    border: 1.5px solid #cfd8e0;
+                    border-radius: 8px;
+                }
+
+                .scan-review-wrap {
+                    max-height: 55vh;
+                    overflow-y: auto;
+                    border: 1px solid #e2e8e5;
+                    border-radius: 10px;
+                }
+
+                #scanCameraVideo {
+                    width: 100%;
+                    border-radius: 10px;
+                }
             </style>
 
             <div class="card shadow-lg border-0">
                 <div class="card-header text-white d-flex justify-content-between align-items-center"
-                    style="background-color: #026837;">
+                    style="background-color: #043AA1;">
                     <h4 class="mb-0">
                         <i class="fa fa-school me-2"></i> School NAME - {{ $schoolName ?? 'N/A' }}
                     </h4>
-                    <div class="d-flex align-items-center">
-                        <span class="badge bg-light text-dark">
+                    <div class="d-flex align-items-center" style="gap: 10px;">
+                        <span class="badge bg-light text-dark" style="padding: 8px 12px; font-size: 13px;">
                             <i class="fa fa-users me-1"></i> {{ $records->count() }} Students
                         </span>
+
                         @if ($records->count() > 0)
-                            @include('itemGrading.partials.scan-marks-modal')
+                            <button type="button" class="btn btn-light btn-sm fw-semibold" id="openScanMarksModalBtn"
+                                style="color:#043AA1; padding: 8px 14px; margin-left: 5px;">
+                                <i class="fa fa-camera me-1"></i> Scan &amp; Auto-Fill Marks
+                            </button>
                         @endif
                     </div>
                 </div>
@@ -676,7 +809,7 @@
                 <div class="card-body">
 
                     <script>
-                        document.addEventListener('DOMContentLoaded', function() {
+                        document.addEventListener('DOMContentLoaded', function () {
                             @if (session('success'))
                                 Swal.fire({
                                     icon: 'success',
@@ -694,7 +827,7 @@
                                     confirmButtonColor: '#d33'
                                 });
                             @endif
-                        });
+                            });
                     </script>
 
                     @if ($records->count() > 0)
@@ -706,7 +839,7 @@
                                         // Use the subject-specific student count from the controller
                                         $subjectStudentIds = $subject->student_ids ?? [];
                                         $subjectStudentCount = count($subjectStudentIds);
-                                        
+
                                         // Count saved marks for this subject (only for students in this subject's roster)
                                         $savedCount = 0;
                                         foreach ($subjectStudentIds as $studentId) {
@@ -714,7 +847,7 @@
                                                 $savedCount++;
                                             }
                                         }
-                                        
+
                                         $unsavedCount = $subjectStudentCount - $savedCount;
                                         $progressPercent = $subjectStudentCount > 0 ? ($savedCount / $subjectStudentCount) * 100 : 0;
                                         $isComplete = $unsavedCount == 0 && $subjectStudentCount > 0;
@@ -767,7 +900,7 @@
                                     $subjectRecords = $records->whereIn('Student_ID', $subjectStudentIds)->values();
                                     $subjectMarks = $existingMarks[$subject->md_id] ?? [];
                                     $subjectStudentCount = count($subjectStudentIds);
-                                    
+
                                     $savedCount = 0;
                                     foreach ($subjectStudentIds as $studentId) {
                                         if (isset($existingMarks[$subject->md_id][$studentId])) {
@@ -793,10 +926,8 @@
                                                         students)</small>
                                                 </h5>
                                                 <div class="subject-status">
-                                                    <span
-                                                        class="save-indicator {{ $isComplete ? 'saved' : 'unsaved' }}"></span>
-                                                    <span
-                                                        class="saved-count">{{ $savedCount }}</span>/{{ $subjectStudentCount }}
+                                                    <span class="save-indicator {{ $isComplete ? 'saved' : 'unsaved' }}"></span>
+                                                    <span class="saved-count">{{ $savedCount }}</span>/{{ $subjectStudentCount }}
                                                     saved
                                                 </div>
                                             </div>
@@ -838,35 +969,35 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-@foreach ($subjectRecords as $key => $record)
-    @php
-        $studentName = $studentNames[$record->Student_ID] ?? 'Unknown Student';
-        $studentPapers = $existingPaperMarks[$subject->md_id][$record->Student_ID] ?? [];
+                                                            @foreach ($subjectRecords as $key => $record)
+                                                                @php
+                                                                    $studentName = $studentNames[$record->Student_ID] ?? 'Unknown Student';
+                                                                    $studentPapers = $existingPaperMarks[$subject->md_id][$record->Student_ID] ?? [];
 
-        if ($subject->total_papers > 1) {
-            // Recompute live from each paper's mark against the subject's
-            // *current* max score, so changing a paper's max later is
-            // reflected on refresh — instead of trusting the average that
-            // was persisted at save time against the old max.
-            $convertedVals = [];
-            foreach ($studentPapers as $paperNum => $paperVal) {
-                if ($paperVal !== '' && $paperVal !== null && is_numeric($paperVal)) {
-                    $paperMax = (float) ($subject->paper_max_scores[$paperNum] ?? 100);
-                    if ($paperMax > 0) {
-                        $convertedVals[] = ((float) $paperVal / $paperMax) * 100;
-                    }
-                }
-            }
-            $markValue = count($convertedVals) > 0
-                ? round(array_sum($convertedVals) / count($convertedVals), 2)
-                : '';
-        } else {
-            $markValue = $subjectMarks[$record->Student_ID] ?? '';
-            if ($markValue !== '' && is_numeric($markValue)) {
-                $markValue = $markValue + 0;
-            }
-        }
-    @endphp
+                                                                    if ($subject->total_papers > 1) {
+                                                                        // Recompute live from each paper's mark against the subject's
+                                                                        // *current* max score, so changing a paper's max later is
+                                                                        // reflected on refresh — instead of trusting the average that
+                                                                        // was persisted at save time against the old max.
+                                                                        $convertedVals = [];
+                                                                        foreach ($studentPapers as $paperNum => $paperVal) {
+                                                                            if ($paperVal !== '' && $paperVal !== null && is_numeric($paperVal)) {
+                                                                                $paperMax = (float) ($subject->paper_max_scores[$paperNum] ?? 100);
+                                                                                if ($paperMax > 0) {
+                                                                                    $convertedVals[] = ((float) $paperVal / $paperMax) * 100;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        $markValue = count($convertedVals) > 0
+                                                                            ? round(array_sum($convertedVals) / count($convertedVals), 2)
+                                                                            : '';
+                                                                    } else {
+                                                                        $markValue = $subjectMarks[$record->Student_ID] ?? '';
+                                                                        if ($markValue !== '' && is_numeric($markValue)) {
+                                                                            $markValue = $markValue + 0;
+                                                                        }
+                                                                    }
+                                                                @endphp
                                                                 <tr
                                                                     data-search="{{ strtolower($studentName . ' ' . $record->Student_ID) }}">
                                                                     <td>{{ $key + 1 }}</td>
@@ -952,7 +1083,7 @@
                                                             <i class="fa fa-eraser me-1"></i> Clear All
                                                         </button>
                                                     </div>
-                                                    <button type="submit" class="btn text-white" style="background-color: #287C44;">
+                                                    <button type="submit" class="btn text-white" style="background-color: #0059ff;">
                                                         <i class="fa fa-save me-2"></i> Save {{ $subject->md_name }}
                                                     </button>
                                                 </div>
@@ -972,6 +1103,156 @@
                                 <i class="fa fa-save me-2"></i> Save All Subjects
                             </button>
                         </div>
+
+                        {{-- ══════════ SCAN & AUTO-FILL MARKS MODAL (inlined) ══════════ --}}
+                        <div class="modal fade" id="scanMarksModal" tabindex="-1" aria-labelledby="scanMarksModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="scanMarksModalLabel">
+                                            <i class="fa fa-camera me-2"></i> Scan &amp; Auto-Fill Marks
+                                            — <span id="scanTargetSubjectName">—</span>
+                                        </h5>
+                                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+
+                                    <div class="modal-body">
+
+                                        {{-- STEP 1: upload --}}
+                                        <div id="scanUploadStep">
+                                            <p class="text-muted mb-3" style="font-size:.88rem">
+                                                Upload a photo, scan, or PDF of the printed score sheet for
+                                                <strong id="scanTargetSubjectNameInline">this subject</strong>.
+                                                Scanned names will be matched against the
+                                                <strong><span id="scanTargetStudentCount">0</span> student(s)</strong>
+                                                currently listed on this tab.
+                                            </p>
+
+                                            <div class="scan-type-toggle d-flex mb-3" style="gap: 10px; padding: 5px 0;">
+                                                <button type="button" class="btn btn-outline-primary btn-sm active"
+                                                    style="padding: 8px 16px; margin-right: 5px;" onclick="setScanType('pdf')"
+                                                    id="scanTypePdfLabel">
+                                                    <i class="fa fa-file-pdf-o me-1"></i> Softcopy PDF
+                                                </button>
+
+                                                <button type="button" class="btn btn-outline-primary btn-sm"
+                                                    style="padding: 8px 16px; margin-left: 5px;" onclick="setScanType('image')"
+                                                    id="scanTypeImageLabel">
+                                                    <i class="fa fa-camera me-1"></i> Hardcopy Photo / Scan
+                                                </button>
+                                            </div>
+
+                                            <div class="scan-dropzone" id="scanDropZone"
+                                                onclick="document.getElementById('scanFileInput').click()">
+                                                <input type="file" id="scanFileInput" accept=".pdf" style="display:none">
+                                                <i class="fa fa-cloud-upload d-block mb-2"></i>
+                                                <div class="fw-semibold" id="scanDropTitle">Click or drag &amp; drop your file
+                                                    here</div>
+                                                <div class="text-muted" style="font-size:.8rem">PDF, JPG, PNG, WEBP
+                                                    &nbsp;·&nbsp; Max 20&nbsp;MB</div>
+                                            </div>
+
+                                            <div id="scanFilePreview" class="mt-3 d-none">
+                                                <div class="d-flex align-items-center gap-3 p-2 bg-light rounded border">
+                                                    <i class="fa fa-file-text-o fs-4 text-primary"></i>
+                                                    <div class="flex-grow-1 overflow-hidden">
+                                                        <div class="fw-semibold text-truncate" id="scanFileName"
+                                                            style="font-size:.85rem"></div>
+                                                        <div class="text-muted" id="scanFileSize" style="font-size:.75rem">
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                                        onclick="clearScanFile()">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <div id="scanCameraSection" class="mt-3 d-none">
+                                                <button type="button" class="btn btn-outline-secondary btn-sm w-100"
+                                                    onclick="openScanCamera()">
+                                                    <i class="fa fa-camera me-1"></i> Or take a photo with your camera
+                                                </button>
+                                                <video id="scanCameraVideo" class="d-none mt-2" autoplay playsinline></video>
+                                                <button type="button" class="btn btn-success btn-sm mt-2 w-100 d-none"
+                                                    id="scanCaptureBtn" onclick="captureScanPhoto()">
+                                                    <i class="fa fa-circle me-1"></i> Capture Photo
+                                                </button>
+                                                <canvas id="scanCameraCanvas" style="display:none"></canvas>
+                                            </div>
+
+                                            <div class="alert alert-primary mt-3 py-2 px-3 mb-0" style="font-size:.8rem">
+                                                <i class="fa fa-shield me-1"></i>
+                                                Tesseract OCR runs first, for free. If it can't confidently read a
+                                                handwritten/low-quality sheet, it automatically falls back to AI
+                                                vision — only when a Gemini API key is configured on the server.
+                                            </div>
+                                        </div>
+
+                                        {{-- STEP 2: review + match --}}
+                                        <div id="scanReviewStep" class="d-none">
+                                            <div id="scanReviewNotice" class="alert alert-warning d-none mb-3"
+                                                style="font-size:.85rem"></div>
+
+                                            <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                                                <div style="font-size:.85rem" class="text-muted">
+                                                    <i class="fa fa-info-circle me-1"></i>
+                                                    Review the matches below. Un-tick any row you don't want applied,
+                                                    or use the dropdown to pick the correct student.
+                                                </div>
+                                                <button type="button" class="btn btn-outline-secondary btn-sm"
+                                                    onclick="backToScanUpload()">
+                                                    <i class="fa fa-arrow-left me-1"></i> Scan Another
+                                                </button>
+                                            </div>
+
+                                            <div class="scan-review-wrap">
+                                                <table class="table table-bordered mb-0" id="scanReviewTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width:34px"></th>
+                                                            <th>Scanned Name</th>
+                                                            <th>Scanned Score(s)</th>
+                                                            <th>Matched Student</th>
+                                                            <th style="width:110px">Confidence</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="scanReviewTbody"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <div id="scanUploadFooter">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                            <button type="button" class="btn text-white" style="background-color:#0059ff"
+                                                id="scanRunBtn" onclick="runScoreScan()" disabled>
+                                                <i class="fa fa-search me-1"></i> Run OCR &amp; Extract Data
+                                            </button>
+                                        </div>
+                                        <div id="scanReviewFooter"
+                                            class="d-none w-100 d-flex justify-content-between align-items-center flex-wrap gap-2">
+                                            <span style="font-size:.8rem" class="text-muted">
+                                                <span id="scanMatchedCount">0</span> row(s) will be applied
+                                            </span>
+                                            <div>
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn text-white" style="background-color:#0059ff"
+                                                    id="scanApplyBtn" onclick="applyScanMatches()">
+                                                    <i class="fa fa-check-circle me-1"></i> Apply to Marks Table
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     @else
                         <div class="alert alert-danger text-center">
                             <i class="fa fa-exclamation-triangle me-2"></i> No records found for selected filters.
@@ -990,27 +1271,17 @@
 
 @section('js')
     <script>
-        jQuery(function($) {
+        jQuery(function ($) {
             const studentIds = @json($records->pluck('Student_ID'));
             const subjects = @json($subjects->pluck('md_id'));
             const existingMarks = @json($existingMarks);
             const studentNamesMap = @json($studentNames);
 
-            // Exposed for resources/views/itemGrading/partials/scan-marks-modal.blade.php
-            // so the "Scan & Auto-Fill Marks" tool knows, per subject, which
-            // students belong on that subject's roster and how many papers
-            // it has — without re-querying the server.
-            window.studentNamesMap = studentNamesMap;
+            // Per-subject metadata for the scan-and-fill tool: name, paper
+            // count, student roster, allowed papers. Built server-side once,
+            // consumed by the scan functions further down in this same
+            // script — no window.* globals, no separate partial needed.
             @php
-                // Built as a plain PHP array first (not inline inside @json()).
-                // @json() takes a single expression, and Blade's directive
-                // parser splits that expression on top-level commas — the
-                // commas inside this closure's array literal were being
-                // read as extra @json() arguments, which is what produced
-                // the "Unclosed '[' on line 1017" error. Pre-computing the
-                // value here and handing @json() a bare variable avoids
-                // that entirely. $subjects is already in scope in this view
-                // (it's used above in the @foreach that renders each tab).
                 $subjectMetaForJs = $subjects->mapWithKeys(function ($subject) {
                     return [
                         $subject->md_id => [
@@ -1022,10 +1293,10 @@
                     ];
                 })->all();
             @endphp
-            window.subjectMeta = @json($subjectMetaForJs);
+            const subjectMeta = @json($subjectMetaForJs);
 
             // ==================== TAB SWITCHING ====================
-            $('.subject-tab').on('click', function() {
+            $('.subject-tab').on('click', function () {
                 const subjectId = $(this).data('subject-id');
 
                 // Update tab active state
@@ -1043,18 +1314,18 @@
             });
 
             // ==================== STUDENT SEARCH ====================
-            $(document).on('keyup', '.student-search-input', function() {
+            $(document).on('keyup', '.student-search-input', function () {
                 const term = $(this).val().toLowerCase().trim();
                 const $rows = $(this).closest('.tab-pane').find('tbody tr');
 
-                $rows.each(function() {
+                $rows.each(function () {
                     const haystack = $(this).data('search') || '';
                     $(this).toggle(String(haystack).indexOf(term) !== -1);
                 });
             });
 
             // ==================== AUTO-TAB FUNCTIONALITY ====================
-            $(document).on('input', '.tab-pane.active .mark-input', function() {
+            $(document).on('input', '.tab-pane.active .mark-input', function () {
                 if ($(this).prop('disabled')) return;
 
                 const $input = $(this);
@@ -1098,7 +1369,7 @@
             });
 
             // Flag any pre-filled values that are over their paper's max
-            $('.mark-input[data-max]').each(function() {
+            $('.mark-input[data-max]').each(function () {
                 const $input = $(this);
                 const max = parseFloat($input.data('max')) || 100;
                 const val = parseFloat($input.val());
@@ -1148,7 +1419,7 @@
                 if (paperGroup.length) {
                     const paperInputs = paperGroup.find('.paper-input');
 
-                    const convertedVals = paperInputs.map(function() {
+                    const convertedVals = paperInputs.map(function () {
                         const raw = $(this).val();
                         if (raw === '') return null;
                         const max = parseFloat($(this).data('max')) || 100;
@@ -1157,7 +1428,7 @@
 
                     let anyPending = false;
                     let anyEmpty = false;
-                    paperInputs.each(function() {
+                    paperInputs.each(function () {
                         const s = getMarkState($(this));
                         if (s === 'pending') anyPending = true;
                         if (s === 'empty') anyEmpty = true;
@@ -1199,12 +1470,9 @@
                 // Update tab progress
                 updateTabProgress(input.closest('.tab-pane').data('subject-id'));
             }
-            // Exposed so the "Scan & Auto-Fill Marks" tool can apply the same
-            // saved/pending/unsaved styling to inputs it fills in from a scan.
-            window.updateMarkStatus = updateMarkStatus;
 
             // ==================== KEYBOARD NAVIGATION ====================
-            $(document).on('keydown', '.tab-pane.active .mark-input', function(e) {
+            $(document).on('keydown', '.tab-pane.active .mark-input', function (e) {
                 const inputs = $('.tab-pane.active .mark-input:enabled');
                 const currentIndex = inputs.index(this);
 
@@ -1225,7 +1493,7 @@
             });
 
             // ==================== FILL ALL FUNCTIONALITY ====================
-            $('.fill-all-btn').on('click', function() {
+            $('.fill-all-btn').on('click', function () {
                 const form = $(this).closest('form');
                 const subjectId = form.data('subject-id');
 
@@ -1238,7 +1506,7 @@
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        form.find('.mark-input').each(function() {
+                        form.find('.mark-input').each(function () {
                             if ($(this).val() === '') {
                                 $(this).val('0');
                                 updateMarkStatus($(this), '0');
@@ -1257,7 +1525,7 @@
             });
 
             // ==================== CLEAR ALL FUNCTIONALITY ====================
-            $('.clear-all-btn').on('click', function() {
+            $('.clear-all-btn').on('click', function () {
                 const form = $(this).closest('form');
 
                 Swal.fire({
@@ -1271,7 +1539,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.find('.mark-input').val('');
-                        form.find('.mark-input').each(function() {
+                        form.find('.mark-input').each(function () {
                             updateMarkStatus($(this), '');
                         });
                     }
@@ -1284,7 +1552,7 @@
                 const form = $(`#subject-form-${subjectId}`);
                 const inputs = form.find('.mark-input');
                 const totalInputs = inputs.length;
-                const filledInputs = inputs.filter(function() {
+                const filledInputs = inputs.filter(function () {
                     return $(this).val() !== '';
                 }).length;
                 const pending = totalInputs - filledInputs;
@@ -1303,22 +1571,22 @@
                 // Update pending badge - remove existing and add new one
                 const tabHeader = tab.find('.tab-header');
                 const statusBadgeContainer = tabHeader.find('.tab-status-badge');
-                
+
                 // Clear the container and add fresh badge
                 statusBadgeContainer.empty();
-                
+
                 if (pending > 0) {
                     statusBadgeContainer.append(`
-                        <span class="pending-badge">
-                            <i class="fa fa-clock"></i> ${pending}
-                        </span>
-                    `);
+                            <span class="pending-badge">
+                                <i class="fa fa-clock"></i> ${pending}
+                            </span>
+                        `);
                 } else if (totalInputs > 0) {
                     statusBadgeContainer.append(`
-                        <span class="saved-badge">
-                            <i class="fa fa-check-circle"></i> Complete
-                        </span>
-                    `);
+                            <span class="saved-badge">
+                                <i class="fa fa-check-circle"></i> Complete
+                            </span>
+                        `);
                 }
 
                 // Update status in form header
@@ -1347,10 +1615,10 @@
                         url: form.attr('action'),
                         method: 'POST',
                         data: form.serialize(),
-                        success: function(response) {
+                        success: function (response) {
                             resolve({ ok: true, response });
                         },
-                        error: function(xhr) {
+                        error: function (xhr) {
                             resolve({
                                 ok: false,
                                 message: (xhr.responseJSON && xhr.responseJSON.message) ?
@@ -1366,12 +1634,12 @@
             // grouped by student, so the confirm dialog can show exactly who
             // will be left pending.
             function getMissingStudents(form) {
-                const emptyInputs = form.find('.mark-input').filter(function() {
+                const emptyInputs = form.find('.mark-input').filter(function () {
                     return $(this).val() === '';
                 });
 
                 const missingByStudent = {};
-                emptyInputs.each(function() {
+                emptyInputs.each(function () {
                     const $input = $(this);
                     const studentId = $input.data('student');
                     const paperLabel = $input.data('paper');
@@ -1388,7 +1656,7 @@
             }
 
             function renderMissingList(missingByStudent) {
-                return Object.keys(missingByStudent).map(function(id) {
+                return Object.keys(missingByStudent).map(function (id) {
                     const name = studentNamesMap[id] || id;
                     const papers = missingByStudent[id];
                     const paperNote = papers.length > 0 ?
@@ -1399,7 +1667,7 @@
             }
 
             // ==================== FORM SUBMISSION ====================
-            $('.subject-form').on('submit', function(e) {
+            $('.subject-form').on('submit', function (e) {
                 e.preventDefault();
 
                 const form = $(this);
@@ -1407,7 +1675,7 @@
 
                 // Validate mark ranges first — marks that were actually typed
                 // in must be sane; this always blocks submission.
-                const invalidInputs = form.find('.mark-input').filter(function() {
+                const invalidInputs = form.find('.mark-input').filter(function () {
                     const val = parseFloat($(this).val());
                     const max = parseFloat($(this).data('max')) || 100;
                     return $(this).val() !== '' && (isNaN(val) || val < 0 || val > max);
@@ -1439,12 +1707,12 @@
                         icon: 'warning',
                         title: 'Some students have no marks yet',
                         html: `
-                            <p>${missingCount} student(s) still have no marks for <strong>${subjectName}</strong>:</p>
-                            <div style="max-height:200px; overflow-y:auto; text-align:left;">
-                                ${studentList}
-                            </div>
-                            <p class="mt-2 mb-0">Save marks for everyone else now, and enter the rest later?</p>
-                        `,
+                                <p>${missingCount} student(s) still have no marks for <strong>${subjectName}</strong>:</p>
+                                <div style="max-height:200px; overflow-y:auto; text-align:left;">
+                                    ${studentList}
+                                </div>
+                                <p class="mt-2 mb-0">Save marks for everyone else now, and enter the rest later?</p>
+                            `,
                         showCancelButton: true,
                         confirmButtonText: 'Yes, save the rest',
                         cancelButtonText: 'Keep editing'
@@ -1518,14 +1786,14 @@
             });
 
             // ==================== SAVE ALL SUBJECTS ====================
-            $('#saveAllSubjectsBtn').on('click', function() {
+            $('#saveAllSubjectsBtn').on('click', function () {
                 const forms = $('.subject-form');
                 let hasInvalidMarks = false;
                 let missingCountBySubject = {};
                 let totalMissing = 0;
 
                 // Validate all forms first
-                forms.each(function() {
+                forms.each(function () {
                     const form = $(this);
                     const subjectName = form.closest('.tab-pane').find('.card-header h5').text()
                         .trim();
@@ -1537,7 +1805,7 @@
                         totalMissing += missingCount;
                     }
 
-                    const invalidInputs = form.find('.mark-input').filter(function() {
+                    const invalidInputs = form.find('.mark-input').filter(function () {
                         const val = parseFloat($(this).val());
                         const max = parseFloat($(this).data('max')) || 100;
                         return $(this).val() !== '' && (isNaN(val) || val < 0 || val > max);
@@ -1564,13 +1832,13 @@
                 const confirmTitle = totalMissing > 0 ? 'Some students have no marks yet' :
                     'Save All Subjects?';
                 const confirmHtml = totalMissing > 0 ? `
-                        <p>${totalMissing} student(s) across ${Object.keys(missingCountBySubject).length}
-                        subject(s) still have no marks:</p>
-                        <ul style="text-align:left; max-height:200px; overflow-y:auto;">
-                            ${Object.keys(missingCountBySubject).map(s => `<li>${s}: ${missingCountBySubject[s]} pending</li>`).join('')}
-                        </ul>
-                        <p class="mt-2 mb-0">Save marks for everyone else now, and enter the rest later?</p>
-                    ` :
+                            <p>${totalMissing} student(s) across ${Object.keys(missingCountBySubject).length}
+                            subject(s) still have no marks:</p>
+                            <ul style="text-align:left; max-height:200px; overflow-y:auto;">
+                                ${Object.keys(missingCountBySubject).map(s => `<li>${s}: ${missingCountBySubject[s]} pending</li>`).join('')}
+                            </ul>
+                            <p class="mt-2 mb-0">Save marks for everyone else now, and enter the rest later?</p>
+                        ` :
                     `This will save marks for <strong>${forms.length} subjects</strong>.`;
 
                 // Confirm saving all
@@ -1605,9 +1873,9 @@
                                     title: errors.length > 0 ? 'Completed with errors' :
                                         'All Saved!',
                                     html: `
-                                        Saved ${completed - errors.length}/${forms.length} subjects.<br>
-                                        ${errors.length > 0 ? 'Errors: ' + errors.join(', ') : ''}
-                                    `,
+                                            Saved ${completed - errors.length}/${forms.length} subjects.<br>
+                                            ${errors.length > 0 ? 'Errors: ' + errors.join(', ') : ''}
+                                        `,
                                     confirmButtonText: 'OK'
                                 }).then(() => {
                                     location.reload();
@@ -1623,11 +1891,11 @@
                                 url: form.attr('action'),
                                 method: 'POST',
                                 data: form.serialize(),
-                                success: function() {
+                                success: function () {
                                     completed++;
                                     submitForm(index + 1);
                                 },
-                                error: function(xhr) {
+                                error: function (xhr) {
                                     completed++;
                                     errors.push(subjectName);
                                     submitForm(index + 1);
@@ -1641,23 +1909,372 @@
             });
 
             // ==================== SAVE CURRENT SUBJECT ====================
-            $('#saveAllVisibleBtn').on('click', function() {
+            $('#saveAllVisibleBtn').on('click', function () {
                 const activeForm = $('.tab-pane.active .subject-form');
                 activeForm.submit();
             });
 
             // Initialize all tabs progress on load
-            subjects.forEach(function(subjectId) {
+            subjects.forEach(function (subjectId) {
                 updateTabProgress(subjectId);
             });
+
+            // ══════════════════════════════════════════════════════════════
+            // SCAN & AUTO-FILL MARKS — inlined here, same scope as everything
+            // above. No separate partial, no window.* globals, no
+            // DOMContentLoaded wrapper needed since this whole block already
+            // runs inside jQuery(function($){...}) which fires after jQuery
+            // is loaded and the DOM is ready.
+            // ══════════════════════════════════════════════════════════════
+            let scanSelectedFile = null;
+            let scanSelectedType = 'pdf';
+            let scanCameraStream = null;
+            let scanExtractedEntries = [];
+            const scanCsrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            // ── OPEN MODAL (reads the currently active subject tab) ────────
+            $('#openScanMarksModalBtn').on('click', function () {
+                const $activePane = $('.tab-pane.active');
+                const subjectId = $activePane.data('subject-id');
+                const subjectName = $activePane.find('.card-header h5').text().trim();
+                const meta = subjectMeta[subjectId] || { studentIds: [], totalPapers: 1, name: subjectName };
+
+                $('#scanTargetSubjectName').text(subjectName || '—');
+                $('#scanTargetSubjectNameInline').text(subjectName || 'this subject');
+                $('#scanTargetStudentCount').text((meta.studentIds || []).length);
+
+                backToScanUpload();
+                clearScanFile();
+                $('#scanMarksModal').data('subject-id', subjectId).modal('show');
+            });
+
+            // ── SCAN TYPE TOGGLE ────────────────────────────────────────
+            window.setScanType = function (type) {
+                scanSelectedType = type;
+                $('#scanTypePdfLabel').toggleClass('active', type === 'pdf');
+                $('#scanTypeImageLabel').toggleClass('active', type === 'image');
+                $('#scanFileInput').attr('accept', type === 'pdf' ? '.pdf' : '.jpg,.jpeg,.png,.webp');
+                $('#scanCameraSection').toggleClass('d-none', type === 'pdf');
+                $('#scanDropTitle').text('Click or drag & drop your file here');
+                clearScanFile();
+            };
+
+            // ── DRAG & DROP / FILE PICK ─────────────────────────────────
+            const scanDropZoneEl = document.getElementById('scanDropZone');
+            if (scanDropZoneEl) {
+                scanDropZoneEl.addEventListener('dragover', e => { e.preventDefault(); scanDropZoneEl.classList.add('drag-over'); });
+                scanDropZoneEl.addEventListener('dragleave', () => scanDropZoneEl.classList.remove('drag-over'));
+                scanDropZoneEl.addEventListener('drop', e => {
+                    e.preventDefault();
+                    scanDropZoneEl.classList.remove('drag-over');
+                    if (e.dataTransfer.files[0]) handleScanFile(e.dataTransfer.files[0]);
+                });
+            }
+            const scanFileInputEl = document.getElementById('scanFileInput');
+            if (scanFileInputEl) {
+                scanFileInputEl.addEventListener('change', e => {
+                    if (e.target.files[0]) handleScanFile(e.target.files[0]);
+                });
+            }
+
+            function handleScanFile(file) {
+                scanSelectedFile = file;
+                $('#scanFileName').text(file.name);
+                $('#scanFileSize').text((file.size / 1024 / 1024).toFixed(2) + ' MB');
+                $('#scanFilePreview').removeClass('d-none');
+                $('#scanRunBtn').prop('disabled', false);
+                $('#scanDropTitle').text('File selected ✓');
+            }
+
+            window.clearScanFile = function () {
+                scanSelectedFile = null;
+                $('#scanFileInput').val('');
+                $('#scanFilePreview').addClass('d-none');
+                $('#scanRunBtn').prop('disabled', true);
+                $('#scanDropTitle').text('Click or drag & drop your file here');
+            };
+
+            // ── CAMERA ───────────────────────────────────────────────────
+            window.openScanCamera = async function () {
+                try {
+                    scanCameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                    const video = document.getElementById('scanCameraVideo');
+                    video.srcObject = scanCameraStream;
+                    video.classList.remove('d-none');
+                    document.getElementById('scanCaptureBtn').classList.remove('d-none');
+                } catch (err) {
+                    Swal.fire('Camera Error', err.message, 'error');
+                }
+            };
+
+            window.captureScanPhoto = function () {
+                const video = document.getElementById('scanCameraVideo');
+                const canvas = document.getElementById('scanCameraCanvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0);
+                canvas.toBlob(blob => {
+                    const file = new File([blob], 'camera_capture.jpg', { type: 'image/jpeg' });
+                    handleScanFile(file);
+                    if (scanCameraStream) scanCameraStream.getTracks().forEach(t => t.stop());
+                    document.getElementById('scanCameraVideo').classList.add('d-none');
+                    document.getElementById('scanCaptureBtn').classList.add('d-none');
+                }, 'image/jpeg', 0.95);
+            };
+
+            // ── RUN SCAN ─────────────────────────────────────────────────
+            window.runScoreScan = async function () {
+                if (!scanSelectedFile) return;
+
+                Swal.fire({
+                    title: 'Reading document…',
+                    html: 'Running OCR — this can take 10–20 seconds',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+
+                const formData = new FormData();
+                formData.append('file', scanSelectedFile);
+                formData.append('scan_type', scanSelectedType);
+
+                try {
+                    const res = await fetch('{{ route("iteb.scan.score.sheet") }}', {
+                        method: 'POST',
+                        headers: { 'X-CSRF-TOKEN': scanCsrfToken, 'Accept': 'application/json' },
+                        body: formData,
+                    });
+                    const result = await res.json();
+                    Swal.close();
+
+                    if (!result.success) {
+                        Swal.fire('Extraction Failed', result.message || 'Unknown error', 'error');
+                        return;
+                    }
+
+                    scanExtractedEntries = (result.data && result.data.entries) || [];
+                    showScanReview(result.data);
+                } catch (err) {
+                    Swal.close();
+                    Swal.fire('Network Error', err.message, 'error');
+                }
+            };
+
+            // ── FUZZY MATCH HELPERS ──────────────────────────────────────
+            function scanNormalizeName(str) {
+                return String(str || '')
+                    .toUpperCase()
+                    .replace(/[^A-Z\s]/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+            }
+
+            function scanLevenshtein(a, b) {
+                const m = a.length, n = b.length;
+                if (m === 0) return n;
+                if (n === 0) return m;
+                const d = Array.from({ length: m + 1 }, (_, i) => [i].concat(Array(n).fill(0)));
+                for (let j = 0; j <= n; j++) d[0][j] = j;
+                for (let i = 1; i <= m; i++) {
+                    for (let j = 1; j <= n; j++) {
+                        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+                    }
+                }
+                return d[m][n];
+            }
+
+            // Token-sort ratio: order-independent similarity, so "OKELLO JOHN"
+            // matches a roster entry stored as "JOHN OKELLO" just as well.
+            function scanSimilarity(a, b) {
+                const normA = scanNormalizeName(a).split(' ').filter(Boolean).sort().join(' ');
+                const normB = scanNormalizeName(b).split(' ').filter(Boolean).sort().join(' ');
+                if (!normA || !normB) return 0;
+                if (normA === normB) return 1;
+                const dist = scanLevenshtein(normA, normB);
+                const maxLen = Math.max(normA.length, normB.length);
+                return maxLen === 0 ? 0 : 1 - (dist / maxLen);
+            }
+
+            function scanBestMatch(ocrName, roster) {
+                let best = null;
+                let bestScore = 0;
+                roster.forEach(student => {
+                    const score = scanSimilarity(ocrName, student.name);
+                    if (score > bestScore) {
+                        bestScore = score;
+                        best = student;
+                    }
+                });
+                return { student: best, score: bestScore };
+            }
+
+            function scanConfidenceClass(score) {
+                if (score >= 0.82) return 'high';
+                if (score >= 0.6) return 'medium';
+                return 'low';
+            }
+
+            // ── REVIEW TABLE ─────────────────────────────────────────────
+            function showScanReview(data) {
+                const subjectId = $('#scanMarksModal').data('subject-id');
+                const meta = subjectMeta[subjectId] || { studentIds: [], totalPapers: 1 };
+                const namesMap = studentNamesMap || {};
+
+                const roster = (meta.studentIds || []).map(id => ({ id, name: namesMap[id] || id }));
+
+                $('#scanUploadStep').addClass('d-none');
+                $('#scanReviewStep').removeClass('d-none');
+                $('#scanUploadFooter').addClass('d-none');
+                $('#scanReviewFooter').removeClass('d-none');
+
+                const notice = $('#scanReviewNotice');
+                if (data.notice) {
+                    notice.text(data.notice).removeClass('d-none');
+                } else {
+                    notice.addClass('d-none');
+                }
+
+                const tbody = $('#scanReviewTbody').empty();
+
+                if (!scanExtractedEntries.length) {
+                    tbody.append(`<tr><td colspan="5" class="text-center text-muted py-4">
+                            No rows could be read from this document. Try a clearer photo, or enter marks manually.
+                        </td></tr>`);
+                    updateScanMatchedCount();
+                    return;
+                }
+
+                scanExtractedEntries.forEach((entry, idx) => {
+                    const { student, score } = scanBestMatch(entry.candidate_name, roster);
+                    const confClass = scanConfidenceClass(score);
+                    const scores = [entry.p1, entry.p2, entry.p3, entry.p4]
+                        .map((v, i) => v !== null && v !== undefined ? `<span class="score-pill">P${i + 1}: ${v}</span>` : '')
+                        .join('');
+                    const avgPill = entry.average !== null && entry.average !== undefined
+                        ? `<span class="score-pill">Avg: ${entry.average}</span>` : '';
+
+                    const options = roster.map(s =>
+                        `<option value="${s.id}" ${student && s.id === student.id ? 'selected' : ''}>${scanEscapeHtml(s.name)}</option>`
+                    ).join('');
+
+                    const row = $(`
+                            <tr data-index="${idx}">
+                                <td class="text-center">
+                                    <input type="checkbox" class="form-check-input scan-row-check" ${student ? 'checked' : ''}>
+                                </td>
+                                <td class="ocr-name">${scanEscapeHtml(entry.candidate_name || '(blank)')}</td>
+                                <td>${scores}${avgPill}</td>
+                                <td>
+                                    <select class="form-control form-control-sm match-select">
+                                        <option value="">— Do not apply —</option>
+                                        ${options}
+                                    </select>
+                                </td>
+                                <td>
+                                    <span class="match-confidence ${confClass}">
+                                        ${student ? Math.round(score * 100) + '%' : 'No match'}
+                                    </span>
+                                </td>
+                            </tr>
+                        `);
+
+                    if (!student) row.find('.scan-row-check').prop('checked', false);
+                    tbody.append(row);
+                });
+
+                updateScanMatchedCount();
+            }
+
+            $(document).on('change', '.scan-row-check, .match-select', updateScanMatchedCount);
+
+            function updateScanMatchedCount() {
+                let count = 0;
+                $('#scanReviewTbody tr').each(function () {
+                    const checked = $(this).find('.scan-row-check').is(':checked');
+                    const hasStudent = $(this).find('.match-select').val();
+                    if (checked && hasStudent) count++;
+                });
+                $('#scanMatchedCount').text(count);
+            }
+
+            window.backToScanUpload = function () {
+                $('#scanReviewStep').addClass('d-none');
+                $('#scanUploadStep').removeClass('d-none');
+                $('#scanReviewFooter').addClass('d-none');
+                $('#scanUploadFooter').removeClass('d-none');
+            };
+
+            // ── APPLY TO MARKS TABLE ────────────────────────────────────
+            window.applyScanMatches = function () {
+                const subjectId = $('#scanMarksModal').data('subject-id');
+                const meta = subjectMeta[subjectId] || { totalPapers: 1, allowedPapers: null };
+                const $pane = $(`#subject-form-${subjectId}`);
+                let applied = 0;
+
+                $('#scanReviewTbody tr').each(function () {
+                    const $row = $(this);
+                    const idx = $row.data('index');
+                    if (idx === undefined) return;
+
+                    const checked = $row.find('.scan-row-check').is(':checked');
+                    const studentId = $row.find('.match-select').val();
+                    if (!checked || !studentId) return;
+
+                    const entry = scanExtractedEntries[idx];
+                    if (!entry) return;
+
+                    const totalPapers = meta.totalPapers || 1;
+
+                    if (totalPapers > 1) {
+                        for (let p = 1; p <= totalPapers; p++) {
+                            if (meta.allowedPapers && !meta.allowedPapers.includes(p)) continue;
+                            const val = entry['p' + p];
+                            if (val === null || val === undefined) continue;
+                            const $input = $pane.find(`input[name="marks[${studentId}][${p}]"]`);
+                            if ($input.length) {
+                                $input.val(Math.round(val));
+                                updateMarkStatus($input, $input.val());
+                            }
+                        }
+                    } else {
+                        const val = entry.p1 !== null && entry.p1 !== undefined ? entry.p1 : entry.average;
+                        if (val === null || val === undefined) return;
+                        const $input = $pane.find(`input[name="marks[${studentId}]"]`);
+                        if ($input.length) {
+                            $input.val(Math.round(val));
+                            updateMarkStatus($input, $input.val());
+                        }
+                    }
+
+                    $row.css('background-color', '#eaf3ff');
+                    applied++;
+                });
+
+                $('#scanMarksModal').modal('hide');
+
+                Swal.fire({
+                    icon: applied > 0 ? 'success' : 'warning',
+                    title: applied > 0 ? 'Marks Filled In' : 'Nothing Applied',
+                    html: applied > 0
+                        ? `${applied} student(s) filled in. Review the highlighted (blue "unsaved") fields, then click <strong>Save</strong> for this subject.`
+                        : 'No rows were selected/matched to apply.',
+                    confirmButtonText: 'OK'
+                });
+            };
+
+            function scanEscapeHtml(str) {
+                return String(str)
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+            }
         });
 
         // ==================== SEARCH CLEAR BUTTON ====================
-        $(document).on('input', '.student-search-input', function() {
+        $(document).on('input', '.student-search-input', function () {
             $(this).siblings('.subject-search-clear').css('display', this.value ? 'flex' : 'none');
         });
 
-        $(document).on('click', '.subject-search-clear', function() {
+        $(document).on('click', '.subject-search-clear', function () {
             const $input = $(this).siblings('.student-search-input');
             $input.val('').trigger('keyup');
             $(this).css('display', 'none');
