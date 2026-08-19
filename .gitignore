@@ -13,9 +13,6 @@ yarn-error.log
 storage/framework/sessions/*
 storage/framework/views/*
 storage/logs/*.log
-
 .env
-
-u453625278_ple_meb.sql
-
+.env.example
 *.sql

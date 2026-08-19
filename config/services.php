@@ -30,14 +30,6 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    // Used by App\Http\Controllers\ScoreScanController for the AI-vision
-    // fallback when Tesseract can't confidently read a handwritten or
-    // low-quality score sheet photo. Optional — scanning still works with
-    // Tesseract alone if this is left blank, just without the fallback.
-    'gemini' => [
-        'api_key' => env('GEMINI_API_KEY'),
-    ],
-
     // Optional overrides for the OCR command-line tools used by
     // ScoreScanController. Leave blank to auto-detect from PATH (works on
     // Linux/Mac out of the box). On Windows, if `tesseract --version` /
@@ -52,6 +44,17 @@ return [
         'tesseract_path' => env('TESSERACT_PATH'),
         'pdftoppm_path' => env('PDFTOPPM_PATH'),
         'imagemagick_path' => env('IMAGEMAGICK_PATH'),
+    ],
+
+    // Used by App\Http\Controllers\ScoreScanController for the AI-vision
+    // fallback when Tesseract can't confidently read a handwritten or
+    // low-quality score sheet photo. Optional — scanning still works with
+    // Tesseract alone if this is left blank, just without the fallback.
+    //
+    // GEMINI_API_KEYS takes a comma-separated list so the rotator can fail
+    // over between them: GEMINI_API_KEYS=key1,key2,key3,...
+    'gemini' => [
+        'keys' => array_filter(explode(',', env('GEMINI_API_KEYS', ''))),
     ],
 
 ];

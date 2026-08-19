@@ -142,10 +142,11 @@ class ScoreScanController extends Controller
                 : 'sudo apt-get install -y imagemagick',
         ];
 
+               $geminiKeys = config('services.gemini.keys', []);
         $checks['gemini_api_key'] = [
-            'ok' => !empty(config('services.gemini.api_key')),
-            'version' => !empty(config('services.gemini.api_key')) ? 'configured' : 'not set',
-            'fix' => 'Add GEMINI_API_KEY=... to your .env file',
+            'ok' => !empty($geminiKeys),
+            'version' => !empty($geminiKeys) ? count($geminiKeys) . ' key(s) configured' : 'not set',
+            'fix' => 'Add GEMINI_API_KEYS=key1,key2,... to your .env file',
         ];
 
         $allOk = collect($checks)->every(fn($c) => $c['ok']);
@@ -351,16 +352,21 @@ class ScoreScanController extends Controller
             return $gemini;
         }
 
+        if (empty($tesseractResult['entries']) && empty($gemini)) {
+            $tesseractResult['notice'] = 'We couldn\'t automatically read any rows from this file. This '
+                . 'usually means the image is too blurry, dark, or at too sharp an angle. Please try '
+                . 'retaking the photo in good lighting with the sheet flat, or add the rows manually below.';
+        }
+
         return $tesseractResult;
     }
 
     // ═══════════════════════════════════════════════════════════════════════
     // GEMINI VISION FALLBACK (for handwritten / low-quality scans)
     // ═══════════════════════════════════════════════════════════════════════
-    private function extractWithGeminiVision(string $imagePath): ?array
+        private function extractWithGeminiVision(string $imagePath): ?array
     {
-        $apiKey = config('services.gemini.api_key');
-        if (empty($apiKey)) {
+        if (empty(config('services.gemini.keys'))) {
             return null;
         }
 
@@ -412,43 +418,35 @@ class ScoreScanController extends Controller
             . 'zone, REF number, subject, exam year. Return only the structured data described by the '
             . 'schema — do not invent rows or scores that are not on the sheet.';
 
+        $payload = [
+            'contents' => [[
+                'parts' => [
+                    ['text' => $prompt],
+                    ['inline_data' => ['mime_type' => $mimeType, 'data' => $imageData]],
+                ],
+            ]],
+            'generationConfig' => [
+                'responseMimeType' => 'application/json',
+                'responseSchema' => $schema,
+                'temperature' => 0,
+            ],
+        ];
+
+        $geminiT0 = microtime(true);
+        Log::info(sprintf(
+            '[GEMINI TIMING] request starting, image size = %.1f KB',
+            strlen($imageData) / 1024
+        ));
+
         try {
-            $geminiT0 = microtime(true);
-            Log::info(sprintf(
-                '[GEMINI TIMING] request starting, image size = %.1f KB',
-                strlen($imageData) / 1024
-            ));
-
-            $response = Http::timeout(45)->post(
-                'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key='
-                . $apiKey,
-                [
-                    'contents' => [[
-                        'parts' => [
-                            ['text' => $prompt],
-                            ['inline_data' => ['mime_type' => $mimeType, 'data' => $imageData]],
-                        ],
-                    ]],
-                    'generationConfig' => [
-                        'responseMimeType' => 'application/json',
-                        'responseSchema' => $schema,
-                        'temperature' => 0,
-                    ],
-                ]
-            );
+            $json = app(\App\Services\GeminiKeyRotator::class)->request('gemini-3.6-flash', $payload);
 
             Log::info(sprintf(
-                '[GEMINI TIMING] response received after %.2fs, HTTP status = %d',
-                microtime(true) - $geminiT0,
-                $response->status()
+                '[GEMINI TIMING] response received after %.2fs',
+                microtime(true) - $geminiT0
             ));
 
-            if (!$response->successful()) {
-                Log::warning('Gemini vision request failed: ' . $response->body());
-                return null;
-            }
-
-            $text = $response->json('candidates.0.content.parts.0.text');
+            $text = data_get($json, 'candidates.0.content.parts.0.text');
             if (!$text) {
                 return null;
             }
@@ -479,6 +477,16 @@ class ScoreScanController extends Controller
                     ];
                 }, $decoded['entries']),
             ];
+        } catch (\App\Exceptions\GeminiAllKeysFailedException $e) {
+            // Every key in the rotation failed — log the real reason, but
+            // don't blow up the request: extractFromImage() will just fall
+            // back to whatever Tesseract already found, same as before.
+            Log::error(sprintf(
+                '[GEMINI TIMING] all keys exhausted after %.2fs: %s',
+                microtime(true) - $geminiT0,
+                $e->getMessage()
+            ));
+            return null;
         } catch (\Throwable $e) {
             Log::warning(sprintf(
                 '[GEMINI TIMING] call threw after %.2fs: %s',

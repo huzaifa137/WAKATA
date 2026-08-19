@@ -24,6 +24,7 @@ use App\Http\Controllers\MarksEntrantController;
 use App\Http\Controllers\BroadcastMessageController;
 use App\Http\Controllers\ScoreScanController;
 use App\Http\Controllers\ScoreSheetExportController;
+use App\Http\Controllers\GeminiKeyMonitorController;
 use App\Models\House;
 use App\Models\SchoolPassword;
 use Illuminate\Support\Facades\Hash;
@@ -739,6 +740,8 @@ Route::controller(GradingSettingsController::class)->group(function () {
 Route::get('houses/create', [HouseController::class, 'create'])->name('houses.create');
 Route::post('houses/store', [HouseController::class, 'store'])->name('houses.store');
 
+Route::get('/gemini-key-monitor', [GeminiKeyMonitorController::class, 'index']);
+   
 /*
 |--------------------------------------------------------------------------
 | Offline sync UI
