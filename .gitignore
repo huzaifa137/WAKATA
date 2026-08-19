@@ -15,3 +15,7 @@ storage/framework/views/*
 storage/logs/*.log
 
 .env
+
+u453625278_ple_meb.sql
+
+*.sql
