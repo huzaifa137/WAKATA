@@ -23,6 +23,7 @@ use App\Http\Controllers\SubjectManagementController;
 use App\Http\Controllers\MarksEntrantController;
 use App\Http\Controllers\BroadcastMessageController;
 use App\Http\Controllers\ScoreScanController;
+use App\Http\Controllers\ScoreSheetExportController;
 use App\Models\House;
 use App\Models\SchoolPassword;
 use Illuminate\Support\Facades\Hash;
@@ -423,6 +424,20 @@ Route::controller(ScoreScanController::class)->group(function () {
     Route::group(['middleware' => ['StudentAuth']], function () {
         Route::post('/iteb/scan-score-sheet', 'scan')->name('iteb.scan.score.sheet');
         Route::get('/iteb/scan-score-sheet/check', 'check')->name('iteb.scan.score.sheet.check');
+    });
+});
+
+// Standalone "Scan & Export Score Sheet" admin page — reuses the OCR
+// endpoint above, adds saving reviewed rows to the DB ("Import") and
+// downloading them as .xlsx ("Export"). See resources/views/ScoreExport/index.blade.php
+// and the "Export Excel" link in the admin sidebar.
+Route::controller(ScoreSheetExportController::class)->group(function () {
+    Route::group(['prefix' => 'score-sheet-export', 'middleware' => ['StudentAuth']], function () {
+        Route::get('/', 'index')->name('score.export.index');
+        Route::post('/save', 'save')->name('score.export.save');
+        Route::post('/download', 'exportPreview')->name('score.export.download');
+        Route::get('/{scoreSheet}/download', 'exportSaved')->name('score.export.download.saved');
+        Route::delete('/{scoreSheet}', 'destroy')->name('score.export.destroy');
     });
 });
 

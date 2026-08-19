@@ -409,9 +409,8 @@
 
             <div style="font-size: 1.55rem; font-weight: 800; letter-spacing: -0.02em;
                 color: #0a0a0a; margin-bottom: 0.15rem; line-height: 1.2;">
-                <span style="color: #043AA1;">K</span>ampala <span style="color: #043AA1;">I</span>ntegrated
-                <span style="color: #043AA1;">S</span>econdary <span style="color: #043AA1;">S</span>chools
-                <span style="color: #043AA1;">E</span>xamination
+                <span style="color: #043AA1;">W</span>akiso <span style="color: #043AA1;">K</span>ampala
+                <span style="color: #043AA1;">T</span>eachers <span style="color: #043AA1;">A</span>ssociation
             </div>
 
             <div style="font-size: 0.78rem; font-weight: 700; letter-spacing: 3px;

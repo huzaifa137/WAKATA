@@ -64,6 +64,13 @@ $__loggedInMarksEntrant = Session('LoggedAdmin')
                 </a>
             </li>
 
+            <li class="slide">
+                <a class="side-menu__item" href="{{ route('score.export.index') }}">
+                    <i class="fas fa-file-export fa-2x mr-3"></i>
+                    Export Excel
+                </a>
+            </li>
+
             <li class="slide has-sub">
                 <a class="side-menu__item" href="#" data-toggle="submenu">
                     <i class="fa fa-user-graduate fa-2x mr-3"></i>

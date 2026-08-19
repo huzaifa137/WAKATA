@@ -6,7 +6,7 @@
         :root {
             --primary: #043AA1;
             --primary-light: #1a6b30;
-            --primary-pale: #e8f5ec;
+            --primary-pale: #adbdd9;
             --accent-ple: #E65100;
             --accent-uce: #00695C;
             --accent-uace: #AD1457;
@@ -334,7 +334,7 @@
 
         .pill-C5,
         .pill-DIVISION-II {
-            background: #e8f5ec;
+            background: #adbdd9;
             color: #1a6b30;
         }
 

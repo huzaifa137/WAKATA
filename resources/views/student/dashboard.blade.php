@@ -8,7 +8,7 @@
                 :root {
                     --primary: #043AA1;
                     --primary-light: #1E7A3D;
-                    --primary-lighter: #E8F5EC;
+                    --primary-lighter: #adbdd9;
                     --primary-dark: #014425;
                     --ink: #10241A;
                     --muted: #6B7B72;

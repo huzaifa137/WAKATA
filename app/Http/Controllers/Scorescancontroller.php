@@ -39,10 +39,21 @@ class ScoreScanController extends Controller
     // -----------------------------------------------------------------------
     public function scan(Request $request)
     {
+        // DEBUG: raise the PHP script ceiling for this request only, so a
+        // slow stage produces a log line instead of a silent 60s kill.
+        set_time_limit(180);
+
+        $t0 = microtime(true);
+        $mark = function (string $label) use ($t0) {
+            Log::info(sprintf('[SCAN TIMING] %s at +%.2fs', $label, microtime(true) - $t0));
+        };
+        $mark('request received');
+
         $request->validate([
             'file' => 'required|file|mimes:pdf,jpg,jpeg,png,webp|max:20480',
             'scan_type' => 'required|in:pdf,image',
         ]);
+        $mark('validation done');
 
         Storage::disk('local')->makeDirectory('score-scans/temp');
 
@@ -52,13 +63,15 @@ class ScoreScanController extends Controller
 
         $storedPath = $file->store('score-scans/temp', 'local');
         $fullPath = Storage::disk('local')->path($storedPath);
+        $mark('file stored to disk');
 
         try {
             if ($extension === 'pdf') {
-                $extracted = $this->extractFromPdf($fullPath);
+                $extracted = $this->extractFromPdf($fullPath, $mark);
             } else {
-                $extracted = $this->extractFromImage($fullPath);
+                $extracted = $this->extractFromImage($fullPath, $mark);
             }
+            $mark('extraction finished');
 
             Storage::disk('local')->delete($storedPath);
 
@@ -69,6 +82,7 @@ class ScoreScanController extends Controller
                 'scan_type' => $scanType,
             ]);
         } catch (\Throwable $e) {
+            $mark('extraction threw: ' . $e->getMessage());
             Log::error('Score sheet scan failed: ' . $e->getMessage());
             Storage::disk('local')->delete($storedPath);
 
@@ -203,7 +217,7 @@ class ScoreScanController extends Controller
     // OCR PIPELINE
     // ═══════════════════════════════════════════════════════════════════════
 
-    private function extractFromPdf(string $pdfPath): array
+    private function extractFromPdf(string $pdfPath, ?\Closure $mark = null): array
     {
         $parser = new \Smalot\PdfParser\Parser();
         $pdf = $parser->parseFile($pdfPath);
@@ -230,7 +244,7 @@ class ScoreScanController extends Controller
         $usedAiVision = false;
 
         foreach ($pages as $pagePath) {
-            $pageResult = $this->extractFromImage($pagePath);
+            $pageResult = $this->extractFromImage($pagePath, $mark ?? null);
             @unlink($pagePath);
 
             if (!empty($pageResult['notice'])) {
@@ -289,27 +303,42 @@ class ScoreScanController extends Controller
      * Tesseract cannot read — automatically fall back to Gemini's vision API
      * (see GEMINI_API_KEY in .env) for a proper read.
      */
-    private function extractFromImage(string $imgPath): array
+    private function extractFromImage(string $imgPath, ?\Closure $mark = null): array
     {
+        $mark ??= function (string $label) {
+            Log::info('[SCAN TIMING] ' . $label);
+        };
+
         $tesseractResult = ['sheet_meta' => $this->extractMeta([]), 'entries' => []];
 
         try {
+            $mark('ensureTesseract() start');
             $this->ensureTesseract();
+            $mark('ensureTesseract() done');
+
             $processed = $this->preprocessImage($imgPath);
+            $mark('preprocessImage() (ImageMagick) done');
+
             $text = $this->runTesseract($processed);
+            $mark('runTesseract() done');
+
             if ($processed !== $imgPath) {
                 @unlink($processed);
             }
             $tesseractResult = $this->parseOcrText($text);
         } catch (\Throwable $e) {
+            $mark('Tesseract stage threw: ' . $e->getMessage());
             Log::warning('Tesseract OCR unavailable/failed, relying on AI vision fallback: ' . $e->getMessage());
         }
 
         if (count($tesseractResult['entries']) >= 3) {
+            $mark('Tesseract found >=3 rows, skipping Gemini entirely');
             return $tesseractResult;
         }
 
+        $mark('calling extractWithGeminiVision() now');
         $gemini = $this->extractWithGeminiVision($imgPath);
+        $mark('extractWithGeminiVision() returned');
 
         if ($gemini !== null && count($gemini['entries']) > count($tesseractResult['entries'])) {
             $gemini['notice'] = count($tesseractResult['entries']) === 0
@@ -384,8 +413,14 @@ class ScoreScanController extends Controller
             . 'schema — do not invent rows or scores that are not on the sheet.';
 
         try {
-            $response = Http::timeout(60)->post(
-                'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='
+            $geminiT0 = microtime(true);
+            Log::info(sprintf(
+                '[GEMINI TIMING] request starting, image size = %.1f KB',
+                strlen($imageData) / 1024
+            ));
+
+            $response = Http::timeout(45)->post(
+                'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key='
                 . $apiKey,
                 [
                     'contents' => [[
@@ -401,6 +436,12 @@ class ScoreScanController extends Controller
                     ],
                 ]
             );
+
+            Log::info(sprintf(
+                '[GEMINI TIMING] response received after %.2fs, HTTP status = %d',
+                microtime(true) - $geminiT0,
+                $response->status()
+            ));
 
             if (!$response->successful()) {
                 Log::warning('Gemini vision request failed: ' . $response->body());
@@ -439,7 +480,11 @@ class ScoreScanController extends Controller
                 }, $decoded['entries']),
             ];
         } catch (\Throwable $e) {
-            Log::warning('Gemini vision call failed: ' . $e->getMessage());
+            Log::warning(sprintf(
+                '[GEMINI TIMING] call threw after %.2fs: %s',
+                microtime(true) - $geminiT0,
+                $e->getMessage()
+            ));
             return null;
         }
     }
